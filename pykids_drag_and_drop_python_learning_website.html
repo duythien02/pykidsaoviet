@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyKids 🐍 - Học Python Kéo Thả Thú Vị</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/msg/vi.js"></script>
+    <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .playful-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* Modern Scrollbars for Flyout */
+        .blocklyScrollbarHandle {
+            fill: #cbd5e1 !important;
+            fill-opacity: 0.6 !important;
+            rx: 6px !important;
+            ry: 6px !important;
+        }
+
+        .blocklyScrollbarBackground {
+            fill: transparent !important;
+            opacity: 0 !important;
+        }
+
+        /* Custom Scratch-like Sidebar */
+        .scratch-sidebar {
+            width: 75px;
+            background-color: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 50;
+        }
+
+        .scratch-category {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 10px 4px;
+            width: 100%;
+            transition: background 0.1s;
+            user-select: none;
+        }
+
+        .scratch-category:hover {
+            background: #f1f5f9;
+        }
+
+        .scratch-cat-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-bottom: 4px;
+        }
+
+        .scratch-cat-text {
+            font-size: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        /* Flyout Titles Label */
+        .blocklyFlyoutLabelText {
+            font-family: 'Fredoka', sans-serif !important;
+            font-size: 14pt !important;
+            font-weight: 700 !important;
+            fill: #475569 !important;
+        }
+
+        .terminal-bg {
+            background-color: #0f172a;
+        }
+
+        .bouncy-btn {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+        }
+
+        .bouncy-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .bouncy-btn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 999px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 999px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-slate-800 h-full flex flex-col overflow-hidden">
+
+    <!-- Header bar -->
+    <header class="bg-[#8b5cf6] px-6 py-2 flex items-center justify-between shrink-0 shadow-md relative z-10">
+        <div class="flex items-center space-x-3">
+            <div class="bg-white text-[#8b5cf6] p-2 rounded-xl shadow-sm transform -rotate-3">
+                <i class="fa-solid fa-snake text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black playful-font text-white tracking-wide">PyKids</h1>
+            </div>
+        </div>
+
+
+    </header>
+
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
+
+        <!-- Left Side: Custom Scratch Toolbox & Blockly Editor -->
+        <section class="flex-1 flex h-full relative">
+
+            <!-- Custom Scratch-like Continuous Scroll Sidebar -->
+            <div id="scratch-sidebar" class="scratch-sidebar">
+
+                <div class="scratch-category" onclick="scrollToCategory('text')" data-color="#06b6d4">
+                    <div class="scratch-cat-circle" style="background: #06b6d4;"></div>
+                    <div class="scratch-cat-text">In ấn</div>
+                </div>
+                <div class="scratch-category" onclick="scrollToCategory('variables_set')" data-color="#14b8a6">
+                    <div class="scratch-cat-circle" style="background: #14b8a6;"></div>
+                    <div class="scratch-cat-text">Biến số</div>
+                </div>
+                <div class="scratch-category" onclick="scrollToCategory('math_number')" data-color="#3b82f6">
+                    <div class="scratch-cat-circle" style="background: #3b82f6;"></div>
+                    <div class="scratch-cat-text">Toán số</div>
+                </div>
+                <div class="scratch-category" onclick="scrollToCategory('controls_if')" data-color="#f59e0b">
+                    <div class="scratch-cat-circle" style="background: #f59e0b;"></div>
+                    <div class="scratch-cat-text">Điều kiện</div>
+                </div>
+                <div class="scratch-category" onclick="scrollToCategory('controls_whileUntil')" data-color="#8b5cf6">
+                    <div class="scratch-cat-circle" style="background: #8b5cf6;"></div>
+                    <div class="scratch-cat-text">Vòng lặp</div>
+                </div>
+                <div class="scratch-category" onclick="scrollToCategory('turtle_pen')" data-color="#ec4899">
+                    <div class="scratch-cat-circle" style="background: #ec4899;"></div>
+                    <div class="scratch-cat-text">Bút vẽ</div>
+                </div>
+                <div class="scratch-category" onclick="scrollToCategory('turtle_forward')" data-color="#10b981">
+                    <div class="scratch-cat-circle" style="background: #10b981;"></div>
+                    <div class="scratch-cat-text">Di chuyển</div>
+                </div>
+            </div>
+
+            <!-- Main Blockly Container Div -->
+            <div id="blockly-editor" class="flex-1 h-full relative border-r border-slate-200"></div>
+        </section>
+
+        <!-- Right Side: Scratch-like UI (Stage, Info, Sprites) -->
+        <section
+            class="w-full md:w-1/2 lg:w-[600px] flex flex-col shrink-0 bg-[#eef2f6] h-[45vh] md:h-full overflow-hidden font-sans md:border-l border-t md:border-t-0 border-slate-300">
+
+            <!-- 1. Stage Header (Green Flag & Stop) -->
+            <div class="bg-white flex items-center justify-between px-4 py-2 shrink-0 border-b border-slate-200">
+                <div class="flex space-x-5">
+                    <button id="run-btn" onclick="runCode()"
+                        class="text-[#4ade80] hover:text-[#22c55e] transition-transform hover:scale-110 active:scale-95"
+                        title="Chạy chương trình (Lá cờ xanh)">
+                        <i class="fa-solid fa-flag text-2xl drop-shadow-sm"></i>
+                    </button>
+                    <button id="stop-btn" onclick="stopExecution()"
+                        class="text-[#ef4444] hover:text-[#dc2626] transition-transform hover:scale-110 active:scale-95"
+                        title="Dừng">
+                        <i class="fa-solid fa-circle-stop text-2xl drop-shadow-sm"></i>
+                    </button>
+                    <button id="reset-btn" onclick="hardResetStage()"
+                        class="text-[#fbbf24] hover:text-[#f59e0b] transition-transform hover:scale-110 active:scale-95"
+                        title="Khôi phục gốc (Về trung tâm & Xóa vẽ)">
+                        <i class="fa-solid fa-rotate-left text-2xl drop-shadow-sm"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="openCustomizationModal()"
+                        class="text-indigo-500 hover:text-indigo-700 transition-transform hover:scale-110 active:scale-95 mr-2"
+                        title="Tùy chỉnh nhân vật & phông nền">
+                        <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                    </button>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">Tốc độ</span>
+                    <input id="speed-slider" type="range" min="1" max="10" value="5"
+                        class="w-16 accent-[#8b5cf6] cursor-pointer">
+                </div>
+            </div>
+
+            <!-- 2. Stage (Canvas) -->
+            <div class="bg-white relative flex items-center justify-center p-4 shrink-0">
+                <div
+                    class="bg-white border border-[#cbd5e1] rounded-sm overflow-hidden flex items-center justify-center">
+                    <!-- Adjusted width to fit neatly -->
+                    <canvas id="turtle-canvas" width="540" height="300"></canvas>
+                </div>
+            </div>
+
+
+            <!-- 5. Python/Console Tabs -->
+            <div class="bg-white border-t border-slate-300 flex flex-col flex-1 z-20">
+                <div class="bg-[#f8fafc] px-2 pt-1 flex items-center justify-between border-b border-slate-200">
+                    <div class="flex space-x-1">
+                        <button id="tab-code-btn" onclick="switchTab('code')"
+                            class="px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all border-b-2 border-indigo-500 text-indigo-600 bg-white shadow-sm">
+                            <i class="fa-brands fa-python text-amber-500 mr-1"></i>Python
+                        </button>
+                        <button id="tab-console-btn" onclick="switchTab('console')"
+                            class="px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-slate-800 bg-transparent">
+                            <i class="fa-solid fa-terminal text-emerald-500 mr-1"></i>Console
+                        </button>
+                        <button id="tab-explain-btn" onclick="switchTab('explain')"
+                            class="px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-slate-800 bg-transparent">
+                            <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i>Giải thích
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 relative">
+                    <div id="tab-code" class="absolute inset-0 p-3 overflow-auto terminal-bg flex flex-col">
+                        <pre
+                            class="font-mono text-[14px] leading-relaxed overflow-x-auto text-slate-100 flex-1"><code id="python-preview"># Kéo khối để xem mã nguồn Python...</code></pre>
+                    </div>
+                    <div id="tab-console" class="absolute inset-0 p-3 overflow-auto bg-slate-900 flex flex-col hidden">
+                        <div id="console-output"
+                            class="font-mono text-[14px] leading-relaxed text-emerald-300 flex-1 whitespace-pre-wrap">
+                            Sẵn sàng nhận lệnh!</div>
+                    </div>
+                    <div id="tab-explain"
+                        class="absolute inset-0 p-4 overflow-auto bg-amber-50/90 flex flex-col hidden">
+                        <div id="explain-output"
+                            class="font-sans text-[15px] leading-relaxed text-slate-800 flex-1 whitespace-pre-wrap">Ghép
+                            khối để xem giải thích nhé!</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Customization Studio Modal -->
+    <div id="custom-modal"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden transition-opacity duration-300">
+        <div
+            class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border-4 border-indigo-100 transform scale-95 transition-transform duration-300 flex flex-col gap-5">
+            <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+                <h3 class="text-xl font-bold playful-font text-indigo-800 flex items-center space-x-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-indigo-500"></i>
+                    <span>Thư viện Nhân vật & Phông nền</span>
+                </h3>
+                <button onclick="closeCustomizationModal()" class="text-slate-400 hover:text-slate-600 text-xl"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <h4 class="text-xs font-black text-slate-500 uppercase tracking-wider mb-2">1. Chọn Nhân vật
+                        (Sprite):</h4>
+                    <div class="grid grid-cols-5 gap-2" id="character-group">
+                        <button onclick="changeCompanion('turtle')" id="btn-char-turtle"
+                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-indigo-500 text-white border-2 border-indigo-600 shadow-md">
+                            <span class="text-2xl mb-1">🐢</span><span class="text-[9px] font-bold">Rùa Xanh</span>
+                        </button>
+                        <button onclick="changeCompanion('cat')" id="btn-char-cat"
+                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200">
+                            <span class="text-2xl mb-1">🐱</span><span class="text-[9px] font-bold">Mèo Vàng</span>
+                        </button>
+                        <button onclick="changeCompanion('rabbit')" id="btn-char-rabbit"
+                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200">
+                            <span class="text-2xl mb-1">🐰</span><span class="text-[9px] font-bold">Thỏ Trắng</span>
+                        </button>
+                        <button onclick="changeCompanion('bee')" id="btn-char-bee"
+                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200">
+                            <span class="text-2xl mb-1">🐝</span><span class="text-[9px] font-bold">Ong Vàng</span>
+                        </button>
+                        <button onclick="changeCompanion('rocket')" id="btn-char-rocket"
+                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200">
+                            <span class="text-2xl mb-1">🚀</span><span class="text-[9px] font-bold">Tên Lửa</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-black text-slate-500 uppercase tracking-wider mb-2">2. Chọn Phông nền
+                        (Backdrop):</h4>
+                    <div class="grid grid-cols-2 gap-3" id="world-group">
+                        <button onclick="changeWorld('garden')" id="btn-world-garden"
+                            class="bouncy-btn py-2 px-3 rounded-xl bg-indigo-500 text-white border-2 border-indigo-600 flex items-center justify-center gap-2">
+                            <span class="text-xl">🏡</span><span class="text-[10px] font-bold">Vườn Hoa</span>
+                        </button>
+                        <button onclick="changeWorld('ocean')" id="btn-world-ocean"
+                            class="bouncy-btn py-2 px-3 rounded-xl bg-white text-slate-700 border-2 border-slate-200 flex items-center justify-center gap-2">
+                            <span class="text-xl">🌊</span><span class="text-[10px] font-bold">Đại Dương</span>
+                        </button>
+                        <button onclick="changeWorld('space')" id="btn-world-space"
+                            class="bouncy-btn py-2 px-3 rounded-xl bg-white text-slate-700 border-2 border-slate-200 flex items-center justify-center gap-2">
+                            <span class="text-xl">🌌</span><span class="text-[10px] font-bold">Vũ Trụ</span>
+                        </button>
+                        <button onclick="changeWorld('notebook')" id="btn-world-notebook"
+                            class="bouncy-btn py-2 px-3 rounded-xl bg-white text-slate-700 border-2 border-slate-200 flex items-center justify-center gap-2">
+                            <span class="text-xl">📝</span><span class="text-[10px] font-bold">Vở Ô Ly</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeCustomizationModal()"
+                class="bouncy-btn bg-indigo-500 hover:bg-indigo-600 text-white font-black py-3 rounded-xl w-full shadow-md mt-1">
+                Xong rồi!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        Blockly.Blocks['turtle_forward'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_forward", "message0": "Tiến %1 bước", "args0": [{ "type": "input_value", "name": "STEPS", "check": "Number" }], "previousStatement": null, "nextStatement": null, "colour": "#10b981" });
+            }
+        };
+        Blockly.Blocks['turtle_backward'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_backward", "message0": "Lùi %1 bước", "args0": [{ "type": "input_value", "name": "STEPS", "check": "Number" }], "previousStatement": null, "nextStatement": null, "colour": "#059669" });
+            }
+        };
+        Blockly.Blocks['turtle_right'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_right", "message0": "Xoay phải %1 độ ↻", "args0": [{ "type": "input_value", "name": "DEGREES", "check": "Number" }], "previousStatement": null, "nextStatement": null, "colour": "#8b5cf6" });
+            }
+        };
+        Blockly.Blocks['turtle_left'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_left", "message0": "Xoay trái %1 độ ↺", "args0": [{ "type": "input_value", "name": "DEGREES", "check": "Number" }], "previousStatement": null, "nextStatement": null, "colour": "#a78bfa" });
+            }
+        };
+        Blockly.Blocks['turtle_pen'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_pen", "message0": "Trạng thái bút: %1", "args0": [{ "type": "field_dropdown", "name": "PEN_STATE", "options": [["Hạ bút (Bắt đầu vẽ)", "pendown"], ["Nhấc bút (Dừng vẽ)", "penup"]] }], "previousStatement": null, "nextStatement": null, "colour": "#ec4899" });
+            }
+        };
+        Blockly.Blocks['turtle_color'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_color", "message0": "Đổi màu bút: %1", "args0": [{ "type": "field_colour", "name": "COLOR", "colour": "#3b82f6" }], "previousStatement": null, "nextStatement": null, "colour": "#db2777" });
+            }
+        };
+        Blockly.Blocks['turtle_width'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_width", "message0": "Đổi kích thước nét: %1", "args0": [{ "type": "input_value", "name": "WIDTH", "check": "Number" }], "previousStatement": null, "nextStatement": null, "colour": "#f43f5e" });
+            }
+        };
+        Blockly.Blocks['py_print'] = {
+            init: function () {
+                this.jsonInit({ "type": "py_print", "message0": "In ra màn hình %1", "args0": [{ "type": "input_value", "name": "TEXT" }], "previousStatement": null, "nextStatement": null, "colour": "#06b6d4" });
+            }
+        };
+        Blockly.Blocks['py_input'] = {
+            init: function () {
+                this.jsonInit({ "type": "py_input", "message0": "Hỏi và đợi nhập %1", "args0": [{ "type": "input_value", "name": "TEXT" }], "output": null, "colour": "#0ea5e9" });
+            }
+        };
+        Blockly.Blocks['py_to_int'] = {
+            init: function () {
+                this.jsonInit({ "type": "py_to_int", "message0": "Đổi %1 thành số nguyên (int)", "args0": [{ "type": "input_value", "name": "VALUE" }], "output": "Number", "colour": "#6366f1" });
+            }
+        };
+        Blockly.Blocks['py_to_float'] = {
+            init: function () {
+                this.jsonInit({ "type": "py_to_float", "message0": "Đổi %1 thành số thập phân (float)", "args0": [{ "type": "input_value", "name": "VALUE" }], "output": "Number", "colour": "#6366f1" });
+            }
+        };
+
+        Blockly.Blocks['turtle_clear'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_clear", "message0": "Xóa tranh đã vẽ", "previousStatement": null, "nextStatement": null, "colour": "#64748b" });
+            }
+        };
+        Blockly.Blocks['turtle_home'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_home", "message0": "Về Trung tâm", "previousStatement": null, "nextStatement": null, "colour": "#14b8a6" });
+            }
+        };
+        Blockly.Blocks['event_start'] = {
+            init: function () {
+                this.jsonInit({ "type": "event_start", "message0": "Khi bấm nút chạy", "nextStatement": null, "colour": "#f59e0b" });
+            }
+        };
+    </script>
+
+    <script>
+        function getJsInputValue(block, generator, name, defaultValue) {
+            const activeGen = generator || (typeof javascript !== 'undefined' ? javascript.javascriptGenerator : Blockly.JavaScript);
+            let orderVal = activeGen && activeGen.ORDER_ATOMIC !== undefined ? activeGen.ORDER_ATOMIC : 99;
+            return activeGen.valueToCode(block, name, orderVal) || defaultValue;
+        }
+        function getPyInputValue(block, generator, name, defaultValue) {
+            const activeGen = generator || (typeof python !== 'undefined' ? python.pythonGenerator : Blockly.Python);
+            let orderVal = activeGen && activeGen.ORDER_ATOMIC !== undefined ? activeGen.ORDER_ATOMIC : 99;
+            return activeGen.valueToCode(block, name, orderVal) || defaultValue;
+        }
+
+        function getExplainInputValue(block, name, defaultValue) {
+            return explainGen.valueToCode(block, name, explainGen.ORDER_NONE) || defaultValue;
+        }
+
+        const explainGen = new Blockly.Generator('Explain');
+        explainGen.ORDER_ATOMIC = 0;
+        explainGen.ORDER_NONE = 99;
+        explainGen.init = function (workspace) { };
+        explainGen.finish = function (code) { return code; };
+        explainGen.scrub_ = function (block, code, opt_thisOnly) {
+            const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
+            const nextCode = opt_thisOnly ? '' : explainGen.blockToCode(nextBlock);
+            return code + nextCode;
+        };
+
+        function registerAllGenerators() {
+            const jsGen = typeof javascript !== 'undefined' ? javascript.javascriptGenerator : Blockly.JavaScript;
+            const pyGen = typeof python !== 'undefined' ? python.pythonGenerator : Blockly.Python;
+
+            if (!jsGen.forBlock) jsGen.forBlock = {};
+            if (!pyGen.forBlock) pyGen.forBlock = {};
+            if (!explainGen.forBlock) explainGen.forBlock = {};
+
+            const mapBlock = (name, jsFunc, pyFunc, explainFunc) => {
+                jsGen.forBlock[name] = jsFunc; jsGen[name] = jsFunc;
+                pyGen.forBlock[name] = pyFunc; pyGen[name] = pyFunc;
+                if (explainFunc) {
+                    explainGen.forBlock[name] = explainFunc; explainGen[name] = explainFunc;
+                }
+            };
+
+            mapBlock('turtle_forward',
+                (b, g) => `queueCommand({type: "forward", value: ${getJsInputValue(b, g, 'STEPS', '10')}});\n`,
+                (b, g) => `turtle.forward(${getPyInputValue(b, g, 'STEPS', '10')})\n`,
+                (b) => `🐢 Rùa tiến về phía trước ${getExplainInputValue(b, 'STEPS', '10')} bước\n`
+            );
+            mapBlock('turtle_backward',
+                (b, g) => `queueCommand({type: "backward", value: ${getJsInputValue(b, g, 'STEPS', '10')}});\n`,
+                (b, g) => `turtle.backward(${getPyInputValue(b, g, 'STEPS', '10')})\n`,
+                (b) => `🐢 Rùa lùi về phía sau ${getExplainInputValue(b, 'STEPS', '10')} bước\n`
+            );
+            mapBlock('turtle_right',
+                (b, g) => `queueCommand({type: "right", value: ${getJsInputValue(b, g, 'DEGREES', '90')}});\n`,
+                (b, g) => `turtle.right(${getPyInputValue(b, g, 'DEGREES', '90')})\n`,
+                (b) => `🐢 Rùa xoay phải ${getExplainInputValue(b, 'DEGREES', '90')} độ\n`
+            );
+            mapBlock('turtle_left',
+                (b, g) => `queueCommand({type: "left", value: ${getJsInputValue(b, g, 'DEGREES', '90')}});\n`,
+                (b, g) => `turtle.left(${getPyInputValue(b, g, 'DEGREES', '90')})\n`,
+                (b) => `🐢 Rùa xoay trái ${getExplainInputValue(b, 'DEGREES', '90')} độ\n`
+            );
+            mapBlock('turtle_pen',
+                (b, g) => `queueCommand({type: "pen", value: ${b.getFieldValue('PEN_STATE') === 'pendown' ? 'true' : 'false'}});\n`,
+                (b, g) => b.getFieldValue('PEN_STATE') === 'pendown' ? 'turtle.pendown()\n' : 'turtle.penup()\n',
+                (b) => `🐢 Rùa ${b.getFieldValue('PEN_STATE') === 'pendown' ? 'đặt bút xuống để vẽ' : 'nhấc bút lên không vẽ nữa'}\n`
+            );
+            mapBlock('turtle_color',
+                (b, g) => `queueCommand({type: "color", value: "${b.getFieldValue('COLOR')}"});\n`,
+                (b, g) => `turtle.color("${b.getFieldValue('COLOR')}")\n`,
+                (b) => `🎨 Đổi màu bút vẽ thành màu ${b.getFieldValue('COLOR')}\n`
+            );
+            mapBlock('turtle_width',
+                (b, g) => `queueCommand({type: "width", value: ${getJsInputValue(b, g, 'WIDTH', '3')}});\n`,
+                (b, g) => `turtle.width(${getPyInputValue(b, g, 'WIDTH', '3')})\n`,
+                (b) => `🖍️ Đổi độ dày nét vẽ thành ${getExplainInputValue(b, 'WIDTH', '3')}\n`
+            );
+            mapBlock('py_print',
+                (b, g) => `queueCommand({type: "print", value: ${getJsInputValue(b, g, 'TEXT', '""')}});\n`,
+                (b, g) => `print(${getPyInputValue(b, g, 'TEXT', '""')})\n`,
+                (b) => `👉 In ra màn hình nội dung: ${getExplainInputValue(b, 'TEXT', '""')}\n`
+            );
+            mapBlock('py_input',
+                (b, g) => [`(await customPrompt(${getJsInputValue(b, g, 'TEXT', '""')}))`, (g && g.ORDER_FUNCTION_CALL !== undefined ? g.ORDER_FUNCTION_CALL : 99)],
+                (b, g) => [`input(${getPyInputValue(b, g, 'TEXT', '""')})`, (g && g.ORDER_FUNCTION_CALL !== undefined ? g.ORDER_FUNCTION_CALL : 99)],
+                (b) => [`(Hỏi người dùng: ${getExplainInputValue(b, 'TEXT', '""')})`, explainGen.ORDER_NONE]
+            );
+            mapBlock('py_to_int',
+                (b, g) => [`parseInt(${getJsInputValue(b, g, 'VALUE', '0')} || 0)`, (g && g.ORDER_FUNCTION_CALL !== undefined ? g.ORDER_FUNCTION_CALL : 99)],
+                (b, g) => [`int(${getPyInputValue(b, g, 'VALUE', '0')})`, (g && g.ORDER_FUNCTION_CALL !== undefined ? g.ORDER_FUNCTION_CALL : 99)],
+                (b) => [`(chuyển ${getExplainInputValue(b, 'VALUE', '0')} thành số nguyên)`, explainGen.ORDER_NONE]
+            );
+            mapBlock('py_to_float',
+                (b, g) => [`parseFloat(${getJsInputValue(b, g, 'VALUE', '0')} || 0)`, (g && g.ORDER_FUNCTION_CALL !== undefined ? g.ORDER_FUNCTION_CALL : 99)],
+                (b, g) => [`float(${getPyInputValue(b, g, 'VALUE', '0')})`, (g && g.ORDER_FUNCTION_CALL !== undefined ? g.ORDER_FUNCTION_CALL : 99)],
+                (b) => [`(chuyển ${getExplainInputValue(b, 'VALUE', '0')} thành số thập phân)`, explainGen.ORDER_NONE]
+            );
+
+            mapBlock('turtle_clear', (b, g) => `queueCommand({type: "clear"});\n`, (b, g) => `turtle.clear()\n`, (b) => `🧹 Xóa toàn bộ hình đã vẽ\n`);
+            mapBlock('turtle_home', (b, g) => `queueCommand({type: "home"});\n`, (b, g) => `turtle.home()\n`, (b) => `🏠 Đưa rùa về vị trí trung tâm\n`);
+            mapBlock('event_start', (b, g) => `// Bắt đầu\n`, (b, g) => `# Bắt đầu\n`, (b) => `🚀 <b class="text-indigo-800">Bắt đầu chương trình</b>\n`);
+
+            // Ghi đè khối nối chuỗi (text_join) để tạo ra f-string trong Python và template literal trong JS
+            jsGen.forBlock['text_join'] = function (block) {
+                if (block.itemCount_ === 0) return ["''", jsGen.ORDER_ATOMIC];
+                let elements = [];
+                for (let i = 0; i < block.itemCount_; i++) {
+                    let code = jsGen.valueToCode(block, 'ADD' + i, jsGen.ORDER_NONE) || "''";
+                    elements.push(code);
+                }
+                return [`[${elements.join(', ')}].join(' ')`, jsGen.ORDER_ATOMIC];
+            };
+            jsGen['text_join'] = jsGen.forBlock['text_join'];
+
+            pyGen.forBlock['text_join'] = function (block) {
+                if (block.itemCount_ === 0) return ["''", pyGen.ORDER_ATOMIC];
+                let elements = [];
+                for (let i = 0; i < block.itemCount_; i++) {
+                    let code = pyGen.valueToCode(block, 'ADD' + i, pyGen.ORDER_NONE) || "''";
+                    elements.push(code);
+                }
+                return [elements.join(', '), pyGen.ORDER_ATOMIC];
+            };
+            pyGen['text_join'] = pyGen.forBlock['text_join'];
+
+            explainGen.forBlock['text_join'] = function (block) {
+                if (block.itemCount_ === 0) return ["''", explainGen.ORDER_ATOMIC];
+                let elements = [];
+                for (let i = 0; i < block.itemCount_; i++) {
+                    let code = explainGen.valueToCode(block, 'ADD' + i, explainGen.ORDER_NONE) || "''";
+                    elements.push(code);
+                }
+                return [`[${elements.join(' và ')}]`, explainGen.ORDER_NONE];
+            };
+            explainGen['text_join'] = explainGen.forBlock['text_join'];
+
+            explainGen.forBlock['text'] = function (block) {
+                return ["\"" + block.getFieldValue('TEXT') + "\"", explainGen.ORDER_ATOMIC];
+            };
+            explainGen['text'] = explainGen.forBlock['text'];
+
+            explainGen.forBlock['variables_set'] = function (block) {
+                return `👉 Lưu giá trị ${getExplainInputValue(block, 'VALUE', '0')} vào một chiếc hộp có tên là <b class="text-indigo-600">${block.getField('VAR').getText()}</b>\n`;
+            };
+            explainGen['variables_set'] = explainGen.forBlock['variables_set'];
+
+            explainGen.forBlock['variables_get'] = function (block) {
+                return [block.getField('VAR').getText(), explainGen.ORDER_ATOMIC];
+            };
+            explainGen['variables_get'] = explainGen.forBlock['variables_get'];
+
+            explainGen.forBlock['math_number'] = function (block) {
+                return [block.getFieldValue('NUM'), explainGen.ORDER_ATOMIC];
+            };
+            explainGen['math_number'] = explainGen.forBlock['math_number'];
+
+            explainGen.forBlock['math_arithmetic'] = function (block) {
+                const ops = { 'ADD': 'cộng', 'MINUS': 'trừ', 'MULTIPLY': 'nhân', 'DIVIDE': 'chia', 'POWER': 'mũ' };
+                const op = ops[block.getFieldValue('OP')] || '+';
+                const a = getExplainInputValue(block, 'A', '0');
+                const b = getExplainInputValue(block, 'B', '0');
+                return [`(${a} ${op} ${b})`, explainGen.ORDER_NONE];
+            };
+            explainGen['math_arithmetic'] = explainGen.forBlock['math_arithmetic'];
+
+            explainGen.forBlock['controls_if'] = function (block) {
+                let code = '';
+                for (let i = 0; i <= block.elseifCount_; i++) {
+                    const cond = getExplainInputValue(block, 'IF' + i, 'sai');
+                    const branch = explainGen.statementToCode(block, 'DO' + i);
+                    if (i === 0) code += `👉 <b class="text-amber-600">NẾU</b> điều kiện (${cond}) đúng thì:\n${branch}`;
+                    else code += `👉 <b class="text-amber-600">NGƯỢC LẠI, NẾU</b> điều kiện (${cond}) đúng thì:\n${branch}`;
+                }
+                if (block.elseCount_) {
+                    const branch = explainGen.statementToCode(block, 'ELSE');
+                    code += `👉 <b class="text-amber-600">TRONG CÁC TRƯỜNG HỢP CÒN LẠI</b> thì:\n${branch}`;
+                }
+                return code;
+            };
+            explainGen['controls_if'] = explainGen.forBlock['controls_if'];
+
+            explainGen.forBlock['logic_compare'] = function (block) {
+                const ops = { 'EQ': 'bằng', 'NEQ': 'khác', 'LT': 'nhỏ hơn', 'LTE': 'nhỏ hơn hoặc bằng', 'GT': 'lớn hơn', 'GTE': 'lớn hơn hoặc bằng' };
+                const op = ops[block.getFieldValue('OP')] || 'bằng';
+                const a = getExplainInputValue(block, 'A', '0');
+                const b = getExplainInputValue(block, 'B', '0');
+                return [`(${a} ${op} ${b})`, explainGen.ORDER_NONE];
+            };
+            explainGen['logic_compare'] = explainGen.forBlock['logic_compare'];
+
+            explainGen.forBlock['logic_operation'] = function (block) {
+                const ops = { 'AND': 'và', 'OR': 'hoặc' };
+                const op = ops[block.getFieldValue('OP')] || 'và';
+                const a = getExplainInputValue(block, 'A', 'sai');
+                const b = getExplainInputValue(block, 'B', 'sai');
+                return [`(${a} ${op} ${b})`, explainGen.ORDER_NONE];
+            };
+            explainGen['logic_operation'] = explainGen.forBlock['logic_operation'];
+
+            explainGen.forBlock['controls_repeat_ext'] = function (block) {
+                const repeats = getExplainInputValue(block, 'TIMES', '0');
+                const branch = explainGen.statementToCode(block, 'DO') || '  (chưa có lệnh nào)\n';
+                let code = `🔁 <b class="text-blue-600">VÒNG LẶP:</b> Lặp lại khối lệnh bên trong chính xác ${repeats} lần:\n`;
+                code += `  <b>Lần lặp 1:</b>\n${branch}`;
+                code += `  <b>Lần lặp 2:</b>\n${branch}`;
+                code += `  ... lặp tiếp tục như vậy đến lần thứ ${repeats}\n`;
+                return code;
+            };
+            explainGen['controls_repeat_ext'] = explainGen.forBlock['controls_repeat_ext'];
+
+            explainGen.forBlock['controls_for'] = function (block) {
+                const variable0 = block.getField('VAR').getText();
+                const from = getExplainInputValue(block, 'FROM', '0');
+                const to = getExplainInputValue(block, 'TO', '0');
+                const by = getExplainInputValue(block, 'BY', '1');
+                const branch = explainGen.statementToCode(block, 'DO') || '  (chưa có lệnh nào)\n';
+                let code = `🔁 <b class="text-blue-600">VÒNG LẶP (for):</b> Cho biến <b class="text-indigo-600">${variable0}</b> chạy từ ${from} đến ${to}:\n`;
+                code += `  <b>Lần lặp 1</b> (khi <b class="text-indigo-600">${variable0}</b> = ${from}):\n${branch}`;
+                code += `  <b>Lần lặp 2</b> (khi biến chạy tiếp):\n${branch}`;
+                code += `  ... lặp tiếp tục cho đến khi <b class="text-indigo-600">${variable0}</b> = ${to}\n`;
+                return code;
+            };
+            explainGen['controls_for'] = explainGen.forBlock['controls_for'];
+
+            explainGen.forBlock['controls_whileUntil'] = function (block) {
+                const cond = getExplainInputValue(block, 'BOOL', 'sai');
+                const branch = explainGen.statementToCode(block, 'DO') || '  (chưa có lệnh nào)\n';
+                let code = `🔁 <b class="text-blue-600">VÒNG LẶP (while):</b> Liên tục kiểm tra điều kiện (${cond}):\n`;
+                code += `  <b>Lần lặp 1</b> (điều kiện đúng nên chạy lệnh):\n${branch}`;
+                code += `  <b>Lần lặp 2</b> (điều kiện vẫn đúng nên chạy tiếp):\n${branch}`;
+                code += `  ... lặp tiếp tục đến khi điều kiện (${cond}) bị sai thì dừng lại.\n`;
+                return code;
+            };
+            explainGen['controls_whileUntil'] = explainGen.forBlock['controls_whileUntil'];
+
+            // Thêm hiệu ứng bong bóng hiển thị số lần lặp cho vòng lặp
+            jsGen.forBlock['controls_repeat_ext'] = function (block) {
+                let repeats = jsGen.valueToCode(block, 'TIMES', jsGen.ORDER_ASSIGNMENT) || '0';
+                let branch = jsGen.statementToCode(block, 'DO');
+                let loopVar = jsGen.nameDB_.getDistinctName('count', Blockly.VARIABLE_CATEGORY_NAME);
+                let code = `for (var ${loopVar} = 0; ${loopVar} < ${repeats}; ${loopVar}++) {\n`;
+                code += `  queueCommand({type: "loop_text", value: "Lặp lần " + (${loopVar} + 1)});\n`;
+                code += branch;
+                code += `}\n`;
+                return code;
+            };
+            jsGen['controls_repeat_ext'] = jsGen.forBlock['controls_repeat_ext'];
+
+            jsGen.forBlock['controls_for'] = function (block) {
+                let variable0 = jsGen.nameDB_.getName(block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME);
+                let argument0 = jsGen.valueToCode(block, 'FROM', jsGen.ORDER_ASSIGNMENT) || '0';
+                let argument1 = jsGen.valueToCode(block, 'TO', jsGen.ORDER_ASSIGNMENT) || '0';
+                let increment = jsGen.valueToCode(block, 'BY', jsGen.ORDER_ASSIGNMENT) || '1';
+                let branch = jsGen.statementToCode(block, 'DO');
+                let code = `for (var ${variable0} = ${argument0}; ${variable0} <= ${argument1}; ${variable0} += ${increment}) {\n`;
+                code += `  queueCommand({type: "loop_text", value: "Lặp: " + "${block.getField('VAR').getText()}" + " = " + ${variable0}});\n`;
+                code += branch;
+                code += `}\n`;
+                return code;
+            };
+            jsGen['controls_for'] = jsGen.forBlock['controls_for'];
+        }
+
+        let workspace;
+        let isMuted = false;
+        let synth;
+        let activeCompanion = 'turtle';
+        let activeWorld = 'garden';
+
+        function initSound() {
+            if (!synth) synth = new Tone.Synth({ oscillator: { type: "sine" } }).toDestination();
+        }
+        function playTone(note, dur) { if (!isMuted) { initSound(); Tone.start(); synth.triggerAttackRelease(note, dur); } }
+        function playClick() { playTone("C6", "32n"); }
+
+        function toggleSound() {
+            isMuted = !isMuted;
+            document.getElementById('sound-icon').className = isMuted ? "fa-solid fa-volume-xmark text-lg" : "fa-solid fa-volume-high text-lg";
+            if (!isMuted) playClick();
+        }
+    </script>
+
+    <script>
+        const canvas = document.getElementById('turtle-canvas');
+        const ctx = canvas.getContext('2d');
+        let paths = [];
+        let turtleStart = { x: 270, y: 150, angle: -90 };
+        let turtleState = { x: 270, y: 150, angle: -90, penDown: true, color: '#3b82f6', width: 3 };
+
+        function drawBackground() {
+            if (activeWorld === 'garden') {
+                ctx.fillStyle = '#e8f5e9'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            } else if (activeWorld === 'ocean') {
+                ctx.fillStyle = '#e0f7fa'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            } else if (activeWorld === 'space') {
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            } else if (activeWorld === 'notebook') {
+                ctx.fillStyle = '#fffdf5'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1;
+                for (let j = 20; j < canvas.height; j += 20) { ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke(); }
+            }
+        }
+
+        function drawCompanion(context, x, y, angleDeg) {
+            context.save(); context.translate(x, y); context.rotate(angleDeg * Math.PI / 180);
+            const icons = { turtle: '🐢', cat: '🐱', rabbit: '🐰', bee: '🐝', rocket: '🚀' };
+            const icon = icons[activeCompanion] || '🐢';
+            context.font = '24px Arial';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+
+            // Xoay thêm 90 độ vì icon emoji thường hướng lên trên, 
+            // trong khi góc 0 độ của hệ tọa độ là hướng sang phải.
+            context.rotate(Math.PI / 2);
+
+            context.fillText(icon, 0, 0);
+            context.restore();
+        }
+
+        function drawSpeechBubble(context, x, y, text) {
+            context.save();
+            context.font = 'bold 14px "Nunito", sans-serif';
+            const paddingX = 12;
+            const paddingY = 8;
+            const metrics = context.measureText(text);
+            const w = metrics.width + paddingX * 2;
+            const h = 18 + paddingY * 2;
+
+            const bx = x + 15;
+            const by = y - 55;
+
+            context.fillStyle = 'white';
+            context.strokeStyle = '#94a3b8';
+            context.lineWidth = 2;
+            context.beginPath();
+            if (context.roundRect) {
+                context.roundRect(bx, by, w, h, 10);
+            } else {
+                context.rect(bx, by, w, h);
+            }
+            context.fill();
+            context.stroke();
+
+            context.beginPath();
+            context.moveTo(bx + 10, by + h);
+            context.lineTo(bx - 5, by + h + 15);
+            context.lineTo(bx + 25, by + h);
+            context.fill();
+            context.stroke();
+
+            context.beginPath();
+            context.moveTo(bx + 11, by + h);
+            context.lineTo(bx + 24, by + h);
+            context.strokeStyle = 'white';
+            context.lineWidth = 3;
+            context.stroke();
+
+            context.fillStyle = '#334155';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(text, bx + w / 2, by + h / 2);
+            context.restore();
+        }
+
+        function drawCanvas() {
+            drawBackground();
+            paths.forEach(p => {
+                ctx.strokeStyle = p.color; ctx.lineWidth = p.width; ctx.lineCap = 'round';
+                ctx.beginPath(); ctx.moveTo(p.x1, p.y1); ctx.lineTo(p.x2, p.y2); ctx.stroke();
+            });
+            if (currentCommand && (currentCommand.type === 'forward' || currentCommand.type === 'backward')) {
+                if (turtleState.penDown) {
+                    ctx.strokeStyle = turtleState.color; ctx.lineWidth = turtleState.width; ctx.lineCap = 'round';
+                    ctx.beginPath(); ctx.moveTo(currentCommand.startX, currentCommand.startY); ctx.lineTo(turtleState.x, turtleState.y); ctx.stroke();
+                }
+            }
+            drawCompanion(ctx, turtleState.x, turtleState.y, turtleState.angle);
+
+            if (turtleState.speechBubble) {
+                if (Date.now() - turtleState.speechBubble.time < 3000) {
+                    drawSpeechBubble(ctx, turtleState.x, turtleState.y, turtleState.speechBubble.text);
+                } else {
+                    turtleState.speechBubble = null;
+                }
+            }
+
+            if (turtleState.loopText) {
+                ctx.save();
+                ctx.font = 'bold 16px "Nunito", sans-serif';
+                const metrics = ctx.measureText(turtleState.loopText);
+                const padding = 10;
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                if (ctx.roundRect) {
+                    ctx.roundRect(15, 15, metrics.width + padding * 2, 24 + padding * 2, 8);
+                } else {
+                    ctx.rect(15, 15, metrics.width + padding * 2, 24 + padding * 2);
+                }
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#10b981'; // Green color
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(turtleState.loopText, 15 + padding, 15 + 12 + padding);
+                ctx.restore();
+            }
+        }
+
+        function updateCoordsDisplay() {
+            // Đã ẩn các thành phần giao diện không liên quan đến Python
+        }
+
+        // Xử lý kéo thả nhân vật trên sân khấu
+        let isDraggingTurtle = false;
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top) * scaleY;
+            const dist = Math.hypot(mouseX - turtleState.x, mouseY - turtleState.y);
+            if (dist < 30) { isDraggingTurtle = true; canvas.style.cursor = 'grabbing'; }
+        });
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top) * scaleY;
+            if (isDraggingTurtle) {
+                turtleState.x = mouseX; turtleState.y = mouseY; drawCanvas();
+            } else {
+                const dist = Math.hypot(mouseX - turtleState.x, mouseY - turtleState.y);
+                canvas.style.cursor = dist < 30 ? 'grab' : 'default';
+            }
+        });
+        window.addEventListener('mouseup', () => {
+            if (isDraggingTurtle) {
+                isDraggingTurtle = false;
+                canvas.style.cursor = 'default';
+                turtleStart.x = turtleState.x;
+                turtleStart.y = turtleState.y;
+            }
+        });
+        canvas.addEventListener('touchstart', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const touch = e.touches[0];
+            const mouseX = (touch.clientX - rect.left) * scaleX;
+            const mouseY = (touch.clientY - rect.top) * scaleY;
+            const dist = Math.hypot(mouseX - turtleState.x, mouseY - turtleState.y);
+            if (dist < 40) { isDraggingTurtle = true; e.preventDefault(); }
+        }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => {
+            if (isDraggingTurtle) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const touch = e.touches[0];
+                turtleState.x = (touch.clientX - rect.left) * scaleX;
+                turtleState.y = (touch.clientY - rect.top) * scaleY;
+                drawCanvas();
+                e.preventDefault();
+            }
+        }, { passive: false });
+        window.addEventListener('touchend', () => {
+            if (isDraggingTurtle) {
+                isDraggingTurtle = false;
+                turtleStart.x = turtleState.x;
+                turtleStart.y = turtleState.y;
+            }
+        });
+
+        function hardResetStage() {
+            playClick();
+            turtleStart = { x: 270, y: 150, angle: -90 };
+            resetTurtle();
+        }
+
+        function resetTurtle() {
+            paths = [];
+            turtleState = { x: turtleStart.x, y: turtleStart.y, angle: turtleStart.angle, penDown: true, color: '#3b82f6', width: 3 };
+            updateCoordsDisplay(); drawCanvas();
+        }
+
+        function changeCompanion(id) {
+            activeCompanion = id;
+            const names = { turtle: 'Rùa Xanh', cat: 'Mèo Vàng', rabbit: 'Thỏ Trắng', bee: 'Ong Vàng', rocket: 'Tên Lửa' };
+            const icons = { turtle: '🐢', cat: '🐱', rabbit: '🐰', bee: '🐝', rocket: '🚀' };
+
+            // Removed old Sprite Panel Updates
+
+            Array.from(document.getElementById('character-group').children).forEach(btn => {
+                btn.className = btn.id === 'btn-char-' + id ? "bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-indigo-500 text-white border-2 border-indigo-600 shadow-md"
+                    : "bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200";
+            });
+            playTone("G4", "16n"); drawCanvas();
+        }
+
+        function changeWorld(id) {
+            activeWorld = id;
+            const icons = { garden: '🏡', ocean: '🌊', space: '🌌', notebook: '📝' };
+            // Removed old Backdrop Panel Updates
+
+            Array.from(document.getElementById('world-group').children).forEach(btn => {
+                btn.className = btn.id === 'btn-world-' + id ? "bouncy-btn py-2 px-3 rounded-xl bg-indigo-500 text-white border-2 border-indigo-600 flex items-center justify-center gap-2"
+                    : "bouncy-btn py-2 px-3 rounded-xl bg-white text-slate-700 border-2 border-slate-200 flex items-center justify-center gap-2";
+            });
+            playTone("C5", "16n"); drawCanvas();
+        }
+
+        function openCustomizationModal() { playClick(); document.getElementById('custom-modal').classList.remove('hidden'); }
+        function closeCustomizationModal() { playClick(); document.getElementById('custom-modal').classList.add('hidden'); }
+    </script>
+
+    <script>
+        let commandQueue = []; let currentCommand = null; let animationProgress = 0; let executionTimer = null;
+
+        function queueCommand(cmd) {
+            commandQueue.push(cmd);
+            if (!executionTimer && !currentCommand) {
+                startAnimationLoop();
+            }
+        }
+        function addConsoleMessage(msg) {
+            const box = document.getElementById('console-output');
+            if (box.textContent.startsWith("Sẵn sàng")) box.textContent = "";
+            box.textContent += msg + "\n"; box.scrollTop = box.scrollHeight;
+        }
+
+        function runCode() {
+            stopExecution(); resetTurtle(); document.getElementById('console-output').textContent = "";
+            playClick(); switchTab('console');
+            try {
+                const jsGen = typeof javascript !== 'undefined' ? javascript.javascriptGenerator : Blockly.JavaScript;
+                const startBlock = workspace.getTopBlocks(false).find(b => b.type === 'event_start');
+                if (startBlock) {
+                    jsGen.init(workspace);
+                    let code = jsGen.blockToCode(startBlock);
+                    code = jsGen.finish(code);
+                    let asyncCode = `(async function() {\n${code}\n})();`;
+                    eval(asyncCode);
+                    startAnimationLoop();
+                } else {
+                    addConsoleMessage("Không tìm thấy khối '▶ Khi bấm nút chạy'!");
+                }
+            } catch (err) { addConsoleMessage("Lỗi: " + err.message); }
+        }
+
+        function stopExecution() {
+            if (executionTimer) cancelAnimationFrame(executionTimer); executionTimer = null;
+            commandQueue = []; currentCommand = null; animationProgress = 0; drawCanvas();
+        }
+
+        function startAnimationLoop() {
+            function step() {
+                const sliderVal = parseInt(document.getElementById('speed-slider').value);
+                // Biến đổi hàm mũ để mức 1 cực kỳ chậm (quan sát vòng lặp), mức 10 cực kỳ nhanh
+                const speedMulti = Math.pow(sliderVal / 5, 2) * 5;
+                if (!currentCommand) {
+                    if (commandQueue.length > 0) {
+                        currentCommand = commandQueue.shift(); animationProgress = 0;
+                        if (currentCommand.type === 'forward' || currentCommand.type === 'backward') {
+                            currentCommand.startX = turtleState.x; currentCommand.startY = turtleState.y;
+                            let dist = currentCommand.type === 'backward' ? -currentCommand.value : currentCommand.value;
+                            const rad = turtleState.angle * Math.PI / 180;
+                            currentCommand.endX = turtleState.x + dist * Math.cos(rad); currentCommand.endY = turtleState.y + dist * Math.sin(rad);
+                        } else if (currentCommand.type === 'right' || currentCommand.type === 'left') {
+                            currentCommand.startAngle = turtleState.angle;
+                            currentCommand.endAngle = turtleState.angle + (currentCommand.type === 'left' ? -currentCommand.value : currentCommand.value);
+                        }
+                    } else {
+                        currentCommand = null;
+                        drawCanvas();
+                        if (turtleState.speechBubble) {
+                            executionTimer = requestAnimationFrame(step);
+                        } else {
+                            executionTimer = null;
+                        }
+                        return;
+                    }
+                }
+
+                if (currentCommand) {
+                    animationProgress += 0.02 * speedMulti; if (animationProgress >= 1) animationProgress = 1;
+
+                    if (currentCommand.type === 'forward' || currentCommand.type === 'backward') {
+                        turtleState.x = currentCommand.startX + (currentCommand.endX - currentCommand.startX) * animationProgress;
+                        turtleState.y = currentCommand.startY + (currentCommand.endY - currentCommand.startY) * animationProgress;
+                        if (animationProgress >= 1) {
+                            if (turtleState.penDown) paths.push({ x1: currentCommand.startX, y1: currentCommand.startY, x2: currentCommand.endX, y2: currentCommand.endY, color: turtleState.color, width: turtleState.width });
+                            turtleState.x = currentCommand.endX; turtleState.y = currentCommand.endY; currentCommand = null;
+                        }
+                    } else if (currentCommand.type === 'right' || currentCommand.type === 'left') {
+                        turtleState.angle = currentCommand.startAngle + (currentCommand.endAngle - currentCommand.startAngle) * animationProgress;
+                        if (animationProgress >= 1) { turtleState.angle = currentCommand.endAngle; currentCommand = null; }
+                    } else if (currentCommand.type === 'pen') {
+                        turtleState.penDown = currentCommand.value; currentCommand = null;
+                    } else if (currentCommand.type === 'color') {
+                        turtleState.color = currentCommand.value; currentCommand = null;
+                    } else if (currentCommand.type === 'width') {
+                        turtleState.width = Math.max(1, currentCommand.value); currentCommand = null;
+                    } else if (currentCommand.type === 'clear') {
+                        paths = []; currentCommand = null;
+                    } else if (currentCommand.type === 'home') {
+                        turtleState.x = 270; turtleState.y = 150; turtleState.angle = -90; currentCommand = null;
+                    } else if (currentCommand.type === 'print') {
+                        if (!currentCommand.started) {
+                            currentCommand.started = true;
+                            addConsoleMessage(currentCommand.value);
+                        }
+                        // Cập nhật liên tục thời gian để bong bóng không biến mất trong lúc đang "nói"
+                        turtleState.speechBubble = { text: currentCommand.value, time: Date.now() };
+                        if (animationProgress >= 1) currentCommand = null;
+                    } else if (currentCommand.type === 'loop_text') {
+                        turtleState.loopText = currentCommand.value;
+                        currentCommand = null;
+                    } else { currentCommand = null; }
+
+                    updateCoordsDisplay(); drawCanvas();
+                }
+                executionTimer = requestAnimationFrame(step);
+            }
+            executionTimer = requestAnimationFrame(step);
+        }
+
+        function switchTab(tabId) {
+            const btnCode = document.getElementById('tab-code-btn');
+            const btnConsole = document.getElementById('tab-console-btn');
+            const btnExplain = document.getElementById('tab-explain-btn');
+            const paneCode = document.getElementById('tab-code');
+            const paneConsole = document.getElementById('tab-console');
+            const paneExplain = document.getElementById('tab-explain');
+
+            const activeClass = "px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all border-b-2 border-indigo-500 text-indigo-600 bg-white shadow-sm";
+            const inactiveClass = "px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-slate-800 bg-transparent";
+
+            if (btnCode) btnCode.className = tabId === 'code' ? activeClass : inactiveClass;
+            if (btnConsole) btnConsole.className = tabId === 'console' ? activeClass : inactiveClass;
+            if (btnExplain) btnExplain.className = tabId === 'explain' ? activeClass : inactiveClass;
+
+            if (paneCode) paneCode.classList.toggle('hidden', tabId !== 'code');
+            if (paneConsole) paneConsole.classList.toggle('hidden', tabId !== 'console');
+            if (paneExplain) paneExplain.classList.toggle('hidden', tabId !== 'explain');
+        }
+
+        function handleWorkspaceChange() {
+            const pyGen = typeof python !== 'undefined' ? python.pythonGenerator : Blockly.Python;
+            const startBlock = workspace.getTopBlocks(false).find(b => b.type === 'event_start');
+            let pythonRaw = "";
+            let explainRaw = "";
+            if (startBlock) {
+                pyGen.init(workspace);
+                pythonRaw = pyGen.blockToCode(startBlock);
+                pythonRaw = pyGen.finish(pythonRaw);
+                // Loại bỏ các khai báo biến "= None" vô nghĩa của Blockly Python
+                pythonRaw = pythonRaw.replace(/^[a-zA-Z0-9_]+\s*=\s*None\r?\n/gm, '');
+
+                explainGen.init(workspace);
+                explainRaw = explainGen.blockToCode(startBlock);
+                explainRaw = explainGen.finish(explainRaw);
+
+                let lines = explainRaw.split('\n').filter(l => l.trim().length > 0);
+                explainRaw = lines.map((line, index) => {
+                    let indentMatch = line.match(/^\s*/);
+                    let indent = indentMatch ? indentMatch[0] : '';
+                    let cleanLine = line.substring(indent.length);
+                    return `<span class="text-indigo-600 font-bold">Bước ${index + 1}:</span> ${cleanLine}`;
+                }).join('<br/>');
+            }
+            let prefix = pythonRaw.includes('turtle') ? "import turtle\nt = turtle.Turtle()\n\n" : "";
+            document.getElementById('python-preview').textContent = pythonRaw.trim() === "" ? "# Hãy ghép các khối lệnh vào bên dưới khối 'Khi bấm nút chạy' nhé!" : prefix + pythonRaw;
+            document.getElementById('explain-output').innerHTML = explainRaw.trim() === "" ? "Ghép khối để xem giải thích nhé!" : explainRaw;
+        }
+
+        // Custom Flyout Scroll Logic
+        function scrollToCategory(firstBlockType) {
+            playClick();
+            const flyout = workspace.getFlyout();
+            if (flyout) {
+                const flyoutWs = flyout.getWorkspace();
+                let targetBlock = flyoutWs.getTopBlocks(false).find(b => b.type === firstBlockType);
+                let targetY = targetBlock ? targetBlock.getRelativeToSurfaceXY().y : 0;
+                if (firstBlockType === 'variables_set' && flyout.buttons_.length > 0) targetY = flyout.buttons_[0].info_.y;
+                if (flyoutWs.scrollbar) flyoutWs.scrollbar.setY(Math.max(0, (targetY * flyoutWs.scale) - 40));
+            }
+        }
+    </script>
+
+    <script>
+        window.addEventListener('load', () => {
+            // Thay đổi chữ của khối lệnh điều kiện giống Scratch
+            Blockly.Msg['CONTROLS_IF_MSG_IF'] = 'nếu';
+            Blockly.Msg['CONTROLS_IF_MSG_THEN'] = 'thì';
+            Blockly.Msg['CONTROLS_IF_MSG_ELSE'] = 'nếu không thì';
+            Blockly.Msg['CONTROLS_IF_MSG_ELSEIF'] = 'hoặc nếu';
+
+            // Ghi đè khối vòng lặp while/until để bỏ tùy chọn "cho đến khi"
+            Blockly.Blocks['controls_whileUntil'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "controls_whileUntil",
+                        "message0": "lặp lại trong khi %1",
+                        "args0": [
+                            { "type": "input_value", "name": "BOOL", "check": "Boolean" }
+                        ],
+                        "message1": "thực hiện %1",
+                        "args1": [
+                            { "type": "input_statement", "name": "DO" }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "style": "loop_blocks",
+                        "tooltip": "Lặp lại các lệnh trong khi điều kiện đúng."
+                    });
+                }
+            };
+
+            const toolboxXml = `
+                <xml id="toolbox" style="display: none">
+                    <label text="In ấn / Nhập liệu"></label>
+                    <block type="text"></block>
+                    <block type="text_join"></block>
+                    <block type="py_print"><value name="TEXT"><block type="text"><field name="TEXT">Xin chào thế giới!</field></block></value></block>
+                    <block type="py_input"><value name="TEXT"><block type="text"><field name="TEXT">Tên bạn là gì?</field></block></value></block>
+
+                    <label text="Biến số"></label>
+                    <button text="Tạo biến số mới..." callbackKey="CREATE_VARIABLE"></button>
+                    <block type="variables_set"></block>
+                    <block type="variables_get"></block>
+
+                    <label text="Toán số"></label>
+                    <block type="math_number"><field name="NUM">0</field></block>
+                    <block type="math_arithmetic"></block>
+                    <block type="py_to_int"></block>
+                    <block type="py_to_float"></block>
+
+                    <label text="Điều kiện"></label>
+                    <block type="controls_if"></block>
+                    <block type="logic_compare"></block>
+                    <block type="logic_operation"></block>
+
+                    <label text="Vòng lặp"></label>
+                    <block type="controls_whileUntil"></block>
+                    <block type="controls_for">
+                        <field name="VAR">i</field>
+                        <value name="FROM"><block type="math_number"><field name="NUM">1</field></block></value>
+                        <value name="TO"><block type="math_number"><field name="NUM">10</field></block></value>
+                        <value name="BY"><block type="math_number"><field name="NUM">1</field></block></value>
+                    </block>
+
+                    <label text="Bút vẽ"></label>
+                    <block type="turtle_pen"></block>
+                    <block type="turtle_color"></block>
+                    <block type="turtle_width"><value name="WIDTH"><block type="math_number"><field name="NUM">3</field></block></value></block>
+
+                    <label text="Di chuyển"></label>
+                    <block type="turtle_forward"><value name="STEPS"><block type="math_number"><field name="NUM">100</field></block></value></block>
+                    <block type="turtle_backward"><value name="STEPS"><block type="math_number"><field name="NUM">50</field></block></value></block>
+                    <block type="turtle_right"><value name="DEGREES"><block type="math_number"><field name="NUM">90</field></block></value></block>
+                    <block type="turtle_left"><value name="DEGREES"><block type="math_number"><field name="NUM">90</field></block></value></block>
+                    <block type="turtle_home"></block>
+                    <block type="turtle_clear"></block>
+                </xml>
+            `;
+            const div = document.createElement('div'); div.innerHTML = toolboxXml; document.body.appendChild(div);
+
+            // Đổi tên biến mặc định từ 'vật' (dịch máy) sang một tên có ý nghĩa hơn trong lập trình
+            if (Blockly.Msg) Blockly.Msg['VARIABLES_DEFAULT_NAME'] = 'a';
+
+            workspace = Blockly.inject('blockly-editor', {
+                toolbox: document.getElementById('toolbox'),
+                trashcan: false, toolboxPosition: 'start', css: true, scrollbars: true, sounds: true,
+                grid: { spacing: 25, length: 3, colour: '#cbd5e1', snap: true },
+                zoom: { controls: true, wheel: false, startScale: 1.0, maxScale: 3.0, minScale: 0.01, scaleSpeed: 1.2, pinch: true }
+            });
+
+            // Khởi tạo khối bắt đầu mặc định và không cho phép xóa
+            const defaultStartBlock = workspace.newBlock('event_start');
+            defaultStartBlock.initSvg();
+            defaultStartBlock.render();
+            defaultStartBlock.setDeletable(false);
+            defaultStartBlock.moveBy(50, 50);
+
+            // Khôi phục lại trạng thái ghi đè zoomCenter (phiên bản ổn định nhất)
+            try {
+                const originalZoomCenter = workspace.zoomCenter;
+                workspace.zoomCenter = function (type) {
+                    if (type === undefined || type === 0) {
+                        workspace.zoomToFit();
+                    } else {
+                        originalZoomCenter.call(workspace, type);
+                    }
+                };
+            } catch (e) { }
+
+            workspace.registerButtonCallback('CREATE_VARIABLE', function (button) { Blockly.Variables.createVariableButtonHandler(button.getTargetWorkspace()); });
+
+            // Spoofing technique to lock flyout size and scale perfectly
+            const fixFlyoutScale = () => {
+                const fo = workspace.getFlyout();
+                if (fo && !fo.isScalePatched) {
+                    fo.isScalePatched = true;
+                    const origPosition = fo.position;
+                    fo.position = function () {
+                        const targetWs = this.targetWorkspace || this.targetWorkspace_;
+                        if (targetWs) {
+                            const realScale = targetWs.scale; targetWs.scale = 0.8; origPosition.apply(this, arguments); targetWs.scale = realScale;
+                        } else { origPosition.apply(this, arguments); }
+                    };
+                    const origReflow = fo.reflow;
+                    fo.reflow = function () {
+                        const targetWs = this.targetWorkspace || this.targetWorkspace_;
+                        if (targetWs) {
+                            const realScale = targetWs.scale; targetWs.scale = 0.8; origReflow.apply(this, arguments); targetWs.scale = realScale;
+                        } else { origReflow.apply(this, arguments); }
+                    };
+
+                    const foWs = fo.getWorkspace();
+                    if (foWs) {
+                        foWs.isScaleLocked = true;
+                        foWs.setScale = function (scale) { Blockly.WorkspaceSvg.prototype.setScale.call(this, 0.8); };
+                        foWs.setScale(0.8);
+                    }
+
+                    // Fixed width for Scratch UI ratio
+                    fo.width_ = 260;
+                    fo.getWidth = function () { return 260; };
+                    fo.reflow(); fo.position();
+                }
+            };
+
+            registerAllGenerators();
+            workspace.addChangeListener((e) => {
+                if (e.type === Blockly.Events.VIEWPORT_CHANGE || e.type === Blockly.Events.FINISHED_LOADING) fixFlyoutScale();
+                handleWorkspaceChange();
+            });
+
+            document.getElementById('blockly-editor').addEventListener('wheel', (e) => {
+                if (e.ctrlKey) {
+                    e.preventDefault();
+                    if (workspace && workspace.zoom) {
+                        const rect = document.getElementById('blockly-editor').getBoundingClientRect();
+                        workspace.zoom(e.clientX - rect.left, e.clientY - rect.top, e.deltaY > 0 ? -1 : 1);
+                    }
+                } else {
+                    e.preventDefault();
+                    if (workspace && workspace.scrollbar) {
+                        let scrollX = workspace.scrollX;
+                        let scrollY = workspace.scrollY;
+                        if (e.shiftKey) {
+                            scrollX -= e.deltaY;
+                        } else {
+                            scrollY -= e.deltaY;
+                        }
+                        scrollX -= e.deltaX;
+                        workspace.scroll(scrollX, scrollY);
+                    }
+                }
+            }, { passive: false });
+
+            setTimeout(() => { fixFlyoutScale(); }, 500);
+            window.addEventListener('resize', () => { Blockly.svgResize(workspace); fixFlyoutScale(); });
+            resetTurtle();
+        });
+    </script>
+    <!-- Modals cho Nhập liệu và Biến số -->
+    <div id="custom-prompt-modal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[9999] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-[400px] max-w-[90%] transform scale-95 transition-transform duration-300"
+            id="custom-prompt-box">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500 text-xl"
+                    id="custom-prompt-icon">
+                    💬
+                </div>
+                <h3 class="text-lg font-bold text-slate-800" id="custom-prompt-title">Nhập dữ liệu</h3>
+            </div>
+            <p class="text-slate-600 mb-4 text-sm" id="custom-prompt-message">Vui lòng nhập giá trị:</p>
+            <input type="text" id="custom-prompt-input"
+                class="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all text-slate-700 font-medium mb-6"
+                autocomplete="off" spellcheck="false">
+            <div class="flex justify-end space-x-3">
+                <button id="custom-prompt-cancel"
+                    class="px-5 py-2 rounded-xl font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors hidden">Hủy</button>
+                <button id="custom-prompt-ok"
+                    class="px-5 py-2 rounded-xl font-bold text-white bg-indigo-500 hover:bg-indigo-600 shadow-md shadow-indigo-200 transition-colors">Xác
+                    nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Logic điều khiển Custom Prompt Modal
+        function showCustomPrompt(title, message, icon, defaultValue, showCancel) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('custom-prompt-modal');
+                const box = document.getElementById('custom-prompt-box');
+                const titleEl = document.getElementById('custom-prompt-title');
+                const messageEl = document.getElementById('custom-prompt-message');
+                const iconEl = document.getElementById('custom-prompt-icon');
+                const inputEl = document.getElementById('custom-prompt-input');
+                const btnOk = document.getElementById('custom-prompt-ok');
+                const btnCancel = document.getElementById('custom-prompt-cancel');
+
+                titleEl.textContent = title;
+                messageEl.textContent = message;
+                iconEl.textContent = icon;
+                inputEl.value = defaultValue || '';
+
+                if (showCancel) {
+                    btnCancel.classList.remove('hidden');
+                } else {
+                    btnCancel.classList.add('hidden');
+                }
+
+                modal.classList.remove('hidden');
+                // Trigger reflow
+                void modal.offsetWidth;
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+
+                inputEl.focus();
+                inputEl.select();
+
+                const cleanup = () => {
+                    modal.classList.add('opacity-0');
+                    box.classList.add('scale-95');
+                    setTimeout(() => { modal.classList.add('hidden'); }, 300);
+                    btnOk.removeEventListener('click', onOk);
+                    btnCancel.removeEventListener('click', onCancel);
+                    inputEl.removeEventListener('keydown', onKey);
+                };
+
+                const onOk = () => { cleanup(); resolve(inputEl.value); };
+                const onCancel = () => { cleanup(); resolve(null); };
+                const onKey = (e) => {
+                    if (e.key === 'Enter') onOk();
+                    if (e.key === 'Escape' && showCancel) onCancel();
+                };
+
+                btnOk.addEventListener('click', onOk);
+                btnCancel.addEventListener('click', onCancel);
+                inputEl.addEventListener('keydown', onKey);
+            });
+        }
+
+        // 1. Ghi đè Blockly Prompt cho việc tạo/đổi tên biến
+        const customPromptCallback = function (message, defaultValue, callback) {
+            let title = "Biến số mới";
+            let icon = "🏷️";
+            if (message.toLowerCase().includes('đổi') || message.toLowerCase().includes('rename')) {
+                title = "Đổi tên biến";
+                icon = "✏️";
+            }
+            showCustomPrompt(title, message, icon, defaultValue, true).then(value => {
+                callback(value);
+            });
+        };
+
+        if (Blockly.dialog && Blockly.dialog.setPrompt) {
+            Blockly.dialog.setPrompt(customPromptCallback);
+        } else {
+            Blockly.prompt = customPromptCallback;
+        }
+
+        // 2. Hàm customPrompt gọi từ runtime cho lệnh Hỏi và đợi nhập
+        function customPrompt(message) {
+            return showCustomPrompt("Nhập dữ liệu", message, "💬", "", false);
+        }
+    </script>
+</body>
+
+</html>
