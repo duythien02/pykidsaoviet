@@ -1321,9 +1321,13 @@
     </div>
 
     <script>
-        // Logic điều khiển Custom Prompt Modal
+        let customPromptTimeout = null;
         function showCustomPrompt(title, message, icon, defaultValue, showCancel) {
             return new Promise((resolve) => {
+                if (customPromptTimeout) {
+                    clearTimeout(customPromptTimeout);
+                    customPromptTimeout = null;
+                }
                 const modal = document.getElementById('custom-prompt-modal');
                 const box = document.getElementById('custom-prompt-box');
                 const titleEl = document.getElementById('custom-prompt-title');
@@ -1356,7 +1360,7 @@
                 const cleanup = () => {
                     modal.classList.add('opacity-0');
                     box.classList.add('scale-95');
-                    setTimeout(() => { modal.classList.add('hidden'); }, 300);
+                    customPromptTimeout = setTimeout(() => { modal.classList.add('hidden'); }, 300);
                     btnOk.removeEventListener('click', onOk);
                     btnCancel.removeEventListener('click', onCancel);
                     inputEl.removeEventListener('keydown', onKey);
