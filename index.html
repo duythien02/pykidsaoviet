@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/@blockly/field-colour"></script>
     <script src="https://unpkg.com/blockly/msg/vi.js"></script>
     <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
     <script src="https://unpkg.com/blockly/python_compressed.js"></script>
@@ -212,12 +213,6 @@
                         <i class="fa-solid fa-rotate-left text-2xl drop-shadow-sm"></i>
                     </button>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="openCustomizationModal()"
-                        class="text-indigo-500 hover:text-indigo-700 transition-transform hover:scale-110 active:scale-95 mr-2"
-                        title="Tùy chỉnh nhân vật & phông nền">
-                        <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
-                    </button>
                     <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">Tốc độ</span>
                     <input id="speed-slider" type="range" min="1" max="10" value="5"
                         class="w-16 accent-[#8b5cf6] cursor-pointer">
@@ -225,12 +220,8 @@
             </div>
 
             <!-- 2. Stage (Canvas) -->
-            <div class="bg-white relative flex items-center justify-center p-4 shrink-0">
-                <div
-                    class="bg-white border border-[#cbd5e1] rounded-sm overflow-hidden flex items-center justify-center">
-                    <!-- Adjusted width to fit neatly -->
-                    <canvas id="turtle-canvas" width="540" height="300"></canvas>
-                </div>
+            <div class="bg-white relative flex items-center justify-center shrink-0 w-full overflow-hidden border-b border-slate-200">
+                <canvas id="turtle-canvas" width="600" height="340" class="w-full h-auto block"></canvas>
             </div>
 
 
@@ -274,81 +265,17 @@
 
         </section>
     </main>
-
-    <!-- Customization Studio Modal -->
-    <div id="custom-modal"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden transition-opacity duration-300">
-        <div
-            class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border-4 border-indigo-100 transform scale-95 transition-transform duration-300 flex flex-col gap-5">
-            <div class="flex items-center justify-between border-b pb-3 border-slate-100">
-                <h3 class="text-xl font-bold playful-font text-indigo-800 flex items-center space-x-2">
-                    <i class="fa-solid fa-wand-magic-sparkles text-indigo-500"></i>
-                    <span>Thư viện Nhân vật & Phông nền</span>
-                </h3>
-                <button onclick="closeCustomizationModal()" class="text-slate-400 hover:text-slate-600 text-xl"><i
-                        class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <h4 class="text-xs font-black text-slate-500 uppercase tracking-wider mb-2">1. Chọn Nhân vật
-                        (Sprite):</h4>
-                    <div class="grid grid-cols-5 gap-2" id="character-group">
-                        <button onclick="changeCompanion('turtle')" id="btn-char-turtle"
-                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-indigo-500 text-white border-2 border-indigo-600 shadow-md">
-                            <span class="text-2xl mb-1">🐢</span><span class="text-[9px] font-bold">Rùa Xanh</span>
-                        </button>
-                        <button onclick="changeCompanion('cat')" id="btn-char-cat"
-                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200">
-                            <span class="text-2xl mb-1">🐱</span><span class="text-[9px] font-bold">Mèo Vàng</span>
-                        </button>
-                        <button onclick="changeCompanion('rabbit')" id="btn-char-rabbit"
-                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200">
-                            <span class="text-2xl mb-1">🐰</span><span class="text-[9px] font-bold">Thỏ Trắng</span>
-                        </button>
-                        <button onclick="changeCompanion('bee')" id="btn-char-bee"
-                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200">
-                            <span class="text-2xl mb-1">🐝</span><span class="text-[9px] font-bold">Ong Vàng</span>
-                        </button>
-                        <button onclick="changeCompanion('rocket')" id="btn-char-rocket"
-                            class="bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200">
-                            <span class="text-2xl mb-1">🚀</span><span class="text-[9px] font-bold">Tên Lửa</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div>
-                    <h4 class="text-xs font-black text-slate-500 uppercase tracking-wider mb-2">2. Chọn Phông nền
-                        (Backdrop):</h4>
-                    <div class="grid grid-cols-2 gap-3" id="world-group">
-                        <button onclick="changeWorld('garden')" id="btn-world-garden"
-                            class="bouncy-btn py-2 px-3 rounded-xl bg-indigo-500 text-white border-2 border-indigo-600 flex items-center justify-center gap-2">
-                            <span class="text-xl">🏡</span><span class="text-[10px] font-bold">Vườn Hoa</span>
-                        </button>
-                        <button onclick="changeWorld('ocean')" id="btn-world-ocean"
-                            class="bouncy-btn py-2 px-3 rounded-xl bg-white text-slate-700 border-2 border-slate-200 flex items-center justify-center gap-2">
-                            <span class="text-xl">🌊</span><span class="text-[10px] font-bold">Đại Dương</span>
-                        </button>
-                        <button onclick="changeWorld('space')" id="btn-world-space"
-                            class="bouncy-btn py-2 px-3 rounded-xl bg-white text-slate-700 border-2 border-slate-200 flex items-center justify-center gap-2">
-                            <span class="text-xl">🌌</span><span class="text-[10px] font-bold">Vũ Trụ</span>
-                        </button>
-                        <button onclick="changeWorld('notebook')" id="btn-world-notebook"
-                            class="bouncy-btn py-2 px-3 rounded-xl bg-white text-slate-700 border-2 border-slate-200 flex items-center justify-center gap-2">
-                            <span class="text-xl">📝</span><span class="text-[10px] font-bold">Vở Ô Ly</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="closeCustomizationModal()"
-                class="bouncy-btn bg-indigo-500 hover:bg-indigo-600 text-white font-black py-3 rounded-xl w-full shadow-md mt-1">
-                Xong rồi!
-            </button>
-        </div>
-    </div>
-
     <script>
+        if (typeof registerFieldColour === 'function') {
+            registerFieldColour();
+        }
+        // Cấu hình khối text_join mặc định nằm ngang
+        const originalTextJoinInit = Blockly.Blocks['text_join'].init;
+        Blockly.Blocks['text_join'].init = function () {
+            originalTextJoinInit.call(this);
+            this.setInputsInline(true);
+        };
+
         Blockly.Blocks['turtle_forward'] = {
             init: function () {
                 this.jsonInit({ "type": "turtle_forward", "message0": "Tiến %1 bước", "args0": [{ "type": "input_value", "name": "STEPS", "check": "Number" }], "previousStatement": null, "nextStatement": null, "colour": "#10b981" });
@@ -376,7 +303,17 @@
         };
         Blockly.Blocks['turtle_color'] = {
             init: function () {
-                this.jsonInit({ "type": "turtle_color", "message0": "Đổi màu bút: %1", "args0": [{ "type": "field_colour", "name": "COLOR", "colour": "#3b82f6" }], "previousStatement": null, "nextStatement": null, "colour": "#db2777" });
+                this.jsonInit({
+                    "type": "turtle_color",
+                    "message0": "Đổi màu: Nét %1 Tô %2",
+                    "args0": [
+                        { "type": "field_colour", "name": "COLOR", "colour": "#3b82f6" },
+                        { "type": "field_colour", "name": "FILL_COLOR", "colour": "#f43f5e" }
+                    ],
+                    "previousStatement": null,
+                    "nextStatement": null,
+                    "colour": "#db2777"
+                });
             }
         };
         Blockly.Blocks['turtle_width'] = {
@@ -418,6 +355,38 @@
         Blockly.Blocks['event_start'] = {
             init: function () {
                 this.jsonInit({ "type": "event_start", "message0": "Khi bấm nút chạy", "nextStatement": null, "colour": "#f59e0b" });
+            }
+        };
+
+        // NEW BLOCKS FOR PEN COMMANDS
+        Blockly.Blocks['turtle_circle'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_circle", "message0": "Vẽ hình tròn bán kính %1", "args0": [{ "type": "input_value", "name": "RADIUS", "check": "Number" }], "previousStatement": null, "nextStatement": null, "colour": "#10b981" });
+            }
+        };
+        Blockly.Blocks['turtle_bgcolor'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_bgcolor", "message0": "Đổi màu nền: %1", "args0": [{ "type": "field_colour", "name": "COLOR", "colour": "#bae6fd" }], "previousStatement": null, "nextStatement": null, "colour": "#db2777" });
+            }
+        };
+        Blockly.Blocks['turtle_begin_fill'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_begin_fill", "message0": "Bắt đầu tô màu", "previousStatement": null, "nextStatement": null, "colour": "#ec4899" });
+            }
+        };
+        Blockly.Blocks['turtle_end_fill'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_end_fill", "message0": "Kết thúc tô màu", "previousStatement": null, "nextStatement": null, "colour": "#ec4899" });
+            }
+        };
+        Blockly.Blocks['turtle_speed'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_speed", "message0": "Chỉnh tốc độ vẽ: %1", "args0": [{ "type": "input_value", "name": "SPEED", "check": "Number" }], "previousStatement": null, "nextStatement": null, "colour": "#f59e0b" });
+            }
+        };
+        Blockly.Blocks['turtle_shape'] = {
+            init: function () {
+                this.jsonInit({ "type": "turtle_shape", "message0": "Đổi hình dáng bút: %1", "args0": [{ "type": "field_dropdown", "name": "SHAPE", "options": [["Rùa (turtle)", "turtle"], ["Mèo (cat)", "cat"], ["Thỏ (rabbit)", "rabbit"], ["Mũi tên (arrow)", "arrow"], ["Vòng tròn (circle)", "circle"]] }], "previousStatement": null, "nextStatement": null, "colour": "#8b5cf6" });
             }
         };
     </script>
@@ -491,9 +460,9 @@
                 (b) => `🐢 Rùa ${b.getFieldValue('PEN_STATE') === 'pendown' ? 'đặt bút xuống để vẽ' : 'nhấc bút lên không vẽ nữa'}\n`
             );
             mapBlock('turtle_color',
-                (b, g) => `queueCommand({type: "color", value: "${b.getFieldValue('COLOR')}"});\n`,
-                (b, g) => `turtle.color("${b.getFieldValue('COLOR')}")\n`,
-                (b) => `🎨 Đổi màu bút vẽ thành màu ${b.getFieldValue('COLOR')}\n`
+                (b, g) => `queueCommand({type: "color", color: "${b.getFieldValue('COLOR')}", fillColor: "${b.getFieldValue('FILL_COLOR')}"});\n`,
+                (b, g) => `turtle.color("${b.getFieldValue('COLOR')}", "${b.getFieldValue('FILL_COLOR')}")\n`,
+                (b) => `🎨 Đổi màu: Màu nét ${b.getFieldValue('COLOR')} và Màu tô ${b.getFieldValue('FILL_COLOR')}\n`
             );
             mapBlock('turtle_width',
                 (b, g) => `queueCommand({type: "width", value: ${getJsInputValue(b, g, 'WIDTH', '3')}});\n`,
@@ -524,6 +493,38 @@
             mapBlock('turtle_clear', (b, g) => `queueCommand({type: "clear"});\n`, (b, g) => `turtle.clear()\n`, (b) => `🧹 Xóa toàn bộ hình đã vẽ\n`);
             mapBlock('turtle_home', (b, g) => `queueCommand({type: "home"});\n`, (b, g) => `turtle.home()\n`, (b) => `🏠 Đưa rùa về vị trí trung tâm\n`);
             mapBlock('event_start', (b, g) => `// Bắt đầu\n`, (b, g) => `# Bắt đầu\n`, (b) => `🚀 <b class="text-indigo-800">Bắt đầu chương trình</b>\n`);
+
+            // NEW BLOCKS GENERATORS
+            mapBlock('turtle_circle',
+                (b, g) => `queueCommand({type: "circle", value: ${getJsInputValue(b, g, 'RADIUS', '90')}});\n`,
+                (b, g) => `turtle.circle(${getPyInputValue(b, g, 'RADIUS', '90')})\n`,
+                (b) => `🐢 Rùa vẽ hình tròn bán kính ${getExplainInputValue(b, 'RADIUS', '90')}\n`
+            );
+            mapBlock('turtle_bgcolor',
+                (b, g) => `queueCommand({type: "bgcolor", value: "${b.getFieldValue('COLOR')}"});\n`,
+                (b, g) => `turtle.bgcolor("${b.getFieldValue('COLOR')}")\n`,
+                (b) => `🎨 Đổi màu nền cửa sổ thành màu ${b.getFieldValue('COLOR')}\n`
+            );
+            mapBlock('turtle_begin_fill',
+                (b, g) => `queueCommand({type: "begin_fill"});\n`,
+                (b, g) => `turtle.begin_fill()\n`,
+                (b) => `🖌️ Bắt đầu theo dõi vùng để tô màu\n`
+            );
+            mapBlock('turtle_end_fill',
+                (b, g) => `queueCommand({type: "end_fill"});\n`,
+                (b, g) => `turtle.end_fill()\n`,
+                (b) => `🖌️ Kết thúc và đổ màu vào vùng vừa vẽ\n`
+            );
+            mapBlock('turtle_speed',
+                (b, g) => `queueCommand({type: "speed", value: ${getJsInputValue(b, g, 'SPEED', '5')}});\n`,
+                (b, g) => `turtle.speed(${getPyInputValue(b, g, 'SPEED', '5')})\n`,
+                (b) => `⚡ Chỉnh tốc độ vẽ thành ${getExplainInputValue(b, 'SPEED', '5')}\n`
+            );
+            mapBlock('turtle_shape',
+                (b, g) => `queueCommand({type: "shape", value: "${b.getFieldValue('SHAPE')}"});\n`,
+                (b, g) => `turtle.shape("${b.getFieldValue('SHAPE')}")\n`,
+                (b) => `🐢 Đổi hình dáng bút thành ${b.getFieldValue('SHAPE')}\n`
+            );
 
             // Ghi đè khối nối chuỗi (text_join) để tạo ra f-string trong Python và template literal trong JS
             jsGen.forBlock['text_join'] = function (block) {
@@ -677,7 +678,9 @@
                 let argument1 = jsGen.valueToCode(block, 'TO', jsGen.ORDER_ASSIGNMENT) || '0';
                 let increment = jsGen.valueToCode(block, 'BY', jsGen.ORDER_ASSIGNMENT) || '1';
                 let branch = jsGen.statementToCode(block, 'DO');
-                let code = `for (var ${variable0} = ${argument0}; ${variable0} <= ${argument1}; ${variable0} += ${increment}) {\n`;
+                let stepVar = jsGen.nameDB_.getDistinctName('step', Blockly.VARIABLE_CATEGORY_NAME);
+                let endVar = jsGen.nameDB_.getDistinctName('end', Blockly.VARIABLE_CATEGORY_NAME);
+                let code = `for (var ${variable0} = Number(${argument0}), ${stepVar} = Number(${increment}), ${endVar} = Number(${argument1}); ${stepVar} >= 0 ? ${variable0} <= ${endVar} : ${variable0} >= ${endVar}; ${variable0} += ${stepVar}) {\n`;
                 code += `  queueCommand({type: "loop_text", value: "Lặp: " + "${block.getField('VAR').getText()}" + " = " + ${variable0}});\n`;
                 code += branch;
                 code += `}\n`;
@@ -690,8 +693,6 @@
         let isMuted = false;
         let synth;
         let activeCompanion = 'turtle';
-        let activeWorld = 'garden';
-
         function initSound() {
             if (!synth) synth = new Tone.Synth({ oscillator: { type: "sine" } }).toDestination();
         }
@@ -709,36 +710,59 @@
         const canvas = document.getElementById('turtle-canvas');
         const ctx = canvas.getContext('2d');
         let paths = [];
-        let turtleStart = { x: 270, y: 150, angle: -90 };
-        let turtleState = { x: 270, y: 150, angle: -90, penDown: true, color: '#3b82f6', width: 3 };
+        let turtleStart = { x: 300, y: 170, angle: 0 };
+        let turtleState = { x: 300, y: 170, angle: 0, penDown: true, color: '#3b82f6', width: 3 };
 
         function drawBackground() {
-            if (activeWorld === 'garden') {
-                ctx.fillStyle = '#e8f5e9'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            } else if (activeWorld === 'ocean') {
-                ctx.fillStyle = '#e0f7fa'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            } else if (activeWorld === 'space') {
-                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            } else if (activeWorld === 'notebook') {
+            if (turtleState.customBgColor) {
+                ctx.fillStyle = turtleState.customBgColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            } else {
+                // Default clean background
                 ctx.fillStyle = '#fffdf5'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1;
-                for (let j = 20; j < canvas.height; j += 20) { ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke(); }
             }
         }
 
         function drawCompanion(context, x, y, angleDeg) {
             context.save(); context.translate(x, y); context.rotate(angleDeg * Math.PI / 180);
-            const icons = { turtle: '🐢', cat: '🐱', rabbit: '🐰', bee: '🐝', rocket: '🚀' };
-            const icon = icons[activeCompanion] || '🐢';
-            context.font = '24px Arial';
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
+            const iconKey = turtleState.shape || activeCompanion;
 
-            // Xoay thêm 90 độ vì icon emoji thường hướng lên trên, 
-            // trong khi góc 0 độ của hệ tọa độ là hướng sang phải.
-            context.rotate(Math.PI / 2);
-
-            context.fillText(icon, 0, 0);
+            if (iconKey === 'arrow') {
+                context.fillStyle = turtleState.color || '#3b82f6';
+                context.strokeStyle = '#ffffff';
+                context.lineWidth = 1.5;
+                context.beginPath();
+                context.moveTo(12, 0);
+                context.lineTo(-8, -8);
+                context.lineTo(-4, 0);
+                context.lineTo(-8, 8);
+                context.closePath();
+                context.fill();
+                context.stroke();
+            } else if (iconKey === 'circle') {
+                context.fillStyle = turtleState.color || '#3b82f6';
+                context.strokeStyle = '#ffffff';
+                context.lineWidth = 1.5;
+                context.beginPath();
+                context.arc(0, 0, 8, 0, 2 * Math.PI);
+                context.fill();
+                context.stroke();
+            } else {
+                const icons = { turtle: '🐢', cat: '🐱', rabbit: '🐰', bee: '🐝', rocket: '🚀' };
+                const icon = icons[iconKey] || '🐢';
+                context.font = '24px Arial';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                
+                // Hầu hết các emoji đều quay mặt sang trái, để mặc định hướng sang phải thì cần lật ngược lại
+                if (iconKey === 'turtle' || iconKey === 'cat' || iconKey === 'rabbit' || iconKey === 'bee') {
+                    context.scale(-1, 1);
+                } else if (iconKey === 'rocket') {
+                    // Rocket mặc định chéo lên (45 độ), xoay thêm 45 độ để thành nằm ngang sang phải
+                    context.rotate(Math.PI / 4); 
+                }
+                
+                context.fillText(icon, 0, 0);
+            }
             context.restore();
         }
 
@@ -790,13 +814,40 @@
         function drawCanvas() {
             drawBackground();
             paths.forEach(p => {
-                ctx.strokeStyle = p.color; ctx.lineWidth = p.width; ctx.lineCap = 'round';
-                ctx.beginPath(); ctx.moveTo(p.x1, p.y1); ctx.lineTo(p.x2, p.y2); ctx.stroke();
+                if (p.type === 'fill' && p.points && p.points.length > 0) {
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.moveTo(p.points[0].x, p.points[0].y);
+                    for (let i = 1; i < p.points.length; i++) ctx.lineTo(p.points[i].x, p.points[i].y);
+                    ctx.fill();
+                } else if (p.type === 'circle') {
+                    ctx.strokeStyle = p.color; ctx.lineWidth = p.width; ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.arc(p.cx, p.cy, p.r, p.startAngleRad, p.endAngleRad, p.counterClockwise);
+                    ctx.stroke();
+                } else {
+                    ctx.strokeStyle = p.color; ctx.lineWidth = p.width; ctx.lineCap = 'round';
+                    ctx.beginPath(); ctx.moveTo(p.x1, p.y1); ctx.lineTo(p.x2, p.y2); ctx.stroke();
+                }
             });
             if (currentCommand && (currentCommand.type === 'forward' || currentCommand.type === 'backward')) {
                 if (turtleState.penDown) {
                     ctx.strokeStyle = turtleState.color; ctx.lineWidth = turtleState.width; ctx.lineCap = 'round';
                     ctx.beginPath(); ctx.moveTo(currentCommand.startX, currentCommand.startY); ctx.lineTo(turtleState.x, turtleState.y); ctx.stroke();
+                }
+            } else if (currentCommand && currentCommand.type === 'circle') {
+                if (turtleState.penDown) {
+                    ctx.strokeStyle = turtleState.color; ctx.lineWidth = turtleState.width; ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    const startAngleRad = currentCommand.phi0 * Math.PI / 180;
+                    let endAngleRad;
+                    if (currentCommand.isCounterClockwise) {
+                        endAngleRad = (currentCommand.phi0 - animationProgress * 360) * Math.PI / 180;
+                    } else {
+                        endAngleRad = (currentCommand.phi0 + animationProgress * 360) * Math.PI / 180;
+                    }
+                    ctx.arc(currentCommand.cx, currentCommand.cy, currentCommand.R, startAngleRad, endAngleRad, currentCommand.isCounterClockwise);
+                    ctx.stroke();
                 }
             }
             drawCompanion(ctx, turtleState.x, turtleState.y, turtleState.angle);
@@ -903,44 +954,17 @@
 
         function hardResetStage() {
             playClick();
-            turtleStart = { x: 270, y: 150, angle: -90 };
+            turtleStart = { x: 300, y: 170, angle: 0 };
             resetTurtle();
         }
 
         function resetTurtle() {
             paths = [];
-            turtleState = { x: turtleStart.x, y: turtleStart.y, angle: turtleStart.angle, penDown: true, color: '#3b82f6', width: 3 };
+            turtleState = { x: turtleStart.x, y: turtleStart.y, angle: turtleStart.angle, penDown: true, color: '#3b82f6', fillColor: '#f43f5e', width: 3, customBgColor: null, shape: null, isFilling: false, fillPoints: [] };
             updateCoordsDisplay(); drawCanvas();
         }
 
-        function changeCompanion(id) {
-            activeCompanion = id;
-            const names = { turtle: 'Rùa Xanh', cat: 'Mèo Vàng', rabbit: 'Thỏ Trắng', bee: 'Ong Vàng', rocket: 'Tên Lửa' };
-            const icons = { turtle: '🐢', cat: '🐱', rabbit: '🐰', bee: '🐝', rocket: '🚀' };
-
-            // Removed old Sprite Panel Updates
-
-            Array.from(document.getElementById('character-group').children).forEach(btn => {
-                btn.className = btn.id === 'btn-char-' + id ? "bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-indigo-500 text-white border-2 border-indigo-600 shadow-md"
-                    : "bouncy-btn flex flex-col items-center justify-center p-2 rounded-xl bg-white text-slate-700 border-2 border-slate-200";
-            });
-            playTone("G4", "16n"); drawCanvas();
-        }
-
-        function changeWorld(id) {
-            activeWorld = id;
-            const icons = { garden: '🏡', ocean: '🌊', space: '🌌', notebook: '📝' };
-            // Removed old Backdrop Panel Updates
-
-            Array.from(document.getElementById('world-group').children).forEach(btn => {
-                btn.className = btn.id === 'btn-world-' + id ? "bouncy-btn py-2 px-3 rounded-xl bg-indigo-500 text-white border-2 border-indigo-600 flex items-center justify-center gap-2"
-                    : "bouncy-btn py-2 px-3 rounded-xl bg-white text-slate-700 border-2 border-slate-200 flex items-center justify-center gap-2";
-            });
-            playTone("C5", "16n"); drawCanvas();
-        }
-
-        function openCustomizationModal() { playClick(); document.getElementById('custom-modal').classList.remove('hidden'); }
-        function closeCustomizationModal() { playClick(); document.getElementById('custom-modal').classList.add('hidden'); }
+        // Removed changeCompanion function to clean up
     </script>
 
     <script>
@@ -958,23 +982,31 @@
             box.textContent += msg + "\n"; box.scrollTop = box.scrollHeight;
         }
 
+        function handleError(msg) {
+            stopExecution();
+            addConsoleMessage(msg);
+            showErrorAlert(msg);
+        }
+
         function runCode() {
             stopExecution(); resetTurtle(); document.getElementById('console-output').textContent = "";
             playClick(); switchTab('console');
+            window.loopStartTime = Date.now();
             try {
                 const jsGen = typeof javascript !== 'undefined' ? javascript.javascriptGenerator : Blockly.JavaScript;
+                jsGen.INFINITE_LOOP_TRAP = 'if (Date.now() - window.loopStartTime > 3000) throw new Error("Phát hiện lặp vô tận! Vui lòng kiểm tra lại điều kiện vòng lặp.");\n';
                 const startBlock = workspace.getTopBlocks(false).find(b => b.type === 'event_start');
                 if (startBlock) {
                     jsGen.init(workspace);
                     let code = jsGen.blockToCode(startBlock);
                     code = jsGen.finish(code);
-                    let asyncCode = `(async function() {\n${code}\n})();`;
+                    let asyncCode = `(async function() {\n${code}\n})().catch(err => handleError("Lỗi: " + err.message));`;
                     eval(asyncCode);
                     startAnimationLoop();
                 } else {
                     addConsoleMessage("Không tìm thấy khối '▶ Khi bấm nút chạy'!");
                 }
-            } catch (err) { addConsoleMessage("Lỗi: " + err.message); }
+            } catch (err) { handleError("Lỗi: " + err.message); }
         }
 
         function stopExecution() {
@@ -998,6 +1030,27 @@
                         } else if (currentCommand.type === 'right' || currentCommand.type === 'left') {
                             currentCommand.startAngle = turtleState.angle;
                             currentCommand.endAngle = turtleState.angle + (currentCommand.type === 'left' ? -currentCommand.value : currentCommand.value);
+                        } else if (currentCommand.type === 'circle') {
+                            currentCommand.startX = turtleState.x;
+                            currentCommand.startY = turtleState.y;
+                            currentCommand.startAngle = turtleState.angle;
+
+                            const r = currentCommand.value;
+                            const R = Math.abs(r);
+                            currentCommand.R = R;
+                            currentCommand.isCounterClockwise = (r > 0);
+
+                            if (r > 0) {
+                                const radCenter = (turtleState.angle - 90) * Math.PI / 180;
+                                currentCommand.cx = turtleState.x + R * Math.cos(radCenter);
+                                currentCommand.cy = turtleState.y + R * Math.sin(radCenter);
+                                currentCommand.phi0 = turtleState.angle + 90;
+                            } else {
+                                const radCenter = (turtleState.angle + 90) * Math.PI / 180;
+                                currentCommand.cx = turtleState.x + R * Math.cos(radCenter);
+                                currentCommand.cy = turtleState.y + R * Math.sin(radCenter);
+                                currentCommand.phi0 = turtleState.angle - 90;
+                            }
                         }
                     } else {
                         currentCommand = null;
@@ -1017,6 +1070,9 @@
                     if (currentCommand.type === 'forward' || currentCommand.type === 'backward') {
                         turtleState.x = currentCommand.startX + (currentCommand.endX - currentCommand.startX) * animationProgress;
                         turtleState.y = currentCommand.startY + (currentCommand.endY - currentCommand.startY) * animationProgress;
+                        if (turtleState.isFilling) {
+                            if (animationProgress >= 1) turtleState.fillPoints.push({ x: turtleState.x, y: turtleState.y });
+                        }
                         if (animationProgress >= 1) {
                             if (turtleState.penDown) paths.push({ x1: currentCommand.startX, y1: currentCommand.startY, x2: currentCommand.endX, y2: currentCommand.endY, color: turtleState.color, width: turtleState.width });
                             turtleState.x = currentCommand.endX; turtleState.y = currentCommand.endY; currentCommand = null;
@@ -1027,13 +1083,91 @@
                     } else if (currentCommand.type === 'pen') {
                         turtleState.penDown = currentCommand.value; currentCommand = null;
                     } else if (currentCommand.type === 'color') {
-                        turtleState.color = currentCommand.value; currentCommand = null;
+                        turtleState.color = currentCommand.color;
+                        turtleState.fillColor = currentCommand.fillColor;
+                        currentCommand = null;
                     } else if (currentCommand.type === 'width') {
                         turtleState.width = Math.max(1, currentCommand.value); currentCommand = null;
+                    } else if (currentCommand.type === 'circle') {
+                        const R = currentCommand.R;
+                        const cx = currentCommand.cx;
+                        const cy = currentCommand.cy;
+                        const phi0 = currentCommand.phi0;
+
+                        let phi, heading;
+                        if (currentCommand.isCounterClockwise) {
+                            phi = phi0 - animationProgress * 360;
+                            heading = currentCommand.startAngle - animationProgress * 360;
+                        } else {
+                            phi = phi0 + animationProgress * 360;
+                            heading = currentCommand.startAngle + animationProgress * 360;
+                        }
+
+                        const rad = phi * Math.PI / 180;
+                        turtleState.x = cx + R * Math.cos(rad);
+                        turtleState.y = cy + R * Math.sin(rad);
+                        turtleState.angle = heading;
+
+                        if (turtleState.isFilling) {
+                            turtleState.fillPoints.push({ x: turtleState.x, y: turtleState.y });
+                        }
+
+                        if (animationProgress >= 1) {
+                            if (turtleState.penDown) {
+                                paths.push({
+                                    type: 'circle',
+                                    cx: cx,
+                                    cy: cy,
+                                    r: R,
+                                    startAngleRad: phi0 * Math.PI / 180,
+                                    endAngleRad: phi * Math.PI / 180,
+                                    counterClockwise: currentCommand.isCounterClockwise,
+                                    color: turtleState.color,
+                                    width: turtleState.width
+                                });
+                            }
+                            if (turtleState.isFilling) {
+                                // Add 36 points around the circle to fillPoints to ensure smooth fill
+                                for (let i = 0; i <= 36; i++) {
+                                    const pVal = i / 36;
+                                    let pPhi;
+                                    if (currentCommand.isCounterClockwise) {
+                                        pPhi = phi0 - pVal * 360;
+                                    } else {
+                                        pPhi = phi0 + pVal * 360;
+                                    }
+                                    const pRad = pPhi * Math.PI / 180;
+                                    turtleState.fillPoints.push({
+                                        x: cx + R * Math.cos(pRad),
+                                        y: cy + R * Math.sin(pRad)
+                                    });
+                                }
+                            }
+                            currentCommand = null;
+                        }
+                    } else if (currentCommand.type === 'bgcolor') {
+                        turtleState.customBgColor = currentCommand.value; currentCommand = null;
+                    } else if (currentCommand.type === 'begin_fill') {
+                        turtleState.isFilling = true;
+                        turtleState.fillPoints = [{ x: turtleState.x, y: turtleState.y }];
+                        currentCommand = null;
+                    } else if (currentCommand.type === 'end_fill') {
+                        turtleState.isFilling = false;
+                        if (turtleState.fillPoints && turtleState.fillPoints.length > 0) {
+                            paths.push({ type: 'fill', points: [...turtleState.fillPoints], color: turtleState.fillColor });
+                        }
+                        currentCommand = null;
+                    } else if (currentCommand.type === 'speed') {
+                        let val = Math.max(1, Math.min(10, currentCommand.value));
+                        let el = document.getElementById('speed-slider');
+                        if (el) el.value = val;
+                        currentCommand = null;
+                    } else if (currentCommand.type === 'shape') {
+                        turtleState.shape = currentCommand.value; currentCommand = null;
                     } else if (currentCommand.type === 'clear') {
-                        paths = []; currentCommand = null;
+                        paths = []; turtleState.customBgColor = null; currentCommand = null;
                     } else if (currentCommand.type === 'home') {
-                        turtleState.x = 270; turtleState.y = 150; turtleState.angle = -90; currentCommand = null;
+                        turtleState.x = 300; turtleState.y = 170; turtleState.angle = 0; currentCommand = null;
                     } else if (currentCommand.type === 'print') {
                         if (!currentCommand.started) {
                             currentCommand.started = true;
@@ -1085,6 +1219,7 @@
                 pythonRaw = pyGen.finish(pythonRaw);
                 // Loại bỏ các khai báo biến "= None" vô nghĩa của Blockly Python
                 pythonRaw = pythonRaw.replace(/^[a-zA-Z0-9_]+\s*=\s*None\r?\n/gm, '');
+                pythonRaw = pythonRaw.trimStart();
 
                 explainGen.init(workspace);
                 explainRaw = explainGen.blockToCode(startBlock);
@@ -1182,9 +1317,15 @@
                     <label text="Bút vẽ"></label>
                     <block type="turtle_pen"></block>
                     <block type="turtle_color"></block>
+                    <block type="turtle_bgcolor"><field name="COLOR">#bae6fd</field></block>
                     <block type="turtle_width"><value name="WIDTH"><block type="math_number"><field name="NUM">3</field></block></value></block>
+                    <block type="turtle_begin_fill"></block>
+                    <block type="turtle_end_fill"></block>
+                    <block type="turtle_shape"></block>
+                    <block type="turtle_speed"><value name="SPEED"><block type="math_number"><field name="NUM">5</field></block></value></block>
 
                     <label text="Di chuyển"></label>
+                    <block type="turtle_circle"><value name="RADIUS"><block type="math_number"><field name="NUM">90</field></block></value></block>
                     <block type="turtle_forward"><value name="STEPS"><block type="math_number"><field name="NUM">100</field></block></value></block>
                     <block type="turtle_backward"><value name="STEPS"><block type="math_number"><field name="NUM">50</field></block></value></block>
                     <block type="turtle_right"><value name="DEGREES"><block type="math_number"><field name="NUM">90</field></block></value></block>
@@ -1294,6 +1435,46 @@
             resetTurtle();
         });
     </script>
+
+    <!-- Modal Báo Lỗi -->
+    <div id="error-modal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[9999] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-[400px] max-w-[90%] transform scale-95 transition-transform duration-300"
+            id="error-modal-box">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-xl">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">Thông báo lỗi</h3>
+            </div>
+            <p class="text-slate-600 mb-6 text-sm font-medium" id="error-modal-message">Đã xảy ra lỗi!</p>
+            <div class="flex justify-end">
+                <button onclick="hideErrorAlert()"
+                    class="px-5 py-2 rounded-xl font-bold text-white bg-red-500 hover:bg-red-600 shadow-md shadow-red-200 transition-colors">Đóng</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showErrorAlert(msg) {
+            const modal = document.getElementById('error-modal');
+            const box = document.getElementById('error-modal-box');
+            const msgEl = document.getElementById('error-modal-message');
+            msgEl.textContent = msg;
+            modal.classList.remove('hidden');
+            void modal.offsetWidth; // Trigger reflow
+            modal.classList.remove('opacity-0');
+            box.classList.remove('scale-95');
+        }
+
+        function hideErrorAlert() {
+            const modal = document.getElementById('error-modal');
+            const box = document.getElementById('error-modal-box');
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+    </script>
+
     <!-- Modals cho Nhập liệu và Biến số -->
     <div id="custom-prompt-modal"
         class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[9999] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
