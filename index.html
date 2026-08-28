@@ -402,7 +402,7 @@ t.forward(100)
         </section>
 
         <!-- Middle Column: Turtle Playground & Terminal -->
-        <section class="w-full lg:w-[500px] flex flex-col gap-4 shrink-0">
+        <section id="middle-section" class="w-full lg:w-[500px] flex flex-col gap-4 shrink-0">
             <!-- Canvas Panel Card -->
             <div class="panel-card flex flex-col h-[360px] shrink-0 lg:h-auto lg:flex-1">
                 <div
@@ -440,7 +440,7 @@ t.forward(100)
             </div>
 
             <!-- Terminal Panel Card -->
-            <div class="panel-card flex flex-col h-[120px] lg:h-[200px] shrink-0">
+            <div id="terminal-panel" class="panel-card flex flex-col h-[120px] lg:h-[200px] shrink-0">
                 <div
                     class="bg-[#e6effc] px-4 py-2 border-b-3 border-[#2b53a7] flex items-center justify-between shrink-0">
                     <div class="flex items-center space-x-2 text-[#2b53a7] font-bold text-sm">
@@ -459,7 +459,7 @@ t.forward(100)
         <section class="w-full lg:w-[380px] flex flex-col gap-4 shrink-0">
             <!-- Tabs Panel Card -->
             <div class="panel-card flex flex-col flex-1">
-                <div
+                <div id="right-tabs-header"
                     class="bg-[#e6effc] px-4 pt-1.5 flex items-center justify-between border-b-3 border-[#2b53a7] shrink-0">
                     <div class="flex space-x-1">
                         <button id="tab-code-btn" onclick="switchTab('code')"
@@ -2258,6 +2258,9 @@ t.forward(100)
             const blockEditor = document.getElementById('blockly-editor');
             const sidebar = document.getElementById('scratch-sidebar');
             const codeEditor = document.getElementById('python-editor-container');
+            const terminalPanel = document.getElementById('terminal-panel');
+            const middleSection = document.getElementById('middle-section');
+            const rightTabsHeader = document.getElementById('right-tabs-header');
 
             const activeClass = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#2b53a7] text-white shadow-sm border border-[#2b53a7]";
             const inactiveClass = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#2b53a7] hover:bg-[#d8e6f7] transition-all border border-[#cbdbea]";
@@ -2268,6 +2271,22 @@ t.forward(100)
                 blockEditor.classList.remove('hidden');
                 sidebar.classList.remove('hidden');
                 codeEditor.classList.add('hidden');
+                
+                // Return terminal panel to middle section and restore border
+                if (terminalPanel && middleSection) {
+                    middleSection.appendChild(terminalPanel);
+                    terminalPanel.style.border = '';
+                    terminalPanel.style.borderTop = '';
+                    terminalPanel.style.borderRadius = '';
+                    terminalPanel.classList.add('panel-card');
+                }
+
+                // Show right tabs header and select code preview
+                if (rightTabsHeader) {
+                    rightTabsHeader.classList.remove('hidden');
+                }
+                switchTab('code');
+
                 if (typeof Blockly !== 'undefined' && workspace) {
                     Blockly.svgResize(workspace);
                 }
@@ -2277,6 +2296,21 @@ t.forward(100)
                 blockEditor.classList.add('hidden');
                 sidebar.classList.add('hidden');
                 codeEditor.classList.remove('hidden');
+
+                // Move terminal panel below python editor and modify border to fit
+                if (terminalPanel && codeEditor) {
+                    codeEditor.appendChild(terminalPanel);
+                    terminalPanel.style.border = 'none';
+                    terminalPanel.style.borderTop = '3px solid #2b53a7';
+                    terminalPanel.style.borderRadius = '0';
+                    terminalPanel.classList.remove('panel-card');
+                }
+
+                // Hide right tabs header and switch to explanation only
+                if (rightTabsHeader) {
+                    rightTabsHeader.classList.add('hidden');
+                }
+                switchTab('explain');
             }
         }
 
