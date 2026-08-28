@@ -24,7 +24,24 @@
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f0f4fa;
+            color: #1e293b;
+        }
+
+        /* Highlighting of Python code lines matching current executing block */
+        .python-line {
+            display: block;
+            border-left: 3px solid transparent;
+            padding-left: 8px;
+            transition: background-color 0.15s ease, border-left-color 0.15s ease;
+        }
+
+        .python-line.highlight-line {
+            background-color: rgba(234, 179, 8, 0.2);
+            /* Semi-transparent yellow */
+            border-left-color: #f59e0b;
+            /* Amber-500 border */
         }
 
         .playful-font {
@@ -34,7 +51,7 @@
         /* Modern Scrollbars for Flyout */
         .blocklyScrollbarHandle {
             fill: #cbd5e1 !important;
-            fill-opacity: 0.6 !important;
+            fill-opacity: 0.8 !important;
             rx: 6px !important;
             ry: 6px !important;
         }
@@ -47,8 +64,8 @@
         /* Custom Scratch-like Sidebar */
         .scratch-sidebar {
             width: 75px;
-            background-color: #f8fafc;
-            border-right: 1px solid #e2e8f0;
+            background-color: #eef4fc;
+            border-right: 3px solid #2b53a7;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -69,7 +86,7 @@
         }
 
         .scratch-category:hover {
-            background: #f1f5f9;
+            background: #d8e6f7;
         }
 
         .scratch-cat-circle {
@@ -83,7 +100,7 @@
             font-size: 10px;
             text-align: center;
             font-weight: 600;
-            color: #64748b;
+            color: #2b53a7;
         }
 
         /* Flyout Titles Label */
@@ -91,11 +108,11 @@
             font-family: 'Fredoka', sans-serif !important;
             font-size: 14pt !important;
             font-weight: 700 !important;
-            fill: #475569 !important;
+            fill: #2b53a7 !important;
         }
 
         .terminal-bg {
-            background-color: #0f172a;
+            background-color: #f8fafc;
         }
 
         .bouncy-btn {
@@ -103,12 +120,113 @@
         }
 
         .bouncy-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px) scale(1.05);
         }
 
         .bouncy-btn:active {
-            transform: translateY(1px) scale(0.98);
+            transform: translateY(1px) scale(0.95);
+        }
+
+        /* Blockly light style overrides */
+        .blocklySvg {
+            background-color: #f8fafc !important;
+        }
+
+        .blocklyMainBackground {
+            stroke: none !important;
+            fill: #f8fafc !important;
+        }
+
+        .blocklyFlyoutBackground {
+            fill: #e6effc !important;
+            fill-opacity: 0.95 !important;
+        }
+
+        /* Custom panel card layout styling */
+        .panel-card {
+            background-color: #ffffff;
+            border: 3px solid #2b53a7;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glowing Variables Chests */
+        .magic-chest {
+            background: rgba(230, 239, 252, 0.8);
+            border: 2px solid rgba(43, 83, 167, 0.2);
+            box-shadow: 0 0 10px rgba(43, 83, 167, 0.05);
+            border-radius: 8px;
+            width: 60px;
+            padding: 4px 2px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex-shrink: 0;
+            margin: 4px;
+        }
+
+        .magic-chest.chest-green {
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.05);
+        }
+
+        .magic-chest.chest-amber {
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.05);
+        }
+
+        .magic-chest.chest-purple {
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.05);
+        }
+
+        .magic-chest:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .chest-value {
+            font-weight: 800;
+            font-size: 13px;
+            color: #2b53a7;
+            margin-top: 1px;
+        }
+
+        .chest-label {
+            font-size: 13px;
+            font-weight: 800;
+            color: #1e293b;
+            letter-spacing: 0.05em;
+        }
+
+        /* Hover Tooltips */
+        .python-keyword {
+            font-weight: bold;
+        }
+
+        .tooltip-keyword {
+            cursor: help;
+            border-bottom: 1px dotted #eab308;
+            padding-bottom: 1px;
+        }
+
+        .custom-tooltip {
+            position: absolute;
+            background: #ffffff;
+            border: 2px solid #cbdbea;
+            color: #1e293b;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            width: 260px;
+            box-shadow: 0 10px 25px -5px rgba(43, 83, 167, 0.1);
+            z-index: 10000;
+            pointer-events: none;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-family: 'Quicksand', sans-serif;
         }
 
         ::-webkit-scrollbar {
@@ -117,152 +235,198 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #f0f4fa;
             border-radius: 999px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #cbdbea;
             border-radius: 999px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: #2b53a7;
         }
     </style>
 </head>
 
-<body class="bg-white text-slate-800 h-full flex flex-col overflow-hidden">
+<body class="bg-[#f0f4fa] text-slate-800 h-full flex flex-col overflow-hidden">
 
     <!-- Header bar -->
-    <header class="bg-[#8b5cf6] px-6 py-2 flex items-center justify-between shrink-0 shadow-md relative z-10">
+    <header
+        class="bg-[#2b53a7] px-6 py-2.5 flex items-center justify-between shrink-0 border-b border-[#1f3d80] relative z-10 shadow-md">
         <div class="flex items-center space-x-3">
-            <div class="bg-white text-[#8b5cf6] p-2 rounded-xl shadow-sm transform -rotate-3">
+            <div
+                class="bg-[#f89b1c] text-white p-2 rounded-xl shadow-lg transform -rotate-3 hover:rotate-0 transition-transform">
                 <i class="fa-solid fa-snake text-2xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-black playful-font text-white tracking-wide">PyKids</h1>
+                <h1 class="text-2.5xl font-black playful-font text-white tracking-wide">PyKids <span
+                        class="text-[#f89b1c]">🐍</span></h1>
             </div>
         </div>
-
-
+        <div class="hidden md:flex items-center space-x-6">
+            <a href="#" class="text-slate-100 hover:text-[#f89b1c] transition-colors font-bold text-sm">Học tập</a>
+            <a href="#" class="text-slate-100 hover:text-[#f89b1c] transition-colors font-bold text-sm">Thử thách</a>
+            <a href="#" class="text-slate-100 hover:text-[#f89b1c] transition-colors font-bold text-sm">Cộng đồng</a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button class="text-slate-200 hover:text-white"><i class="fa-regular fa-bell text-lg"></i></button>
+            <div
+                class="w-8 h-8 rounded-full bg-[#f89b1c] flex items-center justify-center font-bold text-white shadow-md">
+                K</div>
+        </div>
     </header>
 
-    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
+    <main class="flex-1 flex flex-col lg:flex-row p-4 gap-4 overflow-hidden bg-[#f0f4fa]">
 
-        <!-- Left Side: Custom Scratch Toolbox & Blockly Editor -->
-        <section class="flex-1 flex h-full relative">
-
-            <!-- Custom Scratch-like Continuous Scroll Sidebar -->
-            <div id="scratch-sidebar" class="scratch-sidebar">
-
-                <div class="scratch-category" onclick="scrollToCategory('text')" data-color="#06b6d4">
-                    <div class="scratch-cat-circle" style="background: #06b6d4;"></div>
-                    <div class="scratch-cat-text">In ấn</div>
+        <!-- Left Side: Blockly Editor Card -->
+        <section class="flex-[1.2] flex flex-col panel-card h-[45vh] lg:h-full relative">
+            <div class="bg-[#e6effc] px-4 py-2 border-b-3 border-[#2b53a7] flex items-center justify-between shrink-0">
+                <div class="flex items-center space-x-2 text-[#2b53a7] font-bold text-sm">
+                    <i class="fa-solid fa-puzzle-piece mr-1"></i>
+                    <span>Khu vực khối lệnh</span>
                 </div>
-                <div class="scratch-category" onclick="scrollToCategory('variables_set')" data-color="#14b8a6">
-                    <div class="scratch-cat-circle" style="background: #14b8a6;"></div>
-                    <div class="scratch-cat-text">Biến số</div>
-                </div>
-                <div class="scratch-category" onclick="scrollToCategory('math_number')" data-color="#3b82f6">
-                    <div class="scratch-cat-circle" style="background: #3b82f6;"></div>
-                    <div class="scratch-cat-text">Toán số</div>
-                </div>
-                <div class="scratch-category" onclick="scrollToCategory('controls_if')" data-color="#f59e0b">
-                    <div class="scratch-cat-circle" style="background: #f59e0b;"></div>
-                    <div class="scratch-cat-text">Điều kiện</div>
-                </div>
-                <div class="scratch-category" onclick="scrollToCategory('controls_whileUntil')" data-color="#8b5cf6">
-                    <div class="scratch-cat-circle" style="background: #8b5cf6;"></div>
-                    <div class="scratch-cat-text">Vòng lặp</div>
-                </div>
-                <div class="scratch-category" onclick="scrollToCategory('turtle_pen')" data-color="#ec4899">
-                    <div class="scratch-cat-circle" style="background: #ec4899;"></div>
-                    <div class="scratch-cat-text">Bút vẽ</div>
-                </div>
-                <div class="scratch-category" onclick="scrollToCategory('turtle_forward')" data-color="#10b981">
-                    <div class="scratch-cat-circle" style="background: #10b981;"></div>
-                    <div class="scratch-cat-text">Di chuyển</div>
-                </div>
+                <div class="text-[11px] text-slate-500 hidden sm:block">Kéo các khối lệnh từ cột bên trái vào màn hình
+                    kéo thả</div>
             </div>
-
-            <!-- Main Blockly Container Div -->
-            <div id="blockly-editor" class="flex-1 h-full relative border-r border-slate-200"></div>
+            <div class="flex-1 flex relative overflow-hidden">
+                <!-- Custom Scratch-like Continuous Scroll Sidebar -->
+                <div id="scratch-sidebar" class="scratch-sidebar">
+                    <div class="scratch-category" onclick="scrollToCategory('text')" data-color="#06b6d4">
+                        <div class="scratch-cat-circle" style="background: #06b6d4;"></div>
+                        <div class="scratch-cat-text">In ấn</div>
+                    </div>
+                    <div class="scratch-category" onclick="scrollToCategory('variables_set')" data-color="#14b8a6">
+                        <div class="scratch-cat-circle" style="background: #14b8a6;"></div>
+                        <div class="scratch-cat-text">Biến số</div>
+                    </div>
+                    <div class="scratch-category" onclick="scrollToCategory('math_number')" data-color="#3b82f6">
+                        <div class="scratch-cat-circle" style="background: #3b82f6;"></div>
+                        <div class="scratch-cat-text">Toán số</div>
+                    </div>
+                    <div class="scratch-category" onclick="scrollToCategory('controls_if')" data-color="#f59e0b">
+                        <div class="scratch-cat-circle" style="background: #f59e0b;"></div>
+                        <div class="scratch-cat-text">Điều kiện</div>
+                    </div>
+                    <div class="scratch-category" onclick="scrollToCategory('controls_whileUntil')"
+                        data-color="#8b5cf6">
+                        <div class="scratch-cat-circle" style="background: #8b5cf6;"></div>
+                        <div class="scratch-cat-text">Vòng lặp</div>
+                    </div>
+                    <div class="scratch-category" onclick="scrollToCategory('turtle_pen')" data-color="#ec4899">
+                        <div class="scratch-cat-circle" style="background: #ec4899;"></div>
+                        <div class="scratch-cat-text">Bút vẽ</div>
+                    </div>
+                    <div class="scratch-category" onclick="scrollToCategory('turtle_forward')" data-color="#10b981">
+                        <div class="scratch-cat-circle" style="background: #10b981;"></div>
+                        <div class="scratch-cat-text">Di chuyển</div>
+                    </div>
+                </div>
+                <!-- Main Blockly Container Div -->
+                <div id="blockly-editor" class="flex-1 h-full relative"></div>
+            </div>
         </section>
 
-        <!-- Right Side: Scratch-like UI (Stage, Info, Sprites) -->
-        <section
-            class="w-full md:w-1/2 lg:w-[600px] flex flex-col shrink-0 bg-[#eef2f6] h-[45vh] md:h-full overflow-hidden font-sans md:border-l border-t md:border-t-0 border-slate-300">
-
-            <!-- 1. Stage Header (Green Flag & Stop) -->
-            <div class="bg-white flex items-center justify-between px-4 py-2 shrink-0 border-b border-slate-200">
-                <div class="flex space-x-5">
-                    <button id="run-btn" onclick="runCode()"
-                        class="text-[#4ade80] hover:text-[#22c55e] transition-transform hover:scale-110 active:scale-95"
-                        title="Chạy chương trình (Lá cờ xanh)">
-                        <i class="fa-solid fa-flag text-2xl drop-shadow-sm"></i>
-                    </button>
-                    <button id="stop-btn" onclick="stopExecution()"
-                        class="text-[#ef4444] hover:text-[#dc2626] transition-transform hover:scale-110 active:scale-95"
-                        title="Dừng">
-                        <i class="fa-solid fa-circle-stop text-2xl drop-shadow-sm"></i>
-                    </button>
-                    <button id="reset-btn" onclick="hardResetStage()"
-                        class="text-[#fbbf24] hover:text-[#f59e0b] transition-transform hover:scale-110 active:scale-95"
-                        title="Khôi phục gốc (Về trung tâm & Xóa vẽ)">
-                        <i class="fa-solid fa-rotate-left text-2xl drop-shadow-sm"></i>
-                    </button>
+        <!-- Middle Column: Turtle Playground & Terminal -->
+        <section class="w-full lg:w-[500px] flex flex-col gap-4 shrink-0">
+            <!-- Canvas Panel Card -->
+            <div class="panel-card flex flex-col h-[360px] shrink-0 lg:h-auto lg:flex-1">
+                <div
+                    class="bg-[#e6effc] px-4 py-2 border-b-3 border-[#2b53a7] flex items-center justify-between shrink-0">
+                    <div class="flex items-center space-x-2 text-[#2b53a7] font-bold text-sm">
+                        <i class="fa-solid fa-turtle mr-1"></i>
+                        <span>Khu vực sân khấu</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button id="run-btn" onclick="runCode()"
+                            class="text-[#f89b1c] hover:text-[#d97706] bouncy-btn transition-transform"
+                            title="Chạy chương trình (Lá cờ vàng)">
+                            <i class="fa-solid fa-flag text-lg"></i>
+                        </button>
+                        <button id="stop-btn" onclick="stopExecution()"
+                            class="text-red-500 hover:text-red-600 bouncy-btn transition-transform" title="Dừng">
+                            <i class="fa-solid fa-circle-stop text-lg"></i>
+                        </button>
+                        <button id="reset-btn" onclick="hardResetStage()"
+                            class="text-sky-600 hover:text-sky-500 bouncy-btn transition-transform"
+                            title="Khôi phục gốc (Về trung tâm & Xóa vẽ)">
+                            <i class="fa-solid fa-rotate-left text-lg"></i>
+                        </button>
+                        <div class="h-4 w-[1px] bg-slate-200"></div>
+                        <span class="text-[9px] text-slate-500 font-bold uppercase tracking-wide">Tốc độ</span>
+                        <input id="speed-slider" type="range" min="1" max="10" value="5"
+                            class="w-12 accent-[#f89b1c] cursor-pointer">
+                    </div>
                 </div>
-                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">Tốc độ</span>
-                    <input id="speed-slider" type="range" min="1" max="10" value="5"
-                        class="w-16 accent-[#8b5cf6] cursor-pointer">
+                <!-- Stage (Canvas) -->
+                <div class="flex-1 bg-[#e4e9f2] p-3 relative flex items-center justify-center overflow-hidden">
+                    <canvas id="turtle-canvas" width="600" height="340"
+                        class="max-w-full max-h-full rounded-xl border-2 border-slate-300 shadow-inner bg-[#fffdf5] block"></canvas>
                 </div>
             </div>
 
-            <!-- 2. Stage (Canvas) -->
-            <div class="bg-white relative flex items-center justify-center shrink-0 w-full overflow-hidden border-b border-slate-200">
-                <canvas id="turtle-canvas" width="600" height="340" class="w-full h-auto block"></canvas>
+            <!-- Terminal Panel Card -->
+            <div class="panel-card flex flex-col h-[120px] lg:h-[200px] shrink-0">
+                <div
+                    class="bg-[#e6effc] px-4 py-2 border-b-3 border-[#2b53a7] flex items-center justify-between shrink-0">
+                    <div class="flex items-center space-x-2 text-[#2b53a7] font-bold text-sm">
+                        <i class="fa-solid fa-terminal mr-1"></i>
+                        <span>Terminal</span>
+                    </div>
+                </div>
+                <div id="console-output"
+                    class="flex-1 p-3 overflow-auto bg-[#f8fafc] font-mono text-[13px] leading-relaxed text-slate-800 whitespace-pre-wrap">
+                    Sẵn sàng nhận lệnh!
+                </div>
             </div>
+        </section>
 
-
-            <!-- 5. Python/Console Tabs -->
-            <div class="bg-white border-t border-slate-300 flex flex-col flex-1 z-20">
-                <div class="bg-[#f8fafc] px-2 pt-1 flex items-center justify-between border-b border-slate-200">
+        <!-- Right Column: Python Code & Magic Variables -->
+        <section class="w-full lg:w-[380px] flex flex-col gap-4 shrink-0">
+            <!-- Tabs Panel Card -->
+            <div class="panel-card flex flex-col flex-1">
+                <div
+                    class="bg-[#e6effc] px-4 pt-1.5 flex items-center justify-between border-b-3 border-[#2b53a7] shrink-0">
                     <div class="flex space-x-1">
                         <button id="tab-code-btn" onclick="switchTab('code')"
-                            class="px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all border-b-2 border-indigo-500 text-indigo-600 bg-white shadow-sm">
-                            <i class="fa-brands fa-python text-amber-500 mr-1"></i>Python
-                        </button>
-                        <button id="tab-console-btn" onclick="switchTab('console')"
-                            class="px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-slate-800 bg-transparent">
-                            <i class="fa-solid fa-terminal text-emerald-500 mr-1"></i>Console
+                            class="px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all border-b-2 border-[#f89b1c] text-[#2b53a7] bg-white shadow-sm">
+                            <i class="fa-brands fa-python text-[#f89b1c] mr-1"></i>Python
                         </button>
                         <button id="tab-explain-btn" onclick="switchTab('explain')"
-                            class="px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-slate-800 bg-transparent">
-                            <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i>Giải thích
+                            class="px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-[#2b53a7] bg-transparent">
+                            <i class="fa-solid fa-lightbulb text-[#f89b1c] mr-1"></i>Giải thích
                         </button>
                     </div>
                 </div>
 
-                <div class="flex-1 relative">
-                    <div id="tab-code" class="absolute inset-0 p-3 overflow-auto terminal-bg flex flex-col">
+                <div class="flex-1 relative bg-white">
+                    <div id="tab-code" class="absolute inset-0 p-3 overflow-auto flex flex-col">
                         <pre
-                            class="font-mono text-[14px] leading-relaxed overflow-x-auto text-slate-100 flex-1"><code id="python-preview"># Kéo khối để xem mã nguồn Python...</code></pre>
+                            class="font-mono text-[13px] leading-normal overflow-x-auto text-slate-800 flex-1"><code id="python-preview"># Kéo khối để xem mã nguồn Python...</code></pre>
                     </div>
-                    <div id="tab-console" class="absolute inset-0 p-3 overflow-auto bg-slate-900 flex flex-col hidden">
-                        <div id="console-output"
-                            class="font-mono text-[14px] leading-relaxed text-emerald-300 flex-1 whitespace-pre-wrap">
-                            Sẵn sàng nhận lệnh!</div>
-                    </div>
-                    <div id="tab-explain"
-                        class="absolute inset-0 p-4 overflow-auto bg-amber-50/90 flex flex-col hidden">
+                    <div id="tab-explain" class="absolute inset-0 p-4 overflow-auto bg-white flex flex-col hidden">
                         <div id="explain-output"
-                            class="font-sans text-[15px] leading-relaxed text-slate-800 flex-1 whitespace-pre-wrap">Ghép
-                            khối để xem giải thích nhé!</div>
+                            class="font-sans text-[13.5px] leading-relaxed text-slate-800 flex-1 whitespace-pre-wrap">
+                            Ghép khối để xem giải thích nhé!</div>
                     </div>
                 </div>
             </div>
 
+            <!-- Magic Variables Card -->
+            <div class="panel-card p-4 h-[120px] lg:h-[200px] shrink-0 flex flex-col justify-between">
+                <div class="flex items-center justify-between shrink-0 mb-2">
+                    <div class="flex items-center space-x-2 text-[#2b53a7] font-bold text-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1 text-[#f89b1c]"></i>
+                        <span>Rương Kho Báu Biến Số</span>
+                    </div>
+                    <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Magic Variables</div>
+                </div>
+                <div id="variables-chest-container"
+                    class="flex-1 flex items-center justify-start bg-[#f0f4fa] rounded-xl px-2 py-1 overflow-x-auto">
+                    <!-- Dynamic chests will be rendered here -->
+                </div>
+            </div>
         </section>
     </main>
     <script>
@@ -427,11 +591,27 @@
             if (!explainGen.forBlock) explainGen.forBlock = {};
 
             const mapBlock = (name, jsFunc, pyFunc, explainFunc) => {
-                jsGen.forBlock[name] = jsFunc; jsGen[name] = jsFunc;
+                const wrappedJsFunc = function (block, generator) {
+                    const res = jsFunc(block, generator);
+                    if (typeof res === 'string') {
+                        return res.replace(/queueCommand\(\{/g, `queueCommand({blockId: "${block.id}", `);
+                    }
+                    return res;
+                };
+                jsGen.forBlock[name] = wrappedJsFunc; jsGen[name] = wrappedJsFunc;
                 pyGen.forBlock[name] = pyFunc; pyGen[name] = pyFunc;
                 if (explainFunc) {
                     explainGen.forBlock[name] = explainFunc; explainGen[name] = explainFunc;
                 }
+            };
+
+            pyGen.scrub_ = function (block, code, opt_thisOnly) {
+                const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
+                const nextCode = opt_thisOnly ? '' : pyGen.blockToCode(nextBlock);
+                if (typeof code === 'string' && code.trim().length > 0 && !block.outputConnection) {
+                    return `\n#BLOCK_${block.id}\n${code}\n#ENDBLOCK_${block.id}\n` + nextCode;
+                }
+                return code + nextCode;
             };
 
             mapBlock('turtle_forward',
@@ -665,7 +845,7 @@
                 let branch = jsGen.statementToCode(block, 'DO');
                 let loopVar = jsGen.nameDB_.getDistinctName('count', Blockly.VARIABLE_CATEGORY_NAME);
                 let code = `for (var ${loopVar} = 0; ${loopVar} < ${repeats}; ${loopVar}++) {\n`;
-                code += `  queueCommand({type: "loop_text", value: "Lặp lần " + (${loopVar} + 1)});\n`;
+                code += `  queueCommand({type: "loop_text", value: "Lặp lần " + (${loopVar} + 1), blockId: "${block.id}"});\n`;
                 code += branch;
                 code += `}\n`;
                 return code;
@@ -681,12 +861,32 @@
                 let stepVar = jsGen.nameDB_.getDistinctName('step', Blockly.VARIABLE_CATEGORY_NAME);
                 let endVar = jsGen.nameDB_.getDistinctName('end', Blockly.VARIABLE_CATEGORY_NAME);
                 let code = `for (var ${variable0} = Number(${argument0}), ${stepVar} = Number(${increment}), ${endVar} = Number(${argument1}); ${stepVar} >= 0 ? ${variable0} <= ${endVar} : ${variable0} >= ${endVar}; ${variable0} += ${stepVar}) {\n`;
-                code += `  queueCommand({type: "loop_text", value: "Lặp: " + "${block.getField('VAR').getText()}" + " = " + ${variable0}});\n`;
+                code += `  queueCommand({type: "loop_text", value: "Lặp: " + "${block.getField('VAR').getText()}" + " = " + ${variable0}, blockId: "${block.id}"});\n`;
+                code += `  queueCommand({type: "var_update", name: "${block.getField('VAR').getText()}", value: ${variable0}});\n`;
                 code += branch;
                 code += `}\n`;
                 return code;
             };
             jsGen['controls_for'] = jsGen.forBlock['controls_for'];
+
+            // Ghi đè Python generator cho controls_for - dùng range() trực tiếp như Python chuẩn
+            pyGen.forBlock['controls_for'] = function (block) {
+                let variable0 = pyGen.nameDB_.getName(block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME);
+                let argument0 = pyGen.valueToCode(block, 'FROM', pyGen.ORDER_NONE) || '0';
+                let argument1 = pyGen.valueToCode(block, 'TO', pyGen.ORDER_NONE) || '0';
+                let increment = pyGen.valueToCode(block, 'BY', pyGen.ORDER_NONE) || '1';
+                let branch = pyGen.statementToCode(block, 'DO') || '  pass\n';
+
+                let rangeStr;
+                if (increment === '1') {
+                    rangeStr = `range(${argument0}, ${argument1})`;
+                } else {
+                    rangeStr = `range(${argument0}, ${argument1}, ${increment})`;
+                }
+
+                return `for ${variable0} in ${rangeStr}:\n${branch}`;
+            };
+            pyGen['controls_for'] = pyGen.forBlock['controls_for'];
         }
 
         let workspace;
@@ -719,6 +919,38 @@
             } else {
                 // Default clean background
                 ctx.fillStyle = '#fffdf5'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw a beautiful, subtle coordinate grid
+                ctx.save();
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.03)'; // Very faint black
+                ctx.lineWidth = 1;
+
+                // Vertical lines every 50px
+                ctx.beginPath();
+                for (let x = 50; x < canvas.width; x += 50) {
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvas.height);
+                }
+                // Horizontal lines every 50px
+                for (let y = 50; y < canvas.height; y += 50) {
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                }
+                ctx.stroke();
+
+                // Draw center major axes
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)'; // Slightly more visible
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                // Vertical center axis
+                ctx.moveTo(300, 0);
+                ctx.lineTo(300, canvas.height);
+                // Horizontal center axis
+                ctx.moveTo(0, 170);
+                ctx.lineTo(canvas.width, 170);
+                ctx.stroke();
+
+                ctx.restore();
             }
         }
 
@@ -752,15 +984,15 @@
                 context.font = '24px Arial';
                 context.textAlign = 'center';
                 context.textBaseline = 'middle';
-                
+
                 // Hầu hết các emoji đều quay mặt sang trái, để mặc định hướng sang phải thì cần lật ngược lại
                 if (iconKey === 'turtle' || iconKey === 'cat' || iconKey === 'rabbit' || iconKey === 'bee') {
                     context.scale(-1, 1);
                 } else if (iconKey === 'rocket') {
                     // Rocket mặc định chéo lên (45 độ), xoay thêm 45 độ để thành nằm ngang sang phải
-                    context.rotate(Math.PI / 4); 
+                    context.rotate(Math.PI / 4);
                 }
-                
+
                 context.fillText(icon, 0, 0);
             }
             context.restore();
@@ -968,7 +1200,7 @@
     </script>
 
     <script>
-        let commandQueue = []; let currentCommand = null; let animationProgress = 0; let executionTimer = null;
+        let commandQueue = []; let currentCommand = null; let animationProgress = 0; let executionTimer = null; let activeHighlightedBlockId = null;
 
         function queueCommand(cmd) {
             commandQueue.push(cmd);
@@ -990,7 +1222,8 @@
 
         function runCode() {
             stopExecution(); resetTurtle(); document.getElementById('console-output').textContent = "";
-            playClick(); switchTab('console');
+            playClick();
+            initVariableWatcher();
             window.loopStartTime = Date.now();
             try {
                 const jsGen = typeof javascript !== 'undefined' ? javascript.javascriptGenerator : Blockly.JavaScript;
@@ -1012,6 +1245,16 @@
         function stopExecution() {
             if (executionTimer) cancelAnimationFrame(executionTimer); executionTimer = null;
             commandQueue = []; currentCommand = null; animationProgress = 0; drawCanvas();
+            if (activeHighlightedBlockId) {
+                document.querySelectorAll(`.python-line[data-block-id="${activeHighlightedBlockId}"]`).forEach(el => {
+                    el.classList.remove('highlight-line');
+                });
+                activeHighlightedBlockId = null;
+            }
+            if (typeof workspace !== 'undefined' && workspace) {
+                workspace.highlightBlock(null);
+            }
+            initVariableWatcher();
         }
 
         function startAnimationLoop() {
@@ -1022,6 +1265,29 @@
                 if (!currentCommand) {
                     if (commandQueue.length > 0) {
                         currentCommand = commandQueue.shift(); animationProgress = 0;
+
+                        // Update UI Highlights
+                        if (currentCommand.blockId !== activeHighlightedBlockId) {
+                            if (activeHighlightedBlockId) {
+                                document.querySelectorAll(`.python-line[data-block-id="${activeHighlightedBlockId}"]`).forEach(el => {
+                                    el.classList.remove('highlight-line');
+                                });
+                            }
+                            activeHighlightedBlockId = currentCommand.blockId || null;
+                            if (activeHighlightedBlockId) {
+                                document.querySelectorAll(`.python-line[data-block-id="${activeHighlightedBlockId}"]`).forEach(el => {
+                                    el.classList.add('highlight-line');
+                                });
+                                if (typeof workspace !== 'undefined' && workspace) {
+                                    workspace.highlightBlock(activeHighlightedBlockId);
+                                }
+                            } else {
+                                if (typeof workspace !== 'undefined' && workspace) {
+                                    workspace.highlightBlock(null);
+                                }
+                            }
+                        }
+
                         if (currentCommand.type === 'forward' || currentCommand.type === 'backward') {
                             currentCommand.startX = turtleState.x; currentCommand.startY = turtleState.y;
                             let dist = currentCommand.type === 'backward' ? -currentCommand.value : currentCommand.value;
@@ -1055,6 +1321,15 @@
                     } else {
                         currentCommand = null;
                         drawCanvas();
+                        if (activeHighlightedBlockId) {
+                            document.querySelectorAll(`.python-line[data-block-id="${activeHighlightedBlockId}"]`).forEach(el => {
+                                el.classList.remove('highlight-line');
+                            });
+                            activeHighlightedBlockId = null;
+                        }
+                        if (typeof workspace !== 'undefined' && workspace) {
+                            workspace.highlightBlock(null);
+                        }
                         if (turtleState.speechBubble) {
                             executionTimer = requestAnimationFrame(step);
                         } else {
@@ -1179,6 +1454,9 @@
                     } else if (currentCommand.type === 'loop_text') {
                         turtleState.loopText = currentCommand.value;
                         currentCommand = null;
+                    } else if (currentCommand.type === 'var_update') {
+                        updateVariableWatcher(currentCommand.name, currentCommand.value);
+                        currentCommand = null;
                     } else { currentCommand = null; }
 
                     updateCoordsDisplay(); drawCanvas();
@@ -1190,21 +1468,17 @@
 
         function switchTab(tabId) {
             const btnCode = document.getElementById('tab-code-btn');
-            const btnConsole = document.getElementById('tab-console-btn');
             const btnExplain = document.getElementById('tab-explain-btn');
             const paneCode = document.getElementById('tab-code');
-            const paneConsole = document.getElementById('tab-console');
             const paneExplain = document.getElementById('tab-explain');
 
-            const activeClass = "px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all border-b-2 border-indigo-500 text-indigo-600 bg-white shadow-sm";
-            const inactiveClass = "px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-slate-800 bg-transparent";
+            const activeClass = "px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all border-b-2 border-[#f89b1c] text-[#2b53a7] bg-white shadow-sm";
+            const inactiveClass = "px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-[#2b53a7] bg-transparent";
 
             if (btnCode) btnCode.className = tabId === 'code' ? activeClass : inactiveClass;
-            if (btnConsole) btnConsole.className = tabId === 'console' ? activeClass : inactiveClass;
             if (btnExplain) btnExplain.className = tabId === 'explain' ? activeClass : inactiveClass;
 
             if (paneCode) paneCode.classList.toggle('hidden', tabId !== 'code');
-            if (paneConsole) paneConsole.classList.toggle('hidden', tabId !== 'console');
             if (paneExplain) paneExplain.classList.toggle('hidden', tabId !== 'explain');
         }
 
@@ -1216,7 +1490,25 @@
             if (startBlock) {
                 pyGen.init(workspace);
                 pythonRaw = pyGen.blockToCode(startBlock);
+                // Xóa bỏ các định nghĩa hàm phụ trợ rườm rà của Blockly gốc
+                if (pyGen.definitions_) {
+                    delete pyGen.definitions_['upRange'];
+                    delete pyGen.definitions_['downRange'];
+                }
                 pythonRaw = pyGen.finish(pythonRaw);
+
+                // Loại bỏ triệt để định nghĩa hàm upRange và downRange nếu bị nối vào đầu chuỗi code
+                pythonRaw = pythonRaw.replace(/def\s+upRange\b[\s\S]*?start\s*\+=\s*abs\(step\)\n*/g, '');
+                pythonRaw = pythonRaw.replace(/def\s+downRange\b[\s\S]*?start\s*-=\s*abs\(step\)\n*/g, '');
+
+                // Fallback cứu hộ: Nếu blockly lọt lưới sinh ra cú pháp for phức tạp
+                pythonRaw = pythonRaw.replace(/for\s+([a-zA-Z0-9_]+)\s+in\s+\([^)]+\)\s+and\s+upRange\(([^,]+),\s*([^,]+),\s*([^)]+)\)\s+or\s+downRange[^:]+:/g, function (match, varName, start, stop, step) {
+                    let s = stop.trim();
+                    let st = step.trim();
+                    let stepStr = (st === '1') ? "" : ", " + st;
+                    return `for ${varName} in range(${start.trim()}, ${s}${stepStr}):`;
+                });
+
                 // Loại bỏ các khai báo biến "= None" vô nghĩa của Blockly Python
                 pythonRaw = pythonRaw.replace(/^[a-zA-Z0-9_]+\s*=\s*None\r?\n/gm, '');
                 pythonRaw = pythonRaw.trimStart();
@@ -1234,8 +1526,64 @@
                 }).join('<br/>');
             }
             let prefix = pythonRaw.includes('turtle') ? "import turtle\nt = turtle.Turtle()\n\n" : "";
-            document.getElementById('python-preview').textContent = pythonRaw.trim() === "" ? "# Hãy ghép các khối lệnh vào bên dưới khối 'Khi bấm nút chạy' nhé!" : prefix + pythonRaw;
+            let fullPython = (prefix + pythonRaw).trim();
+            if (fullPython === "") {
+                document.getElementById('python-preview').textContent = "# Hãy ghép các khối lệnh vào bên dưới khối 'Khi bấm nút chạy' nhé!";
+            } else {
+                let lines = fullPython.split('\n');
+                let blockIdStack = [];
+                let htmlLines = [];
+                let lastWasEmpty = true; // Skip leading empty lines
+
+                for (let line of lines) {
+                    let trimLine = line.trim();
+                    if (trimLine.startsWith('#BLOCK_')) {
+                        let blockId = trimLine.substring('#BLOCK_'.length);
+                        blockIdStack.push(blockId);
+                    } else if (trimLine.startsWith('#ENDBLOCK_')) {
+                        blockIdStack.pop();
+                    } else {
+                        if (trimLine === "") {
+                            if (lastWasEmpty) continue;
+                            lastWasEmpty = true;
+                        } else {
+                            lastWasEmpty = false;
+                        }
+
+                        let currentBlockId = blockIdStack[blockIdStack.length - 1] || null;
+                        let escapedLine = line
+                            .replace(/&/g, "&amp;")
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;");
+
+                        // Wrap python keywords for hover tooltips
+                        escapedLine = escapedLine.replace(/\b(for|in|range|print|def|if|elif|else|while|import|turtle)\b/g, '<span class="python-keyword tooltip-keyword" data-keyword="$1">$1</span>');
+
+                        if (currentBlockId) {
+                            htmlLines.push({
+                                text: `<span class="python-line" data-block-id="${currentBlockId}">${escapedLine || ' '}</span>`,
+                                isEmpty: trimLine === ""
+                            });
+                        } else {
+                            htmlLines.push({
+                                text: `<span class="python-line">${escapedLine || ' '}</span>`,
+                                isEmpty: trimLine === ""
+                            });
+                        }
+                    }
+                }
+
+                // Trim trailing empty lines
+                while (htmlLines.length > 0 && htmlLines[htmlLines.length - 1].isEmpty) {
+                    htmlLines.pop();
+                }
+
+                document.getElementById('python-preview').innerHTML = htmlLines.map(item => item.text).join('');
+            }
             document.getElementById('explain-output').innerHTML = explainRaw.trim() === "" ? "Ghép khối để xem giải thích nhé!" : explainRaw;
+            if (typeof initVariableWatcher === 'function') {
+                initVariableWatcher();
+            }
         }
 
         // Custom Flyout Scroll Logic
@@ -1582,6 +1930,190 @@
         // 2. Hàm customPrompt gọi từ runtime cho lệnh Hỏi và đợi nhập
         function customPrompt(message) {
             return showCustomPrompt("Nhập dữ liệu", message, "💬", "", false);
+        }
+
+        // --- Magic Variables Watcher ---
+        window.activeVariables = {};
+
+        function getVariableInitialValue(varName) {
+            if (typeof workspace === 'undefined' || !workspace) return '?';
+            const blocks = workspace.getAllBlocks(false);
+            
+            // 1. Check variables_set blocks
+            for (let i = 0; i < blocks.length; i++) {
+                const block = blocks[i];
+                if (block.type === 'variables_set') {
+                    const varField = block.getField('VAR');
+                    if (varField && varField.getText() === varName) {
+                        const valBlock = block.getInputTargetBlock('VALUE');
+                        if (valBlock) {
+                            if (valBlock.type === 'math_number') {
+                                return valBlock.getFieldValue('NUM');
+                            }
+                            if (valBlock.type === 'text') {
+                                return valBlock.getFieldValue('TEXT');
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 2. Check controls_for blocks
+            for (let i = 0; i < blocks.length; i++) {
+                const block = blocks[i];
+                if (block.type === 'controls_for') {
+                    const varField = block.getField('VAR');
+                    if (varField && varField.getText() === varName) {
+                        const fromBlock = block.getInputTargetBlock('FROM');
+                        if (fromBlock && fromBlock.type === 'math_number') {
+                            return fromBlock.getFieldValue('NUM');
+                        }
+                    }
+                }
+            }
+            
+            return '?';
+        }
+
+        function initVariableWatcher(clearValues = false) {
+            const isRunning = (typeof executionTimer !== 'undefined' && executionTimer !== null) || 
+                              (typeof currentCommand !== 'undefined' && currentCommand !== null) || 
+                              (typeof commandQueue !== 'undefined' && commandQueue.length > 0);
+
+            if (clearValues || !isRunning) {
+                window.activeVariables = {};
+            }
+            if (typeof workspace !== 'undefined' && workspace) {
+                const allVars = workspace.getAllVariables ? workspace.getAllVariables() : (workspace.getVariableMap ? workspace.getVariableMap().getAllVariables() : []);
+                const activeKeys = Object.keys(window.activeVariables);
+                const varNames = allVars.map(v => v.name);
+                activeKeys.forEach(k => {
+                    if (!varNames.includes(k)) {
+                        delete window.activeVariables[k];
+                    }
+                });
+                allVars.forEach(v => {
+                    if (window.activeVariables[v.name] === undefined || window.activeVariables[v.name] === '?') {
+                        window.activeVariables[v.name] = getVariableInitialValue(v.name);
+                    }
+                });
+            }
+            renderVariableChests();
+        }
+
+        function updateVariableWatcher(name, value) {
+            window.activeVariables[name] = value;
+            renderVariableChests();
+        }
+
+        function renderVariableChests() {
+            const container = document.getElementById('variables-chest-container');
+            if (!container) return;
+
+            const vars = Object.keys(window.activeVariables);
+            if (vars.length === 0) {
+                container.innerHTML = `
+                    <div class="text-[11px] text-slate-500 italic text-center py-4 w-full">
+                        Chưa có biến số nào được tạo!
+                    </div>
+                `;
+                return;
+            }
+
+            const colors = ['chest-green', 'chest-purple', 'chest-amber'];
+
+            let html = '';
+            vars.forEach((v, index) => {
+                const colorClass = colors[index % colors.length];
+                const val = window.activeVariables[v];
+                html += `
+                    <div class="magic-chest ${colorClass}">
+                        <div class="chest-label truncate font-bold" title="${v}">${v}</div>
+                        <div class="chest-value">${val !== undefined ? val : '?'}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Override Blockly variables_set for JS generator to notify watcher
+        setTimeout(() => {
+            const jsGen = typeof javascript !== 'undefined' ? javascript.javascriptGenerator : Blockly.JavaScript;
+            if (jsGen && jsGen.forBlock) {
+                jsGen.forBlock['variables_set'] = function (block) {
+                    let argument0 = jsGen.valueToCode(block, 'VALUE', jsGen.ORDER_ASSIGNMENT) || '0';
+                    let varName = jsGen.nameDB_.getName(block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME);
+                    let varText = block.getField('VAR').getText();
+                    return `${varName} = ${argument0};\nqueueCommand({type: "var_update", name: "${varText}", value: ${varName}});\n`;
+                };
+                jsGen['variables_set'] = jsGen.forBlock['variables_set'];
+            }
+            initVariableWatcher();
+        }, 100);
+
+        // --- Python Syntax Hover Tooltip ---
+        const tooltipDescriptions = {
+            'for': 'Vòng lặp <b>for</b> giúp chúng mình lặp lại các công việc nhiều lần một cách tự động! 🔁',
+            'in': 'Từ khóa <b>in</b> dùng để chỉ ra rằng biến sẽ chạy trong một dãy số hoặc danh sách.',
+            'range': 'Hàm <b>range(bắt đầu, kết thúc)</b> tạo ra một dãy số chạy liên tục. Ví dụ <code>range(0, 10)</code> sẽ chạy từ 0 đến 9.',
+            'print': 'Lệnh <b>print()</b> giúp hiển thị chữ viết lên màn hình Terminal để chúng mình đọc! 💬',
+            'def': 'Từ khóa <b>def</b> (viết tắt của define) dùng để tự tạo ra một nhóm lệnh mới (định nghĩa hàm).',
+            'if': 'Lệnh <b>if</b> nghĩa là "nếu". Nó giúp chương trình kiểm tra điều kiện và đưa ra quyết định! ⚖️',
+            'elif': 'Viết tắt của "else if" (ngược lại, nếu), dùng để kiểm tra điều kiện mới khi điều kiện "if" trước bị sai.',
+            'else': 'Nghĩa là "ngược lại", sẽ chạy các lệnh bên dưới khi tất cả điều kiện "if" và "elif" đều sai.',
+            'while': 'Vòng lặp <b>while</b> (trong khi) sẽ lặp lại các lệnh liên tục khi điều kiện vẫn còn đúng! 🔁',
+            'import': 'Từ khóa <b>import</b> dùng để gọi thêm các thư viện công cụ khác vào chương trình (như gọi Rùa 🐢 vẽ tranh).',
+            'turtle': 'Thư viện vẽ hình <b>turtle</b> (Rùa con) giúp chúng mình điều khiển chú rùa vẽ nên các bức tranh tuyệt đẹp! 🎨'
+        };
+
+        document.addEventListener('mouseover', function (e) {
+            const target = e.target.closest('.tooltip-keyword');
+            if (target) {
+                const keyword = target.dataset.keyword;
+                const desc = tooltipDescriptions[keyword];
+                if (desc) {
+                    showFloatingTooltip(target, desc);
+                }
+            }
+        });
+
+        document.addEventListener('mouseout', function (e) {
+            const target = e.target.closest('.tooltip-keyword');
+            if (target) {
+                hideFloatingTooltip();
+            }
+        });
+
+        function showFloatingTooltip(target, text) {
+            let tooltip = document.getElementById('python-syntax-tooltip');
+            if (!tooltip) {
+                tooltip = document.createElement('div');
+                tooltip.id = 'python-syntax-tooltip';
+                tooltip.className = 'custom-tooltip';
+                document.body.appendChild(tooltip);
+            }
+            tooltip.innerHTML = `
+                <div class="flex items-start space-x-2">
+                    <span class="text-base">🐝</span>
+                    <div class="flex-1">${text}</div>
+                </div>
+            `;
+            tooltip.style.display = 'block';
+
+            const rect = target.getBoundingClientRect();
+            tooltip.style.left = (rect.left + window.scrollX + (rect.width / 2) - 130) + 'px';
+            tooltip.style.top = (rect.top + window.scrollY - tooltip.offsetHeight - 8) + 'px';
+
+            void tooltip.offsetWidth;
+            tooltip.style.opacity = '1';
+        }
+
+        function hideFloatingTooltip() {
+            const tooltip = document.getElementById('python-syntax-tooltip');
+            if (tooltip) {
+                tooltip.style.opacity = '0';
+                tooltip.style.display = 'none';
+            }
         }
     </script>
 </body>
