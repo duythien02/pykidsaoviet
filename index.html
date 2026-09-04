@@ -2500,11 +2500,19 @@ t.forward(100)
         window.activeSyntaxCategory = 'all';
 
         window.turtleSyntaxData = [
+            // 🌟 KHỞI TẠO RÙA (Bắt buộc theo chuẩn Python)
+            {
+                category: 'all',
+                syntaxHtml: '<span class="text-purple-600 font-bold">import</span> turtle<br/><span class="text-blue-600 font-bold">t</span> = turtle.Turtle()',
+                example: 'import turtle\nt = turtle.Turtle()',
+                desc: 'Khởi tạo: Nạp thư viện và tạo đối tượng rùa t',
+                keywords: 'import turtle khoi tao bat dau khai bao setup'
+            },
             // 🐢 DI CHUYỂN (Tương ứng các khối trong mục "Di chuyển")
             {
                 category: 'move',
                 syntaxHtml: 'turtle.forward(<span class="text-amber-600 font-semibold">số_bước</span>)',
-                example: 'turtle.forward(100)',
+                example: 't.forward(100)',
                 desc: 'Khối: Tiến ... bước (hoặc t.forward)',
                 keywords: 'tien forward buoc di chuyen turtle_forward'
             },
@@ -2935,7 +2943,10 @@ for i in range(4):
             screen: {
                 bgcolor: function (c) { queueCommand({ type: "bgcolor", value: c }); }
             },
-            getscreen: function () { return window.pyTurtle.screen; }
+            getscreen: function () { return window.pyTurtle.screen; },
+            Turtle: function () { return window.pyTurtle; },
+            Pen: function () { return window.pyTurtle; },
+            turtle: function () { return window.pyTurtle; }
         };
 
         window.pyPrint = function () {
@@ -2952,9 +2963,8 @@ for i in range(4):
             let jsCode = '';
             let indentStack = [0];
 
+            // Strict Mode: Không nạp sẵn t và turtle, học sinh phải import và khởi tạo chuẩn Python
             jsCode += `
-                var t = window.pyTurtle;
-                var turtle = window.pyTurtle;
                 function pyPrint() { window.pyPrint.apply(null, arguments); }
             `;
 
@@ -2976,13 +2986,62 @@ for i in range(4):
 
                 let jsLine = trimmed;
 
-                if (trimmed.startsWith('import ')) {
+                if (/^import\s+turtle\b/.test(trimmed)) {
+                    const asMatch = trimmed.match(/^import\s+turtle\s+as\s+([a-zA-Z0-9_]+)/);
+                    if (asMatch) {
+                        const alias = asMatch[1];
+                        jsLine = `var ${alias} = window.pyTurtle; var turtle = window.pyTurtle;`;
+                    } else {
+                        jsLine = `var turtle = window.pyTurtle; var Turtle = function() { return window.pyTurtle; };`;
+                    }
+                }
+                else if (/^from\s+turtle\s+import\s+(.*)/.test(trimmed)) {
+                    const importMatch = trimmed.match(/^from\s+turtle\s+import\s+(.*)/);
+                    const importedItems = importMatch[1].split(',').map(s => s.trim());
+                    let stmts = [`var turtle = window.pyTurtle;`];
+                    if (importedItems.includes('*')) {
+                        stmts.push(`var Turtle = function() { return window.pyTurtle; };`);
+                        stmts.push(`var t = window.pyTurtle;`);
+                        stmts.push(`function forward(s) { window.pyTurtle.forward(s); }`);
+                        stmts.push(`function fd(s) { window.pyTurtle.fd(s); }`);
+                        stmts.push(`function backward(s) { window.pyTurtle.backward(s); }`);
+                        stmts.push(`function bk(s) { window.pyTurtle.bk(s); }`);
+                        stmts.push(`function right(d) { window.pyTurtle.right(d); }`);
+                        stmts.push(`function rt(d) { window.pyTurtle.rt(d); }`);
+                        stmts.push(`function left(d) { window.pyTurtle.left(d); }`);
+                        stmts.push(`function lt(d) { window.pyTurtle.lt(d); }`);
+                        stmts.push(`function penup() { window.pyTurtle.penup(); }`);
+                        stmts.push(`function pendown() { window.pyTurtle.pendown(); }`);
+                        stmts.push(`function color() { window.pyTurtle.color.apply(window.pyTurtle, arguments); }`);
+                        stmts.push(`function pencolor(c) { window.pyTurtle.pencolor(c); }`);
+                        stmts.push(`function fillcolor(c) { window.pyTurtle.fillcolor(c); }`);
+                        stmts.push(`function width(w) { window.pyTurtle.width(w); }`);
+                        stmts.push(`function pensize(w) { window.pyTurtle.pensize(w); }`);
+                        stmts.push(`function circle(r) { window.pyTurtle.circle(r); }`);
+                        stmts.push(`function speed(s) { window.pyTurtle.speed(s); }`);
+                        stmts.push(`function reset() { window.pyTurtle.reset(); }`);
+                        stmts.push(`function clear() { window.pyTurtle.clear(); }`);
+                        stmts.push(`function home() { window.pyTurtle.home(); }`);
+                    } else {
+                        if (importedItems.includes('Turtle')) {
+                            stmts.push(`var Turtle = function() { return window.pyTurtle; };`);
+                        }
+                        importedItems.forEach(item => {
+                            if (typeof window.pyTurtle[item] === 'function') {
+                                stmts.push(`function ${item}() { return window.pyTurtle['${item}'].apply(window.pyTurtle, arguments); }`);
+                            }
+                        });
+                    }
+                    jsLine = stmts.join(' ');
+                }
+                else if (trimmed.startsWith('import ')) {
                     jsLine = `// ${trimmed}`;
                 }
-                else if (/^[a-zA-Z0-9_]+\s*=\s*(turtle\.)?Turtle\(\)/.test(trimmed)) {
-                    const varMatch = trimmed.match(/^([a-zA-Z0-9_]+)/);
+                else if (/^[a-zA-Z0-9_]+\s*=\s*(?:turtle\.)?Turtle\(\)/.test(trimmed)) {
+                    const varMatch = trimmed.match(/^([a-zA-Z0-9_]+)\s*=\s*((?:turtle\.)?Turtle\(\))/);
                     const varName = varMatch ? varMatch[1] : 't';
-                    jsLine = `var ${varName} = window.pyTurtle;`;
+                    const constructorCall = varMatch ? varMatch[2] : 'turtle.Turtle()';
+                    jsLine = `var ${varName} = ${constructorCall};`;
                 }
                 else if (trimmed.startsWith('for ') && trimmed.includes(' in range(') && trimmed.endsWith(':')) {
                     const forMatch = trimmed.match(/^for\s+([a-zA-Z0-9_]+)\s+in\s+range\(([^)]+)\)\s*:/);
@@ -3074,6 +3133,38 @@ for i in range(4):
             return jsCode;
         }
 
+        function formatPythonError(err) {
+            const rawMsg = err.message || String(err);
+
+            // Match "X is not defined" (Standard JS ReferenceError)
+            const refMatch = rawMsg.match(/^(\w+)\s+is not defined$/i) ||
+                             rawMsg.match(/Cannot access '(\w+)' before initialization/i);
+            if (refMatch) {
+                const name = refMatch[1];
+                if (name === 't') {
+                    return `❌ Lỗi NameError: name 't' is not defined.\n👉 Biến 't' chưa được khởi tạo. Hãy thêm vào đầu chương trình:\nimport turtle\nt = turtle.Turtle()\ntrước khi điều khiển Rùa nhé!`;
+                } else if (name === 'turtle') {
+                    return `❌ Lỗi NameError: name 'turtle' is not defined.\n👉 Thư viện 'turtle' chưa được nạp. Hãy thêm dòng sau ở đầu chương trình:\nimport turtle`;
+                } else if (name === 'Turtle') {
+                    return `❌ Lỗi NameError: name 'Turtle' is not defined.\n👉 Bạn chưa import 'Turtle'. Hãy thêm 'import turtle' hoặc 'from turtle import Turtle' ở đầu chương trình nhé!`;
+                } else if (['forward', 'fd', 'backward', 'bk', 'right', 'rt', 'left', 'lt', 'circle', 'penup', 'pendown', 'color', 'pencolor', 'fillcolor', 'width', 'speed', 'clear', 'reset', 'home'].includes(name)) {
+                    return `❌ Lỗi NameError: name '${name}' is not defined.\n👉 Để dùng lệnh này, hãy gọi qua biến rùa (ví dụ: t.${name}(...)) sau khi 'import turtle' và 't = turtle.Turtle()' nhé!`;
+                } else {
+                    return `❌ Lỗi NameError: name '${name}' is not defined.\n👉 Biến hoặc hàm '${name}' chưa được khai báo trước khi sử dụng!`;
+                }
+            }
+
+            // Match TypeError: Cannot read properties of undefined
+            const propMatch = rawMsg.match(/Cannot read properties of (?:undefined|null) \(reading '(\w+)'\)/i) ||
+                              rawMsg.match(/(\w+) is undefined/i);
+            if (propMatch) {
+                const prop = propMatch[1];
+                return `❌ Lỗi AttributeError / NameError: Không thể gọi lệnh '.${prop}()'.\n👉 Hãy chắc chắn bạn đã nạp thư viện và khởi tạo đối tượng rùa (ví dụ: import turtle; t = turtle.Turtle()) nhé!`;
+            }
+
+            return "❌ Lỗi: " + rawMsg;
+        }
+
         function runPythonCode(pythonCode, withSound = true) {
             stopExecution();
             resetTurtle();
@@ -3086,7 +3177,7 @@ for i in range(4):
 
             try {
                 const jsCode = transpilePythonToJS(pythonCode);
-                let asyncCode = `(async function() {\n${jsCode}\n})().catch(err => handleError("Lỗi runtime: " + err.message));`;
+                let asyncCode = `(async function() {\n${jsCode}\n})().catch(err => handleError(formatPythonError(err)));`;
                 eval(asyncCode);
                 // Chấm điểm tức thì (0ms) cho các bài toán Terminal (in ấn) / Biến số
                 if (window.activeChallengeId && typeof checkCurrentChallenge === 'function') {
@@ -3096,7 +3187,7 @@ for i in range(4):
                     startAnimationLoop();
                 }
             } catch (err) {
-                handleError("Lỗi cú pháp Python: " + err.message);
+                handleError(formatPythonError(err));
             }
         }
 
