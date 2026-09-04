@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyKids 🐍 - Học Python Kéo Thả Thú Vị</title>
+    <title>SaoVietPyScratch 🐍 - Học Python Kéo Thả Thú Vị</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -254,27 +254,35 @@
 
     <!-- Header bar -->
     <header
-        class="bg-[#2b53a7] px-6 py-2.5 flex items-center justify-between shrink-0 border-b border-[#1f3d80] relative z-10 shadow-md">
+        class="bg-[#2b53a7] px-6 h-14 flex items-center justify-between shrink-0 border-b border-[#1f3d80] relative z-10 shadow-md">
+        <!-- Left: Logo & Brand -->
         <div class="flex items-center space-x-3">
             <div
-                class="bg-[#f89b1c] text-white p-2 rounded-xl shadow-lg transform -rotate-3 hover:rotate-0 transition-transform">
-                <i class="fa-solid fa-snake text-2xl"></i>
+                class="bg-[#f89b1c] text-white p-1.5 rounded-xl shadow-md transform -rotate-3 hover:rotate-0 transition-transform flex items-center justify-center">
+                <i class="fa-solid fa-snake text-xl"></i>
             </div>
             <div>
-                <h1 class="text-2.5xl font-black playful-font text-white tracking-wide">PyKids <span
-                        class="text-[#f89b1c]">🐍</span></h1>
+                <h1 class="text-xl sm:text-2xl font-black playful-font text-white tracking-wide flex items-center gap-1.5">
+                    <span>SaoVietPyScratch</span>
+                    <span class="text-[#f89b1c]">🐍</span>
+                </h1>
             </div>
         </div>
-        <div class="hidden md:flex items-center space-x-6">
-            <a href="#" class="text-slate-100 hover:text-[#f89b1c] transition-colors font-bold text-sm">Học tập</a>
-            <a href="#" class="text-slate-100 hover:text-[#f89b1c] transition-colors font-bold text-sm">Thử thách</a>
-            <a href="#" class="text-slate-100 hover:text-[#f89b1c] transition-colors font-bold text-sm">Cộng đồng</a>
-        </div>
-        <div class="flex items-center space-x-4">
-            <button class="text-slate-200 hover:text-white"><i class="fa-regular fa-bell text-lg"></i></button>
+
+        <!-- Right: Actions & User Avatar -->
+        <div class="flex items-center space-x-3 sm:space-x-4">
+            <button onclick="openChallengeModal()"
+                class="inline-flex items-center space-x-2 bg-[#f89b1c] hover:bg-[#e0860f] active:bg-[#c97507] text-white px-3.5 py-1.5 rounded-xl font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all transform hover:scale-105 active:scale-95 cursor-pointer border border-[#ffb84d]/40">
+                <i class="fa-solid fa-trophy text-amber-100 text-xs sm:text-sm"></i>
+                <span>Thử thách</span>
+            </button>
+            <button class="text-slate-200 hover:text-white p-1.5 transition-colors" title="Thông báo">
+                <i class="fa-regular fa-bell text-lg"></i>
+            </button>
             <div
-                class="w-8 h-8 rounded-full bg-[#f89b1c] flex items-center justify-center font-bold text-white shadow-md">
-                K</div>
+                class="w-8 h-8 rounded-full bg-[#f89b1c] flex items-center justify-center font-bold text-white shadow-md select-none text-sm">
+                S
+            </div>
         </div>
     </header>
 
@@ -285,11 +293,20 @@
             <div class="bg-[#e6effc] px-4 py-2 border-b-3 border-[#2b53a7] flex items-center justify-between shrink-0">
                 <div class="flex items-center space-x-2 text-[#2b53a7] font-bold text-sm">
                     <i class="fa-solid fa-puzzle-piece mr-1"></i>
-                    <span>Khu vực khối lệnh</span>
+                    <span>Khu vực lệnh</span>
                 </div>
-                <div class="text-[11px] text-slate-500 hidden sm:block">Kéo các khối lệnh từ cột bên trái vào màn hình
-                    kéo thả</div>
+                <div class="flex items-center space-x-2">
+                    <button id="toggle-blocks-btn" onclick="setMode('blocks')"
+                        class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#2b53a7] text-white shadow-sm border border-[#2b53a7]">
+                        🎮 Khối Lệnh
+                    </button>
+                    <button id="toggle-code-btn" onclick="setMode('code')"
+                        class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#2b53a7] hover:bg-[#d8e6f7] transition-all border border-[#cbdbea]">
+                        ⌨️ Gõ Python
+                    </button>
+                </div>
             </div>
+
             <div class="flex-1 flex relative overflow-hidden">
                 <!-- Custom Scratch-like Continuous Scroll Sidebar -->
                 <div id="scratch-sidebar" class="scratch-sidebar">
@@ -325,11 +342,79 @@
                 </div>
                 <!-- Main Blockly Container Div -->
                 <div id="blockly-editor" class="flex-1 h-full relative"></div>
+
+                <!-- Python Code Editor Container -->
+                <div id="python-editor-container"
+                    class="hidden flex-1 flex flex-col relative bg-[#f8fafc] h-full overflow-hidden">
+                    <div
+                        class="bg-[#f1f5f9] px-4 py-1.5 border-b border-slate-200 flex items-center justify-between shrink-0">
+                        <span class="text-[11px] font-bold text-slate-600">✍️ Gõ mã Python của bạn vào đây:</span>
+                        <button onclick="insertPythonTemplate()"
+                            class="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-0.5"></i> Chèn code mẫu
+                        </button>
+                    </div>
+                    <div class="flex-1 flex overflow-hidden relative">
+                        <textarea id="python-textarea"
+                            class="w-[60%] flex-[6] min-w-0 p-4 font-mono text-[14.5px] leading-relaxed text-slate-800 bg-[#fffdf5] focus:outline-none resize-none overflow-y-auto"
+                            spellcheck="false" placeholder="# Nhập mã Python để điều khiển Rùa...
+import turtle
+t = turtle.Turtle()
+t.forward(100)
+"></textarea>
+
+                        <!-- Toast thông báo chèn / sao chép cú pháp -->
+                        <div id="code-toast"
+                            class="pointer-events-none absolute bottom-4 left-1/3 -translate-x-1/2 bg-slate-900/90 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg transition-all duration-300 opacity-0 transform translate-y-2 z-30 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                            <span id="code-toast-text">Đã chèn lệnh vào dòng mới ✨</span>
+                        </div>
+
+                        <!-- Panel Gợi ý Cú pháp inside Python Code Mode (40% width) -->
+                        <div
+                            class="w-[40%] flex-[4] min-w-0 bg-slate-50 border-l border-slate-200 flex flex-col hidden sm:flex select-none h-full">
+                            <!-- Header & Filter -->
+                            <div class="p-3 border-b border-slate-200 bg-white shrink-0">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <div class="flex items-center space-x-1.5">
+                                        <span class="text-amber-500 text-base">💡</span>
+                                        <h4 class="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider">Gợi ý cú pháp</h4>
+                                    </div>
+                                    <span id="syntax-count-badge" class="text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">28 lệnh</span>
+                                </div>
+                                <p class="text-xs text-slate-500 mb-2 leading-tight">Tra cứu cú pháp mẫu để tự viết mã:</p>
+                                
+                                <!-- Search Input -->
+                                <div class="relative mb-2">
+                                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                    <input type="text" id="syntax-search-input" oninput="filterSyntaxCheatSheet()"
+                                        placeholder="Tìm lệnh (tiến, màu, xoay, lặp...)"
+                                        class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-indigo-400 focus:bg-white transition-all text-slate-700 placeholder:text-slate-400">
+                                </div>
+
+                                <!-- Categories horizontal scroll -->
+                                <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
+                                    <button onclick="filterSyntaxCategory('all')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-[#2b53a7] text-white transition-all shrink-0 text-xs" data-cat="all">Tất cả</button>
+                                    <button onclick="filterSyntaxCategory('move')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="move">🐢 Di chuyển</button>
+                                    <button onclick="filterSyntaxCategory('pen')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="pen">🎨 Bút vẽ</button>
+                                    <button onclick="filterSyntaxCategory('loop')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="loop">🔁 Vòng lặp</button>
+                                    <button onclick="filterSyntaxCategory('logic')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="logic">❓ Điều kiện</button>
+                                    <button onclick="filterSyntaxCategory('io')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="io">📦 In & Biến</button>
+                                </div>
+                            </div>
+
+                            <!-- List of Syntax Cards -->
+                            <div id="syntax-cards-container" class="flex-1 overflow-y-auto px-3 pb-3 pt-0 space-y-2.5 text-xs">
+                                <!-- Dynamically populated by renderSyntaxCards() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Middle Column: Turtle Playground & Terminal -->
-        <section class="w-full lg:w-[500px] flex flex-col gap-4 shrink-0">
+        <section id="middle-section" class="w-full lg:w-[500px] flex flex-col gap-4 shrink-0">
             <!-- Canvas Panel Card -->
             <div class="panel-card flex flex-col h-[360px] shrink-0 lg:h-auto lg:flex-1">
                 <div
@@ -342,7 +427,7 @@
                         <button id="run-btn" onclick="runCode()"
                             class="text-[#f89b1c] hover:text-[#d97706] bouncy-btn transition-transform"
                             title="Chạy chương trình (Lá cờ vàng)">
-                            <i class="fa-solid fa-flag text-lg"></i>
+                            <i class="fa-solid fa-flag text-lg pointer-events-none"></i>
                         </button>
                         <button id="stop-btn" onclick="stopExecution()"
                             class="text-red-500 hover:text-red-600 bouncy-btn transition-transform" title="Dừng">
@@ -367,7 +452,7 @@
             </div>
 
             <!-- Terminal Panel Card -->
-            <div class="panel-card flex flex-col h-[120px] lg:h-[200px] shrink-0">
+            <div id="terminal-panel" class="panel-card flex flex-col h-[120px] lg:h-[200px] shrink-0">
                 <div
                     class="bg-[#e6effc] px-4 py-2 border-b-3 border-[#2b53a7] flex items-center justify-between shrink-0">
                     <div class="flex items-center space-x-2 text-[#2b53a7] font-bold text-sm">
@@ -386,7 +471,7 @@
         <section class="w-full lg:w-[380px] flex flex-col gap-4 shrink-0">
             <!-- Tabs Panel Card -->
             <div class="panel-card flex flex-col flex-1">
-                <div
+                <div id="right-tabs-header"
                     class="bg-[#e6effc] px-4 pt-1.5 flex items-center justify-between border-b-3 border-[#2b53a7] shrink-0">
                     <div class="flex space-x-1">
                         <button id="tab-code-btn" onclick="switchTab('code')"
@@ -396,6 +481,10 @@
                         <button id="tab-explain-btn" onclick="switchTab('explain')"
                             class="px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-[#2b53a7] bg-transparent">
                             <i class="fa-solid fa-lightbulb text-[#f89b1c] mr-1"></i>Giải thích
+                        </button>
+                        <button id="tab-challenge-btn" onclick="switchTab('challenge')"
+                            class="hidden px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-amber-700 hover:text-[#2b53a7] bg-transparent">
+                            <i class="fa-solid fa-bullseye text-[#f89b1c] mr-1"></i>Nhiệm vụ
                         </button>
                     </div>
                 </div>
@@ -409,6 +498,31 @@
                         <div id="explain-output"
                             class="font-sans text-[13.5px] leading-relaxed text-slate-800 flex-1 whitespace-pre-wrap">
                             Ghép khối để xem giải thích nhé!</div>
+                    </div>
+                    <div id="tab-challenge" class="absolute inset-0 p-4 overflow-auto bg-[#fffdfa] flex flex-col hidden">
+                        <div class="flex items-center space-x-2.5 pb-2.5 border-b border-amber-200/80 mb-3 shrink-0">
+                            <span class="text-2xl">🎯</span>
+                            <div class="min-w-0 flex-1">
+                                <h4 id="right-challenge-title" class="text-sm font-bold text-amber-900 leading-tight">Thử thách</h4>
+                                <span class="text-[11px] font-semibold text-amber-600">Bảng nhiệm vụ & Đề bài chi tiết</span>
+                            </div>
+                        </div>
+                        <div class="space-y-3.5 text-xs flex-1">
+                            <div>
+                                <span class="font-bold text-slate-700 block mb-1 text-xs">📝 Yêu cầu cần làm:</span>
+                                <div id="right-challenge-desc" class="text-slate-800 leading-relaxed bg-amber-50/70 p-3 rounded-xl border border-amber-200 text-xs font-medium">...</div>
+                            </div>
+                            <div class="p-2.5 bg-sky-50 rounded-xl border border-sky-200 text-sky-800 text-[11px] flex items-center space-x-2">
+                                <i class="fa-solid fa-flag text-amber-500 text-sm"></i>
+                                <span>Bấm <b>Lá cờ vàng</b> trên sân khấu để chạy và tự động nộp bài!</span>
+                            </div>
+                        </div>
+                        <div class="pt-2.5 border-t border-slate-200 flex items-center justify-between mt-2 shrink-0">
+                            <span class="text-[10px] text-slate-400 font-medium">SaoVietPyScratch Challenge System</span>
+                            <button onclick="quitChallenge()" class="text-xs text-red-500 hover:text-red-700 font-bold hover:underline cursor-pointer">
+                                <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i>Thoát thử thách
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -894,9 +1008,29 @@
         let synth;
         let activeCompanion = 'turtle';
         function initSound() {
-            if (!synth) synth = new Tone.Synth({ oscillator: { type: "sine" } }).toDestination();
+            if (!synth) {
+                try {
+                    synth = new Tone.Synth({ oscillator: { type: "sine" } }).toDestination();
+                } catch (e) {
+                    console.warn("Could not init synth:", e);
+                }
+            }
         }
-        function playTone(note, dur) { if (!isMuted) { initSound(); Tone.start(); synth.triggerAttackRelease(note, dur); } }
+        function playTone(note, dur) {
+            if (!isMuted) {
+                try {
+                    initSound();
+                    if (typeof Tone !== 'undefined' && Tone.context && Tone.context.state !== 'running') {
+                        Tone.start().catch(() => {});
+                    }
+                    if (synth) {
+                        synth.triggerAttackRelease(note, dur);
+                    }
+                } catch (e) {
+                    // Suppress audio collision / audio context errors so logic never crashes
+                }
+            }
+        }
         function playClick() { playTone("C6", "32n"); }
 
         function toggleSound() {
@@ -955,6 +1089,7 @@
         }
 
         function drawCompanion(context, x, y, angleDeg) {
+            if (turtleState.visible === false) return;
             context.save(); context.translate(x, y); context.rotate(angleDeg * Math.PI / 180);
             const iconKey = turtleState.shape || activeCompanion;
 
@@ -1057,12 +1192,17 @@
                     ctx.beginPath();
                     ctx.arc(p.cx, p.cy, p.r, p.startAngleRad, p.endAngleRad, p.counterClockwise);
                     ctx.stroke();
+                } else if (p.type === 'dot') {
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
                 } else {
                     ctx.strokeStyle = p.color; ctx.lineWidth = p.width; ctx.lineCap = 'round';
                     ctx.beginPath(); ctx.moveTo(p.x1, p.y1); ctx.lineTo(p.x2, p.y2); ctx.stroke();
                 }
             });
-            if (currentCommand && (currentCommand.type === 'forward' || currentCommand.type === 'backward')) {
+            if (currentCommand && (currentCommand.type === 'forward' || currentCommand.type === 'backward' || currentCommand.type === 'goto' || currentCommand.type === 'setx' || currentCommand.type === 'sety')) {
                 if (turtleState.penDown) {
                     ctx.strokeStyle = turtleState.color; ctx.lineWidth = turtleState.width; ctx.lineCap = 'round';
                     ctx.beginPath(); ctx.moveTo(currentCommand.startX, currentCommand.startY); ctx.lineTo(turtleState.x, turtleState.y); ctx.stroke();
@@ -1192,7 +1332,7 @@
 
         function resetTurtle() {
             paths = [];
-            turtleState = { x: turtleStart.x, y: turtleStart.y, angle: turtleStart.angle, penDown: true, color: '#3b82f6', fillColor: '#f43f5e', width: 3, customBgColor: null, shape: null, isFilling: false, fillPoints: [] };
+            turtleState = { x: turtleStart.x, y: turtleStart.y, angle: turtleStart.angle, penDown: true, color: '#3b82f6', fillColor: '#f43f5e', width: 3, customBgColor: null, shape: null, isFilling: false, fillPoints: [], visible: true };
             updateCoordsDisplay(); drawCanvas();
         }
 
@@ -1222,9 +1362,18 @@
 
         function runCode() {
             stopExecution(); resetTurtle(); document.getElementById('console-output').textContent = "";
+            window.challengeFastTrack = false;
+            window.challengeTriggeredId = null;
             playClick();
             initVariableWatcher();
             window.loopStartTime = Date.now();
+
+            if (window.currentMode === 'code') {
+                const pyCode = document.getElementById('python-textarea').value;
+                runPythonCode(pyCode, false);
+                return;
+            }
+
             try {
                 const jsGen = typeof javascript !== 'undefined' ? javascript.javascriptGenerator : Blockly.JavaScript;
                 jsGen.INFINITE_LOOP_TRAP = 'if (Date.now() - window.loopStartTime > 3000) throw new Error("Phát hiện lặp vô tận! Vui lòng kiểm tra lại điều kiện vòng lặp.");\n';
@@ -1235,7 +1384,13 @@
                     code = jsGen.finish(code);
                     let asyncCode = `(async function() {\n${code}\n})().catch(err => handleError("Lỗi: " + err.message));`;
                     eval(asyncCode);
-                    startAnimationLoop();
+                    // Chấm điểm tức thì (0ms) cho các bài toán Terminal / Biến số
+                    if (window.activeChallengeId && typeof checkCurrentChallenge === 'function') {
+                        checkCurrentChallenge(true);
+                    }
+                    if (!executionTimer && !currentCommand && commandQueue.length > 0) {
+                        startAnimationLoop();
+                    }
                 } else {
                     addConsoleMessage("Không tìm thấy khối '▶ Khi bấm nút chạy'!");
                 }
@@ -1244,6 +1399,8 @@
 
         function stopExecution() {
             if (executionTimer) cancelAnimationFrame(executionTimer); executionTimer = null;
+            window.challengeFastTrack = false;
+            window.challengeTriggeredId = null;
             commandQueue = []; currentCommand = null; animationProgress = 0; drawCanvas();
             if (activeHighlightedBlockId) {
                 document.querySelectorAll(`.python-line[data-block-id="${activeHighlightedBlockId}"]`).forEach(el => {
@@ -1258,10 +1415,14 @@
         }
 
         function startAnimationLoop() {
+            if (executionTimer) return;
             function step() {
                 const sliderVal = parseInt(document.getElementById('speed-slider').value);
                 // Biến đổi hàm mũ để mức 1 cực kỳ chậm (quan sát vòng lặp), mức 10 cực kỳ nhanh
-                const speedMulti = Math.pow(sliderVal / 5, 2) * 5;
+                let speedMulti = Math.pow(sliderVal / 5, 2) * 5;
+                if (window.challengeFastTrack) {
+                    speedMulti = Math.max(speedMulti, 16);
+                }
                 if (!currentCommand) {
                     if (commandQueue.length > 0) {
                         currentCommand = commandQueue.shift(); animationProgress = 0;
@@ -1293,9 +1454,24 @@
                             let dist = currentCommand.type === 'backward' ? -currentCommand.value : currentCommand.value;
                             const rad = turtleState.angle * Math.PI / 180;
                             currentCommand.endX = turtleState.x + dist * Math.cos(rad); currentCommand.endY = turtleState.y + dist * Math.sin(rad);
+                        } else if (currentCommand.type === 'goto') {
+                            currentCommand.startX = turtleState.x; currentCommand.startY = turtleState.y;
+                            currentCommand.endX = 300 + Number(currentCommand.x);
+                            currentCommand.endY = 170 - Number(currentCommand.y);
+                        } else if (currentCommand.type === 'setx') {
+                            currentCommand.startX = turtleState.x; currentCommand.startY = turtleState.y;
+                            currentCommand.endX = 300 + Number(currentCommand.x);
+                            currentCommand.endY = turtleState.y;
+                        } else if (currentCommand.type === 'sety') {
+                            currentCommand.startX = turtleState.x; currentCommand.startY = turtleState.y;
+                            currentCommand.endX = turtleState.x;
+                            currentCommand.endY = 170 - Number(currentCommand.y);
                         } else if (currentCommand.type === 'right' || currentCommand.type === 'left') {
                             currentCommand.startAngle = turtleState.angle;
                             currentCommand.endAngle = turtleState.angle + (currentCommand.type === 'left' ? -currentCommand.value : currentCommand.value);
+                        } else if (currentCommand.type === 'setheading') {
+                            currentCommand.startAngle = turtleState.angle;
+                            currentCommand.endAngle = -Number(currentCommand.angle);
                         } else if (currentCommand.type === 'circle') {
                             currentCommand.startX = turtleState.x;
                             currentCommand.startY = turtleState.y;
@@ -1330,6 +1506,10 @@
                         if (typeof workspace !== 'undefined' && workspace) {
                             workspace.highlightBlock(null);
                         }
+                        // Kiểm tra kết quả thử thách ngay khi các lệnh vẽ hoàn tất (không bị delay bởi bong bóng thoại)
+                        if (typeof checkCurrentChallenge === 'function') {
+                            checkCurrentChallenge();
+                        }
                         if (turtleState.speechBubble) {
                             executionTimer = requestAnimationFrame(step);
                         } else {
@@ -1342,7 +1522,7 @@
                 if (currentCommand) {
                     animationProgress += 0.02 * speedMulti; if (animationProgress >= 1) animationProgress = 1;
 
-                    if (currentCommand.type === 'forward' || currentCommand.type === 'backward') {
+                    if (currentCommand.type === 'forward' || currentCommand.type === 'backward' || currentCommand.type === 'goto' || currentCommand.type === 'setx' || currentCommand.type === 'sety') {
                         turtleState.x = currentCommand.startX + (currentCommand.endX - currentCommand.startX) * animationProgress;
                         turtleState.y = currentCommand.startY + (currentCommand.endY - currentCommand.startY) * animationProgress;
                         if (turtleState.isFilling) {
@@ -1352,7 +1532,7 @@
                             if (turtleState.penDown) paths.push({ x1: currentCommand.startX, y1: currentCommand.startY, x2: currentCommand.endX, y2: currentCommand.endY, color: turtleState.color, width: turtleState.width });
                             turtleState.x = currentCommand.endX; turtleState.y = currentCommand.endY; currentCommand = null;
                         }
-                    } else if (currentCommand.type === 'right' || currentCommand.type === 'left') {
+                    } else if (currentCommand.type === 'right' || currentCommand.type === 'left' || currentCommand.type === 'setheading') {
                         turtleState.angle = currentCommand.startAngle + (currentCommand.endAngle - currentCommand.startAngle) * animationProgress;
                         if (animationProgress >= 1) { turtleState.angle = currentCommand.endAngle; currentCommand = null; }
                     } else if (currentCommand.type === 'pen') {
@@ -1360,6 +1540,31 @@
                     } else if (currentCommand.type === 'color') {
                         turtleState.color = currentCommand.color;
                         turtleState.fillColor = currentCommand.fillColor;
+                        currentCommand = null;
+                    } else if (currentCommand.type === 'pencolor') {
+                        turtleState.color = currentCommand.color;
+                        currentCommand = null;
+                    } else if (currentCommand.type === 'fillcolor') {
+                        turtleState.fillColor = currentCommand.color;
+                        currentCommand = null;
+                    } else if (currentCommand.type === 'dot') {
+                        paths.push({
+                            type: 'dot',
+                            x: turtleState.x,
+                            y: turtleState.y,
+                            r: Math.max(1, (Number(currentCommand.size) || 10) / 2),
+                            color: currentCommand.color || turtleState.color
+                        });
+                        currentCommand = null;
+                    } else if (currentCommand.type === 'visibility') {
+                        turtleState.visible = currentCommand.value;
+                        currentCommand = null;
+                    } else if (currentCommand.type === 'reset') {
+                        paths = [];
+                        turtleState = { x: 300, y: 170, angle: 0, penDown: true, color: '#3b82f6', fillColor: '#f43f5e', width: 3, customBgColor: null, shape: null, isFilling: false, fillPoints: [], visible: true };
+                        currentCommand = null;
+                    } else if (currentCommand.type === 'write') {
+                        turtleState.speechBubble = { text: currentCommand.text, time: Date.now() };
                         currentCommand = null;
                     } else if (currentCommand.type === 'width') {
                         turtleState.width = Math.max(1, currentCommand.value); currentCommand = null;
@@ -1467,19 +1672,46 @@
         }
 
         function switchTab(tabId) {
+            const isCodeMode = window.currentMode === 'code';
+            if (isCodeMode && tabId === 'code') {
+                tabId = window.activeChallengeId ? 'challenge' : 'explain';
+            }
             const btnCode = document.getElementById('tab-code-btn');
             const btnExplain = document.getElementById('tab-explain-btn');
+            const btnChallenge = document.getElementById('tab-challenge-btn');
             const paneCode = document.getElementById('tab-code');
             const paneExplain = document.getElementById('tab-explain');
+            const paneChallenge = document.getElementById('tab-challenge');
 
             const activeClass = "px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all border-b-2 border-[#f89b1c] text-[#2b53a7] bg-white shadow-sm";
             const inactiveClass = "px-3 py-1.5 rounded-t-lg font-bold text-xs transition-all text-slate-500 hover:text-[#2b53a7] bg-transparent";
 
-            if (btnCode) btnCode.className = tabId === 'code' ? activeClass : inactiveClass;
+            if (btnCode) {
+                if (isCodeMode) {
+                    btnCode.classList.add('hidden');
+                    btnCode.style.display = 'none';
+                } else {
+                    btnCode.classList.remove('hidden');
+                    btnCode.style.display = '';
+                    btnCode.className = tabId === 'code' ? activeClass : inactiveClass;
+                }
+            }
             if (btnExplain) btnExplain.className = tabId === 'explain' ? activeClass : inactiveClass;
+            if (btnChallenge) {
+                const isChallengeActive = !!window.activeChallengeId;
+                btnChallenge.className = tabId === 'challenge' ? activeClass : inactiveClass;
+                if (!isChallengeActive) {
+                    btnChallenge.classList.add('hidden');
+                    btnChallenge.style.display = 'none';
+                } else {
+                    btnChallenge.classList.remove('hidden');
+                    btnChallenge.style.display = '';
+                }
+            }
 
-            if (paneCode) paneCode.classList.toggle('hidden', tabId !== 'code');
+            if (paneCode) paneCode.classList.toggle('hidden', tabId !== 'code' || isCodeMode);
             if (paneExplain) paneExplain.classList.toggle('hidden', tabId !== 'explain');
+            if (paneChallenge) paneChallenge.classList.toggle('hidden', tabId !== 'challenge');
         }
 
         function handleWorkspaceChange() {
@@ -1849,6 +2081,63 @@
         </div>
     </div>
 
+    <!-- Modal Danh Sách Thử Thách -->
+    <div id="challenge-modal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[9999] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-[620px] max-w-[94%] transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]"
+            id="challenge-modal-box">
+            <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-3 shrink-0">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-500 text-xl shadow-xs">
+                        🎯
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-800">Thử Thách SaoVietPyScratch</h3>
+                        <p class="text-xs text-slate-500">Chinh phục 14 nhiệm vụ từ cơ bản đến nâng cao</p>
+                    </div>
+                </div>
+                <button onclick="closeChallengeModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer p-1"><i
+                        class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <!-- Progress Tracker -->
+            <div class="mb-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-3 flex items-center justify-between text-xs text-slate-700 shrink-0">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-medal text-amber-500 text-base"></i>
+                    <span class="font-medium">Tiến độ hoàn thành:</span>
+                </div>
+                <span id="challenge-progress-text" class="font-bold text-[#2b53a7] bg-white px-2.5 py-1 rounded-lg border border-blue-200">0/14 thử thách</span>
+            </div>
+            <!-- Challenge List -->
+            <div class="space-y-3 overflow-y-auto pr-1 flex-1 max-h-[440px]" id="challenge-list-container">
+                <!-- Challenges will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Thành Công / Chiến Thắng -->
+    <div id="success-modal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[9999] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-[400px] max-w-[90%] transform scale-95 transition-transform duration-300 text-center"
+            id="success-modal-box">
+            <div class="text-5xl mb-3">🎉</div>
+            <h3 class="text-xl font-black text-[#10b981] playful-font tracking-wide mb-2">Thử Thách Hoàn Thành!</h3>
+            <p class="text-slate-600 text-sm mb-6" id="success-modal-message">Chúc mừng bạn đã giải quyết thành công thử
+                thách bằng mã Python tự viết!</p>
+            <div class="flex justify-center space-x-3">
+                <button onclick="retryCurrentChallenge()"
+                    class="px-5 py-2.5 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Làm lại
+                </button>
+                <button id="success-next-btn" onclick="nextChallenge()"
+                    class="px-6 py-2.5 rounded-xl font-bold text-white bg-[#f89b1c] hover:bg-[#d97706] shadow-md shadow-amber-200 transition-colors">
+                    Bài tiếp theo <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         let customPromptTimeout = null;
         function showCustomPrompt(title, message, icon, defaultValue, showCancel) {
@@ -1938,7 +2227,7 @@
         function getVariableInitialValue(varName) {
             if (typeof workspace === 'undefined' || !workspace) return '?';
             const blocks = workspace.getAllBlocks(false);
-            
+
             // 1. Check variables_set blocks
             for (let i = 0; i < blocks.length; i++) {
                 const block = blocks[i];
@@ -1957,7 +2246,7 @@
                     }
                 }
             }
-            
+
             // 2. Check controls_for blocks
             for (let i = 0; i < blocks.length; i++) {
                 const block = blocks[i];
@@ -1971,14 +2260,14 @@
                     }
                 }
             }
-            
+
             return '?';
         }
 
         function initVariableWatcher(clearValues = false) {
-            const isRunning = (typeof executionTimer !== 'undefined' && executionTimer !== null) || 
-                              (typeof currentCommand !== 'undefined' && currentCommand !== null) || 
-                              (typeof commandQueue !== 'undefined' && commandQueue.length > 0);
+            const isRunning = (typeof executionTimer !== 'undefined' && executionTimer !== null) ||
+                (typeof currentCommand !== 'undefined' && currentCommand !== null) ||
+                (typeof commandQueue !== 'undefined' && commandQueue.length > 0);
 
             if (clearValues || !isRunning) {
                 window.activeVariables = {};
@@ -2114,6 +2403,1200 @@
                 tooltip.style.opacity = '0';
                 tooltip.style.display = 'none';
             }
+        }
+
+        // --- Python Text Coding Transition Feature Scripts ---
+        window.currentMode = 'blocks';
+
+        function setMode(mode) {
+            playClick();
+            window.currentMode = mode;
+            const btnBlocks = document.getElementById('toggle-blocks-btn');
+            const btnCode = document.getElementById('toggle-code-btn');
+            const blockEditor = document.getElementById('blockly-editor');
+            const sidebar = document.getElementById('scratch-sidebar');
+            const codeEditor = document.getElementById('python-editor-container');
+            const terminalPanel = document.getElementById('terminal-panel');
+            const middleSection = document.getElementById('middle-section');
+            const rightTabsHeader = document.getElementById('right-tabs-header');
+
+            const activeClass = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#2b53a7] text-white shadow-sm border border-[#2b53a7]";
+            const inactiveClass = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#2b53a7] hover:bg-[#d8e6f7] transition-all border border-[#cbdbea]";
+
+            if (mode === 'blocks') {
+                btnBlocks.className = activeClass;
+                btnCode.className = inactiveClass;
+                blockEditor.classList.remove('hidden');
+                sidebar.classList.remove('hidden');
+                codeEditor.classList.add('hidden');
+
+                // Return terminal panel to middle section and restore border
+                if (terminalPanel && middleSection) {
+                    middleSection.appendChild(terminalPanel);
+                    terminalPanel.style.border = '';
+                    terminalPanel.style.borderTop = '';
+                    terminalPanel.style.borderRadius = '';
+                    terminalPanel.classList.add('panel-card');
+                }
+
+                // Hiển thị tab Python khi ở chế độ Khối lệnh
+                const btnTabCode = document.getElementById('tab-code-btn');
+                if (btnTabCode) {
+                    btnTabCode.classList.remove('hidden');
+                    btnTabCode.style.display = '';
+                }
+
+                if (rightTabsHeader) {
+                    rightTabsHeader.classList.remove('hidden');
+                }
+                if (window.activeChallengeId) {
+                    switchTab('challenge');
+                } else {
+                    switchTab('code');
+                }
+
+                if (typeof Blockly !== 'undefined' && workspace) {
+                    setTimeout(() => Blockly.svgResize(workspace), 50);
+                }
+            } else {
+                btnBlocks.className = inactiveClass;
+                btnCode.className = activeClass;
+                blockEditor.classList.add('hidden');
+                sidebar.classList.add('hidden');
+                codeEditor.classList.remove('hidden');
+
+                // Move terminal panel below python editor and modify border to fit
+                if (terminalPanel && codeEditor) {
+                    codeEditor.appendChild(terminalPanel);
+                    terminalPanel.style.border = 'none';
+                    terminalPanel.style.borderTop = '3px solid #2b53a7';
+                    terminalPanel.style.borderRadius = '0';
+                    terminalPanel.classList.remove('panel-card');
+                }
+
+                // Ẩn hoàn toàn tab Python khi ở chế độ Gõ Python
+                const btnTabCode = document.getElementById('tab-code-btn');
+                if (btnTabCode) {
+                    btnTabCode.classList.add('hidden');
+                    btnTabCode.style.display = 'none';
+                }
+                const paneCode = document.getElementById('tab-code');
+                if (paneCode) {
+                    paneCode.classList.add('hidden');
+                }
+
+                if (rightTabsHeader) {
+                    rightTabsHeader.classList.remove('hidden');
+                    if (window.activeChallengeId) {
+                        switchTab('challenge');
+                    } else {
+                        switchTab('explain');
+                    }
+                }
+                renderSyntaxCards();
+            }
+        }
+
+        window.activeSyntaxCategory = 'all';
+
+        window.turtleSyntaxData = [
+            // 🐢 DI CHUYỂN (Tương ứng các khối trong mục "Di chuyển")
+            {
+                category: 'move',
+                syntaxHtml: 'turtle.forward(<span class="text-amber-600 font-semibold">số_bước</span>)',
+                example: 'turtle.forward(100)',
+                desc: 'Khối: Tiến ... bước (hoặc t.forward)',
+                keywords: 'tien forward buoc di chuyen turtle_forward'
+            },
+            {
+                category: 'move',
+                syntaxHtml: 'turtle.backward(<span class="text-amber-600 font-semibold">số_bước</span>)',
+                example: 'turtle.backward(50)',
+                desc: 'Khối: Lùi ... bước (hoặc t.backward)',
+                keywords: 'lui backward buoc di chuyen turtle_backward'
+            },
+            {
+                category: 'move',
+                syntaxHtml: 'turtle.right(<span class="text-amber-600 font-semibold">góc_độ</span>)',
+                example: 'turtle.right(90)',
+                desc: 'Khối: Xoay phải ... độ ↻ (hoặc t.right)',
+                keywords: 'xoay phai right re phai goc turtle_right'
+            },
+            {
+                category: 'move',
+                syntaxHtml: 'turtle.left(<span class="text-amber-600 font-semibold">góc_độ</span>)',
+                example: 'turtle.left(90)',
+                desc: 'Khối: Xoay trái ... độ ↺ (hoặc t.left)',
+                keywords: 'xoay trai left re trai goc turtle_left'
+            },
+            {
+                category: 'move',
+                syntaxHtml: 'turtle.circle(<span class="text-amber-600 font-semibold">bán_kính</span>)',
+                example: 'turtle.circle(90)',
+                desc: 'Khối: Vẽ hình tròn bán kính ...',
+                keywords: 'circle hinh tron ban kinh ve tron turtle_circle'
+            },
+            {
+                category: 'move',
+                syntaxHtml: 'turtle.home()',
+                example: 'turtle.home()',
+                desc: 'Khối: Về Trung tâm (tọa độ 0, 0)',
+                keywords: 'home ve nha trung tam goc toa do turtle_home'
+            },
+            {
+                category: 'move',
+                syntaxHtml: 'turtle.clear()',
+                example: 'turtle.clear()',
+                desc: 'Khối: Xóa tranh đã vẽ',
+                keywords: 'clear xoa tranh lam sach lau bang turtle_clear'
+            },
+
+            // 🎨 BÚT VẼ (Tương ứng các khối trong mục "Bút vẽ")
+            {
+                category: 'pen',
+                syntaxHtml: 'turtle.pendown()',
+                example: 'turtle.pendown()',
+                desc: 'Khối: Trạng thái bút: Hạ bút (Bắt đầu vẽ)',
+                keywords: 'pendown ha but bat dau ve turtle_pen'
+            },
+            {
+                category: 'pen',
+                syntaxHtml: 'turtle.penup()',
+                example: 'turtle.penup()',
+                desc: 'Khối: Trạng thái bút: Nhấc bút (Dừng vẽ)',
+                keywords: 'penup nhac but dung ve ngung ve turtle_pen'
+            },
+            {
+                category: 'pen',
+                syntaxHtml: 'turtle.color(<span class="text-amber-600 font-semibold">"nét"</span>, <span class="text-amber-600 font-semibold">"tô"</span>)',
+                example: 'turtle.color("#3b82f6", "#f43f5e")',
+                desc: 'Khối: Đổi màu: Nét ... Tô ...',
+                keywords: 'color doi mau mau net mau to turtle_color'
+            },
+            {
+                category: 'pen',
+                syntaxHtml: 'turtle.bgcolor(<span class="text-amber-600 font-semibold">"màu"</span>)',
+                example: 'turtle.bgcolor("#bae6fd")',
+                desc: 'Khối: Đổi màu nền sân khấu',
+                keywords: 'bgcolor mau nen san khau background turtle_bgcolor'
+            },
+            {
+                category: 'pen',
+                syntaxHtml: 'turtle.width(<span class="text-amber-600 font-semibold">độ_dày</span>)',
+                example: 'turtle.width(3)',
+                desc: 'Khối: Đổi kích thước nét vẽ',
+                keywords: 'width do day net ve kich thuoc but pensize turtle_width'
+            },
+            {
+                category: 'pen',
+                syntaxHtml: 'turtle.begin_fill()',
+                example: 'turtle.begin_fill()',
+                desc: 'Khối: Bắt đầu tô màu vùng khép kín',
+                keywords: 'begin_fill bat dau to mau turtle_begin_fill'
+            },
+            {
+                category: 'pen',
+                syntaxHtml: 'turtle.end_fill()',
+                example: 'turtle.end_fill()',
+                desc: 'Khối: Kết thúc tô màu (đổ màu vào hình)',
+                keywords: 'end_fill ket thuc to mau turtle_end_fill'
+            },
+            {
+                category: 'pen',
+                syntaxHtml: 'turtle.shape(<span class="text-amber-600 font-semibold">"hình_dáng"</span>)',
+                example: 'turtle.shape("turtle")',
+                desc: 'Khối: Đổi hình dáng bút ("turtle", "cat", "rabbit",...)',
+                keywords: 'shape doi hinh dang but rua meo tho turtle_shape'
+            },
+            {
+                category: 'pen',
+                syntaxHtml: 'turtle.speed(<span class="text-amber-600 font-semibold">tốc_độ</span>)',
+                example: 'turtle.speed(5)',
+                desc: 'Khối: Chỉnh tốc độ vẽ (1 đến 10)',
+                keywords: 'speed toc do ve nhanh cham turtle_speed'
+            },
+
+            // 🔁 VÒNG LẶP (Tương ứng các khối trong mục "Vòng lặp")
+            {
+                category: 'loop',
+                syntaxHtml: 'for <span class="text-amber-600 font-semibold">i</span> in range(<span class="text-amber-600 font-semibold">từ</span>, <span class="text-amber-600 font-semibold">đến</span>):',
+                example: 'for i in range(1, 11):\n    turtle.forward(50)\n    turtle.right(90)',
+                desc: 'Khối: Lặp với i từ ... đến ...',
+                keywords: 'for loop range vong lap controls_for'
+            },
+            {
+                category: 'loop',
+                syntaxHtml: 'while <span class="text-amber-600 font-semibold">điều_kiện</span>:',
+                example: 'while a < 10:\n    turtle.forward(20)\n    a = a + 1',
+                desc: 'Khối: Lặp trong khi điều kiện đúng',
+                keywords: 'while loop lap trong khi controls_whileUntil'
+            },
+
+            // ❓ ĐIỀU KIỆN (Tương ứng các khối trong mục "Điều kiện")
+            {
+                category: 'logic',
+                syntaxHtml: 'if <span class="text-amber-600 font-semibold">điều_kiện</span>: ... else:',
+                example: 'if diem >= 5:\n    print("Đạt")\nelse:\n    print("Chưa đạt")',
+                desc: 'Khối: Nếu ... thì ... Ngược lại ...',
+                keywords: 'if else dieu kien neu thi nguoc lai controls_if'
+            },
+            {
+                category: 'logic',
+                syntaxHtml: '<span class="text-amber-600 font-semibold">a</span> == <span class="text-amber-600 font-semibold">b</span>, !=, &lt;, &gt;, &lt;=, &gt;=',
+                example: 'if a == 10:\n    print("Bằng 10")',
+                desc: 'Khối: So sánh (=, ≠, <, ≤, >, ≥)',
+                keywords: 'so sanh bang khac lon hon nho hon logic_compare'
+            },
+            {
+                category: 'logic',
+                syntaxHtml: '<span class="text-amber-600 font-semibold">đk1</span> and <span class="text-amber-600 font-semibold">đk2</span> (hoặc or)',
+                example: 'if a > 0 and b > 0:\n    print("Đều dương")',
+                desc: 'Khối: Điều kiện kết hợp (và / hoặc)',
+                keywords: 'and or ket hop va hoac logic_operation'
+            },
+
+            // 📦 IN ẤN & BIẾN SỐ (Tương ứng các khối In ấn, Biến số, Toán số)
+            {
+                category: 'io',
+                syntaxHtml: 'print(<span class="text-amber-600 font-semibold">nội_dung</span>)',
+                example: 'print("Xin chào thế giới!")',
+                desc: 'Khối: In ra màn hình ...',
+                keywords: 'print in ra man hinh terminal py_print'
+            },
+            {
+                category: 'io',
+                syntaxHtml: 'input(<span class="text-amber-600 font-semibold">"câu_hỏi"</span>)',
+                example: 'ten = input("Tên bạn là gì?")',
+                desc: 'Khối: Hỏi và đợi nhập ...',
+                keywords: 'input hoi va doi nhap prompt py_input'
+            },
+            {
+                category: 'io',
+                syntaxHtml: '<span class="text-amber-600 font-semibold">tên_biến</span> = <span class="text-amber-600 font-semibold">giá_trị</span>',
+                example: 'a = 10',
+                desc: 'Khối: Gán biến ... thành ...',
+                keywords: 'gan bien so variables_set dat bien'
+            },
+            {
+                category: 'io',
+                syntaxHtml: '<span class="text-amber-600 font-semibold">a</span> + <span class="text-amber-600 font-semibold">b</span>, -, *, /',
+                example: 'tong = a + b',
+                desc: 'Khối: Phép toán cộng, trừ, nhân, chia',
+                keywords: 'cong tru nhan chia phep toan math_arithmetic'
+            },
+            {
+                category: 'io',
+                syntaxHtml: 'int(<span class="text-amber-600 font-semibold">giá_trị</span>)',
+                example: 'tuoi = int(input("Nhập tuổi: "))',
+                desc: 'Khối: Đổi thành số nguyên (int)',
+                keywords: 'int so nguyen py_to_int chuyen doi'
+            },
+            {
+                category: 'io',
+                syntaxHtml: 'float(<span class="text-amber-600 font-semibold">giá_trị</span>)',
+                example: 'diem = float("8.5")',
+                desc: 'Khối: Đổi thành số thập phân (float)',
+                keywords: 'float so thap phan py_to_float'
+            },
+            {
+                category: 'io',
+                syntaxHtml: '<span class="text-amber-600 font-semibold">chuỗi1</span> + <span class="text-amber-600 font-semibold">chuỗi2</span>',
+                example: 'loi_chao = "Chào " + ten',
+                desc: 'Khối: Tạo chuỗi ghép (nối văn bản)',
+                keywords: 'text_join ghep chu noi chu fstring'
+            }
+        ];
+
+        function renderSyntaxCards() {
+            const container = document.getElementById('syntax-cards-container');
+            if (!container) return;
+
+            const searchInput = document.getElementById('syntax-search-input');
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const category = window.activeSyntaxCategory || 'all';
+
+            const filtered = window.turtleSyntaxData.filter(item => {
+                const matchCat = (category === 'all' || item.category === category);
+                if (!matchCat) return false;
+                if (!query) return true;
+                const matchQuery = item.syntaxHtml.toLowerCase().includes(query) ||
+                                   item.example.toLowerCase().includes(query) ||
+                                   item.desc.toLowerCase().includes(query) ||
+                                   (item.keywords && item.keywords.includes(query)) ||
+                                   (item.alias && item.alias.toLowerCase().includes(query));
+                return matchQuery;
+            });
+
+            const countBadge = document.getElementById('syntax-count-badge');
+            if (countBadge) countBadge.textContent = `${filtered.length} lệnh`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-2xl mb-2 opacity-50"></i>
+                        <p class="text-sm font-semibold text-slate-600">Không tìm thấy lệnh nào phù hợp!</p>
+                        <p class="text-xs mt-1 text-slate-400">Thử tìm từ khóa khác (ví dụ: tiến, màu, xoay, lặp...)</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const categoryHeaders = {
+                'move': { title: '🐢 Khối Di chuyển', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+                'pen': { title: '🎨 Khối Bút vẽ', color: 'text-pink-700 bg-pink-50 border-pink-200' },
+                'loop': { title: '🔁 Khối Vòng lặp', color: 'text-purple-700 bg-purple-50 border-purple-200' },
+                'logic': { title: '❓ Khối Điều kiện', color: 'text-amber-700 bg-amber-50 border-amber-200' },
+                'io': { title: '📦 Khối In ấn & Biến số', color: 'text-cyan-700 bg-cyan-50 border-cyan-200' }
+            };
+
+            let html = '';
+            let currentCat = null;
+
+            filtered.forEach(item => {
+                if (category === 'all' && !query && item.category !== currentCat) {
+                    currentCat = item.category;
+                    const catInfo = categoryHeaders[currentCat] || { title: currentCat, color: 'text-slate-700 bg-slate-100 border-slate-200' };
+                    html += `
+                        <div class="sticky top-0 bg-slate-50 z-10 -mx-3 px-3 py-2 border-b border-slate-200">
+                            <div class="text-xs font-bold px-2.5 py-1 rounded-md border ${catInfo.color}">
+                                ${catInfo.title}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="syntax-card p-3 bg-white rounded-xl border border-slate-200 hover:border-indigo-400 hover:shadow-xs transition-all">
+                        <div class="font-mono text-[13.5px] font-bold text-indigo-600 leading-snug tracking-tight">
+                            ${item.syntaxHtml}
+                        </div>
+                        <p class="text-xs text-slate-700 mt-1 leading-snug">${item.desc}</p>
+                        <div class="mt-1.5 text-xs text-slate-400 font-mono">
+                            <span>Mẫu: <code class="text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded font-medium text-[11.5px]">${item.example.split('\n')[0]}</code></span>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function filterSyntaxCategory(cat) {
+            playClick();
+            window.activeSyntaxCategory = cat;
+            document.querySelectorAll('.syntax-cat-btn').forEach(btn => {
+                if (btn.getAttribute('data-cat') === cat) {
+                    btn.className = 'syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-[#2b53a7] text-white transition-all shrink-0 text-xs';
+                } else {
+                    btn.className = 'syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs';
+                }
+            });
+            renderSyntaxCards();
+        }
+
+        function filterSyntaxCheatSheet() {
+            renderSyntaxCards();
+        }
+
+        function insertSnippetByIndex(index) {
+            const item = window.turtleSyntaxData[index];
+            if (item) insertSnippet(item.example);
+        }
+
+        function copySyntaxByIndex(index) {
+            const item = window.turtleSyntaxData[index];
+            if (item) copySyntax(item.example);
+        }
+
+        function insertSnippet(snippet) {
+            playClick();
+            const textarea = document.getElementById('python-textarea');
+            if (!textarea) return;
+
+            const text = textarea.value;
+            const startPos = textarea.selectionStart;
+            const endPos = textarea.selectionEnd;
+
+            // Find current line before cursor
+            const lastNewline = text.lastIndexOf('\n', startPos - 1);
+            const lineStart = lastNewline === -1 ? 0 : lastNewline + 1;
+            const linePrefix = text.substring(lineStart, startPos);
+            const indentMatch = linePrefix.match(/^(\s*)/);
+            const currentIndent = indentMatch ? indentMatch[1] : '';
+
+            let insertText = '';
+            if (linePrefix.trim().length > 0) {
+                // Current line already has code, insert on next line with same indentation
+                insertText = '\n' + currentIndent + snippet;
+            } else {
+                insertText = snippet;
+            }
+
+            textarea.value = text.substring(0, startPos) + insertText + text.substring(endPos);
+            textarea.focus();
+
+            const newPos = startPos + insertText.length;
+            textarea.selectionStart = newPos;
+            textarea.selectionEnd = newPos;
+
+            showCodeToast('Đã chèn lệnh vào dòng mới ✨');
+        }
+
+        function appendCode(snippet) {
+            insertSnippet(snippet);
+        }
+
+        function copySyntax(text) {
+            playClick();
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).catch(() => {});
+            } else {
+                const temp = document.createElement('textarea');
+                temp.value = text;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+            }
+            showCodeToast('Đã sao chép cú pháp 📋');
+        }
+
+        let codeToastTimer = null;
+        function showCodeToast(msg) {
+            const toast = document.getElementById('code-toast');
+            const toastText = document.getElementById('code-toast-text');
+            if (!toast || !toastText) return;
+
+            toastText.textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-2');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            if (codeToastTimer) clearTimeout(codeToastTimer);
+            codeToastTimer = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-2');
+            }, 1500);
+        }
+
+        function insertPythonTemplate() {
+            playClick();
+            const template = `import turtle
+t = turtle.Turtle()
+
+# Vẽ một hình vuông
+for i in range(4):
+    t.forward(100)
+    t.right(90)
+`;
+            document.getElementById('python-textarea').value = template;
+        }
+
+        // Global objects for python runtime simulation
+        window.pyTurtle = {
+            forward: function (steps) { queueCommand({ type: "forward", value: steps }); },
+            fd: function (steps) { queueCommand({ type: "forward", value: steps }); },
+            backward: function (steps) { queueCommand({ type: "backward", value: steps }); },
+            bk: function (steps) { queueCommand({ type: "backward", value: steps }); },
+            back: function (steps) { queueCommand({ type: "backward", value: steps }); },
+            right: function (angle) { queueCommand({ type: "right", value: angle }); },
+            rt: function (angle) { queueCommand({ type: "right", value: angle }); },
+            left: function (angle) { queueCommand({ type: "left", value: angle }); },
+            lt: function (angle) { queueCommand({ type: "left", value: angle }); },
+            goto: function (x, y) { queueCommand({ type: "goto", x: x, y: y }); },
+            setpos: function (x, y) { queueCommand({ type: "goto", x: x, y: y }); },
+            setposition: function (x, y) { queueCommand({ type: "goto", x: x, y: y }); },
+            setx: function (x) { queueCommand({ type: "setx", x: x }); },
+            sety: function (y) { queueCommand({ type: "sety", y: y }); },
+            setheading: function (angle) { queueCommand({ type: "setheading", angle: angle }); },
+            seth: function (angle) { queueCommand({ type: "setheading", angle: angle }); },
+            home: function () { queueCommand({ type: "home" }); },
+            circle: function (radius) { queueCommand({ type: "circle", value: radius }); },
+            dot: function (size, color) { queueCommand({ type: "dot", size: size, color: color }); },
+            width: function (w) { queueCommand({ type: "width", value: w }); },
+            pensize: function (w) { queueCommand({ type: "width", value: w }); },
+            color: function (c1, c2) { queueCommand({ type: "color", color: c1, fillColor: c2 || c1 }); },
+            pencolor: function (c) { queueCommand({ type: "pencolor", color: c }); },
+            fillcolor: function (c) { queueCommand({ type: "fillcolor", color: c }); },
+            penup: function () { queueCommand({ type: "pen", value: false }); },
+            up: function () { queueCommand({ type: "pen", value: false }); },
+            pendown: function () { queueCommand({ type: "pen", value: true }); },
+            down: function () { queueCommand({ type: "pen", value: true }); },
+            speed: function (s) { queueCommand({ type: "speed", value: s }); },
+            shape: function (sh) { queueCommand({ type: "shape", value: sh }); },
+            begin_fill: function () { queueCommand({ type: "begin_fill" }); },
+            end_fill: function () { queueCommand({ type: "end_fill" }); },
+            bgcolor: function (c) { queueCommand({ type: "bgcolor", value: c }); },
+            clear: function () { queueCommand({ type: "clear" }); },
+            reset: function () { queueCommand({ type: "reset" }); },
+            hideturtle: function () { queueCommand({ type: "visibility", value: false }); },
+            ht: function () { queueCommand({ type: "visibility", value: false }); },
+            showturtle: function () { queueCommand({ type: "visibility", value: true }); },
+            st: function () { queueCommand({ type: "visibility", value: true }); },
+            write: function (text) { queueCommand({ type: "write", text: String(text) }); },
+            screen: {
+                bgcolor: function (c) { queueCommand({ type: "bgcolor", value: c }); }
+            },
+            getscreen: function () { return window.pyTurtle.screen; }
+        };
+
+        window.pyPrint = function () {
+            const args = Array.from(arguments).map(arg => {
+                if (typeof arg === 'object') return JSON.stringify(arg);
+                return String(arg);
+            });
+            const msg = args.join(' ');
+            queueCommand({ type: "print", value: msg });
+        };
+
+        function transpilePythonToJS(pythonCode) {
+            const lines = pythonCode.split('\n');
+            let jsCode = '';
+            let indentStack = [0];
+
+            jsCode += `
+                var t = window.pyTurtle;
+                var turtle = window.pyTurtle;
+                function pyPrint() { window.pyPrint.apply(null, arguments); }
+            `;
+
+            for (let idx = 0; idx < lines.length; idx++) {
+                let line = lines[idx];
+                const trimmed = line.trim();
+
+                if (trimmed === '' || trimmed.startsWith('#')) {
+                    continue;
+                }
+
+                const matchIndent = line.match(/^(\s*)/);
+                const indent = matchIndent ? matchIndent[0].length : 0;
+
+                while (indentStack.length > 1 && indent < indentStack[indentStack.length - 1]) {
+                    jsCode += '}\n';
+                    indentStack.pop();
+                }
+
+                let jsLine = trimmed;
+
+                if (trimmed.startsWith('import ')) {
+                    jsLine = `// ${trimmed}`;
+                }
+                else if (/^[a-zA-Z0-9_]+\s*=\s*(turtle\.)?Turtle\(\)/.test(trimmed)) {
+                    const varMatch = trimmed.match(/^([a-zA-Z0-9_]+)/);
+                    const varName = varMatch ? varMatch[1] : 't';
+                    jsLine = `var ${varName} = window.pyTurtle;`;
+                }
+                else if (trimmed.startsWith('for ') && trimmed.includes(' in range(') && trimmed.endsWith(':')) {
+                    const forMatch = trimmed.match(/^for\s+([a-zA-Z0-9_]+)\s+in\s+range\(([^)]+)\)\s*:/);
+                    if (forMatch) {
+                        const loopVar = forMatch[1];
+                        const rangeArgs = forMatch[2].split(',').map(s => s.trim());
+
+                        let start = '0';
+                        let stop = '0';
+                        let step = '1';
+
+                        if (rangeArgs.length === 1) {
+                            stop = rangeArgs[0];
+                        } else if (rangeArgs.length === 2) {
+                            start = rangeArgs[0];
+                            stop = rangeArgs[1];
+                        } else if (rangeArgs.length === 3) {
+                            start = rangeArgs[0];
+                            stop = rangeArgs[1];
+                            step = rangeArgs[2];
+                        }
+
+                        jsLine = `for (var ${loopVar} = Number(${start}); Number(${step}) >= 0 ? ${loopVar} < Number(${stop}) : ${loopVar} > Number(${stop}); ${loopVar} += Number(${step})) {\n`;
+                        jsLine += `  queueCommand({type: "loop_text", value: "Lặp: " + "${loopVar}" + " = " + ${loopVar}});`;
+                        jsLine += `  queueCommand({type: "var_update", name: "${loopVar}", value: ${loopVar}});`;
+
+                        indentStack.push(indent + 4);
+                    }
+                }
+                else if (trimmed.startsWith('while ') && trimmed.endsWith(':')) {
+                    let cond = trimmed.substring(6, trimmed.length - 1).trim();
+                    cond = cond.replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!').replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false');
+                    jsLine = `while (${cond}) {\n`;
+                    indentStack.push(indent + 4);
+                }
+                else if (trimmed.startsWith('if ') && trimmed.endsWith(':')) {
+                    let cond = trimmed.substring(3, trimmed.length - 1).trim();
+                    cond = cond.replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!').replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false');
+                    jsLine = `if (${cond}) {\n`;
+                    indentStack.push(indent + 4);
+                }
+                else if (trimmed.startsWith('elif ') && trimmed.endsWith(':')) {
+                    let cond = trimmed.substring(5, trimmed.length - 1).trim();
+                    cond = cond.replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!').replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false');
+                    jsLine = `} else if (${cond}) {\n`;
+                }
+                else if (trimmed === 'else:') {
+                    jsLine = `} else {\n`;
+                }
+                else if (/^[a-zA-Z_][a-zA-Z0-9_]*\s*(\+=|-=|\*=|\/=|%=|=)\s*(.*)/.test(trimmed)) {
+                    const assignMatch = trimmed.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*(\+=|-=|\*=|\/=|%=|=)\s*(.*)/);
+                    if (assignMatch) {
+                        const varName = assignMatch[1];
+                        const op = assignMatch[2];
+                        const expr = assignMatch[3];
+                        if (op === '=') {
+                            jsLine = `var ${varName} = ${expr};\nqueueCommand({type: "var_update", name: "${varName}", value: ${varName}});`;
+                        } else {
+                            jsLine = `${varName} ${op} ${expr};\nqueueCommand({type: "var_update", name: "${varName}", value: ${varName}});`;
+                        }
+                    }
+                }
+                else if (trimmed.startsWith('print(') && trimmed.endsWith(')')) {
+                    const printContentMatch = trimmed.match(/^print\((.*)\)$/);
+                    if (printContentMatch) {
+                        let content = printContentMatch[1];
+                        if (content.startsWith('f"') && content.endsWith('"')) {
+                            const clean = content.substring(2, content.length - 1);
+                            const jsTemplate = clean.replace(/\{([^}]+)\}/g, '${$1}');
+                            jsLine = `pyPrint(\`${jsTemplate}\`);`;
+                        } else if (content.startsWith("f'") && content.endsWith("'")) {
+                            const clean = content.substring(2, content.length - 1);
+                            const jsTemplate = clean.replace(/\{([^}]+)\}/g, '${$1}');
+                            jsLine = `pyPrint(\`${jsTemplate}\`);`;
+                        } else {
+                            jsLine = `pyPrint(${content});`;
+                        }
+                    }
+                }
+
+                jsCode += jsLine + '\n';
+            }
+
+            while (indentStack.length > 1) {
+                jsCode += '}\n';
+                indentStack.pop();
+            }
+
+            return jsCode;
+        }
+
+        function runPythonCode(pythonCode, withSound = true) {
+            stopExecution();
+            resetTurtle();
+            window.challengeFastTrack = false;
+            window.challengeTriggeredId = null;
+            document.getElementById('console-output').textContent = "";
+            if (withSound) playClick();
+            initVariableWatcher(true);
+            window.loopStartTime = Date.now();
+
+            try {
+                const jsCode = transpilePythonToJS(pythonCode);
+                let asyncCode = `(async function() {\n${jsCode}\n})().catch(err => handleError("Lỗi runtime: " + err.message));`;
+                eval(asyncCode);
+                // Chấm điểm tức thì (0ms) cho các bài toán Terminal (in ấn) / Biến số
+                if (window.activeChallengeId && typeof checkCurrentChallenge === 'function') {
+                    checkCurrentChallenge(true);
+                }
+                if (!executionTimer && !currentCommand && commandQueue.length > 0) {
+                    startAnimationLoop();
+                }
+            } catch (err) {
+                handleError("Lỗi cú pháp Python: " + err.message);
+            }
+        }
+
+        // Challenges Data (14 Thử Thách Từ Đơn Giản Đến Nâng Cao)
+        window.challenges = [
+            // CẤP ĐỘ 1: KHỞI ĐỘNG & LÀM CHỦ LỆNH CƠ BẢN
+            {
+                id: 'intro_card',
+                level: 1,
+                levelName: 'Cấp độ 1: Khởi động & Lệnh cơ bản',
+                levelColor: '#10b981',
+                title: 'Thử thách 1: Thẻ hồ sơ Lập trình viên 🧑‍💻',
+                desc: 'Sử dụng các lệnh <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-bold">print()</code> để in ra đúng 3 dòng giới thiệu bản thân:<br>1. <code>Xin chao SaoVietPyScratch!</code><br>2. <code>To la Lap trinh vien nhi</code><br>3. <code>Muc tieu: Chinh phuc Python</code>',
+                validate: function (consoleLog, paths, variables) {
+                    const norm = consoleLog.toLowerCase().replace(/[\s\-_]/g, '').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    const hasHello = norm.includes('xinchao') || norm.includes('hellosaoviet') || norm.includes('saoviet');
+                    const hasRole = norm.includes('laptrinhvien') || norm.includes('laptrinh') || norm.includes('pythonkid');
+                    const hasGoal = norm.includes('chinhphuc') || norm.includes('python');
+                    return (hasHello && hasRole && hasGoal) || norm.includes('chinhphucpython');
+                }
+            },
+            {
+                id: 'turtle_stairs',
+                level: 1,
+                levelName: 'Cấp độ 1: Khởi động & Lệnh cơ bản',
+                levelColor: '#10b981',
+                title: 'Thử thách 2: Cầu thang phiêu lưu 🪜',
+                desc: 'Điều khiển chú Rùa vượt chướng ngại vật bằng cách vẽ một chiếc cầu thang gồm ít nhất <b>3 bậc</b>. Mỗi bậc: tiến <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">40</code> bước, rẽ trái <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">90°</code>, tiến <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">40</code> bước, rồi rẽ phải <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">90°</code>.',
+                validate: function (consoleLog, paths, variables) {
+                    const lines = paths.filter(p => p.type === undefined || p.x1 !== undefined);
+                    if (lines.length < 6) return false;
+                    let validSteps = 0;
+                    for (let p of lines) {
+                        const dist = Math.hypot(p.x2 - p.x1, p.y2 - p.y1);
+                        if (Math.abs(dist - 40) <= 8) validSteps++;
+                    }
+                    return validSteps >= 5;
+                }
+            },
+            {
+                id: 'turtle_cross',
+                level: 1,
+                levelName: 'Cấp độ 1: Khởi động & Lệnh cơ bản',
+                levelColor: '#10b981',
+                title: 'Thử thách 3: Biển báo Chữ Thập cứu hộ ➕',
+                desc: 'Chỉnh độ dày nét bút lên <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">5</code>, màu đỏ (<code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">red</code>), và điều khiển Rùa vẽ dấu cộng <code class="text-red-500 font-bold">+</code> có 4 nhánh đều nhau (mỗi nhánh dài <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">50</code> bước tính từ tâm).',
+                validate: function (consoleLog, paths, variables) {
+                    const lines = paths.filter(p => p.type === undefined || p.x1 !== undefined);
+                    if (lines.length < 4) return false;
+                    let branchCount = 0;
+                    for (let p of lines) {
+                        const dist = Math.hypot(p.x2 - p.x1, p.y2 - p.y1);
+                        if (Math.abs(dist - 50) <= 12) branchCount++;
+                    }
+                    return branchCount >= 3;
+                }
+            },
+
+            // CẤP ĐỘ 2: HỌA SĨ HÌNH HỌC
+            {
+                id: 'draw_square',
+                level: 2,
+                levelName: 'Cấp độ 2: Họa sĩ hình học',
+                levelColor: '#f59e0b',
+                title: 'Thử thách 4: Hình vuông thần kỳ 🟧',
+                desc: 'Hãy viết code Python sử dụng vòng lặp <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">for</code> 4 lần để vẽ một hình vuông kín có cạnh là <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">100</code> bước.',
+                validate: function (consoleLog, paths, variables) {
+                    const lines = paths.filter(p => p.type === undefined || p.x1 !== undefined);
+                    if (lines.length < 4) return false;
+                    let squareSegments = 0;
+                    for (let p of lines) {
+                        const dist = Math.hypot(p.x2 - p.x1, p.y2 - p.y1);
+                        if (Math.abs(dist - 100) <= 10) squareSegments++;
+                    }
+                    if (squareSegments < 4) return false;
+                    const first = lines[0];
+                    const last = lines[lines.length - 1];
+                    return Math.hypot(last.x2 - first.x1, last.y2 - first.y1) <= 15;
+                }
+            },
+            {
+                id: 'draw_triangle',
+                level: 2,
+                levelName: 'Cấp độ 2: Họa sĩ hình học',
+                levelColor: '#f59e0b',
+                title: 'Thử thách 5: Tam giác sắc màu 🔺',
+                desc: 'Đổi màu bút sang màu đỏ (<code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">red</code>) và vẽ hình tam giác đều khép kín có cạnh là <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">120</code> bước (góc rẽ <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">120°</code>).',
+                validate: function (consoleLog, paths, variables) {
+                    const lines = paths.filter(p => p.type === undefined || p.x1 !== undefined);
+                    if (lines.length < 3) return false;
+                    let triSegments = 0;
+                    for (let p of lines) {
+                        const dist = Math.hypot(p.x2 - p.x1, p.y2 - p.y1);
+                        if (Math.abs(dist - 120) <= 15) triSegments++;
+                    }
+                    if (triSegments < 3) return false;
+                    const first = lines[0];
+                    const last = lines[lines.length - 1];
+                    return Math.hypot(last.x2 - first.x1, last.y2 - first.y1) <= 20;
+                }
+            },
+            {
+                id: 'draw_circle',
+                level: 2,
+                levelName: 'Cấp độ 2: Họa sĩ hình học',
+                levelColor: '#f59e0b',
+                title: 'Thử thách 6: Vòng tròn kỳ diệu 🟣',
+                desc: 'Vẽ một hình tròn hoàn chỉnh có bán kính là <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">50</code> bước bằng lệnh vẽ đường cong tròn của Rùa.',
+                validate: function (consoleLog, paths, variables) {
+                    const circle = paths.find(p => p.type === 'circle' && Math.abs(p.r - 50) <= 10);
+                    if (circle) return true;
+                    const lines = paths.filter(p => p.type === undefined || p.x1 !== undefined);
+                    return lines.length >= 24;
+                }
+            },
+
+            // CẤP ĐỘ 3: BIẾN SỐ & TÍNH TOÁN
+            {
+                id: 'variable_score',
+                level: 3,
+                levelName: 'Cấp độ 3: Biến số & Tính toán',
+                levelColor: '#3b82f6',
+                title: 'Thử thách 7: Chiếc túi đựng điểm 🎒',
+                desc: 'Tạo biến <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-bold">score = 100</code>, sau đó cộng thêm <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-bold">50</code> điểm vào biến <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-bold">score</code> và in giá trị cuối cùng ra Terminal (<code class="bg-slate-100 px-1 py-0.5 rounded text-green-600 font-bold">150</code>).',
+                validate: function (consoleLog, paths, variables) {
+                    if (variables && variables['score'] === 150) return true;
+                    return consoleLog.includes('150');
+                }
+            },
+            {
+                id: 'loop_count_10',
+                level: 3,
+                levelName: 'Cấp độ 3: Biến số & Tính toán',
+                levelColor: '#3b82f6',
+                title: 'Thử thách 8: Máy đếm số siêu tốc 🔢',
+                desc: 'Sử dụng vòng lặp <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">for</code> để in lần lượt các số từ <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">1 đến 10</code> ra màn hình Terminal.',
+                validate: function (consoleLog, paths, variables) {
+                    const numbers = consoleLog.match(/\d+/g);
+                    if (!numbers) return false;
+                    const seq = numbers.map(Number);
+                    let searchIdx = 0;
+                    const target = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                    for (let num of seq) {
+                        if (num === target[searchIdx]) {
+                            searchIdx++;
+                            if (searchIdx === target.length) return true;
+                        }
+                    }
+                    return false;
+                }
+            },
+            {
+                id: 'sum_sequence',
+                level: 3,
+                levelName: 'Cấp độ 3: Biến số & Tính toán',
+                levelColor: '#3b82f6',
+                title: 'Thử thách 9: Tổng các số kỳ bí ➕',
+                desc: 'Sử dụng biến tích lũy và vòng lặp <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">for</code> để tính tổng các số từ 1 đến 5 (1 + 2 + 3 + 4 + 5) và in kết quả (<code class="bg-slate-100 px-1 py-0.5 rounded text-green-600 font-bold">15</code>) ra Terminal.',
+                validate: function (consoleLog, paths, variables) {
+                    if (variables && (variables['tong'] === 15 || variables['total'] === 15 || variables['sum'] === 15 || variables['s'] === 15)) return true;
+                    return consoleLog.includes('15');
+                }
+            },
+
+            // CẤP ĐỘ 4: ĐIỀU KIỆN & QUYẾT ĐỊNH
+            {
+                id: 'even_odd',
+                level: 4,
+                levelName: 'Cấp độ 4: Điều kiện & Logic',
+                levelColor: '#8b5cf6',
+                title: 'Thử thách 10: Vệ sĩ chẵn lẻ ⚖️',
+                desc: 'Cho biến <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-bold">n = 8</code>. Dùng câu lệnh điều kiện <code class="bg-slate-100 px-1 py-0.5 rounded text-amber-600 font-bold">if...else</code> để kiểm tra: nếu n là số chẵn in ra <code class="bg-slate-100 px-1 py-0.5 rounded text-green-600 font-bold">So chan</code>, nếu lẻ in <code class="bg-slate-100 px-1 py-0.5 rounded text-amber-600 font-bold">So le</code>.',
+                validate: function (consoleLog, paths, variables) {
+                    const norm = consoleLog.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    return norm.includes('so chan') || norm.includes('even');
+                }
+            },
+            {
+                id: 'multiplication_5',
+                level: 4,
+                levelName: 'Cấp độ 4: Điều kiện & Logic',
+                levelColor: '#8b5cf6',
+                title: 'Thử thách 11: Bảng nhân 5 vui nhộn ✖️',
+                desc: 'Dùng vòng lặp <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">for</code> để in ra các bội số của 5 từ 5 đến 50 (<code class="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-bold">5, 10, 15, ..., 50</code>) ra màn hình Terminal.',
+                validate: function (consoleLog, paths, variables) {
+                    const numbers = consoleLog.match(/\d+/g);
+                    if (!numbers) return false;
+                    const seq = numbers.map(Number);
+                    let target = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+                    let searchIdx = 0;
+                    for (let num of seq) {
+                        if (num === target[searchIdx]) {
+                            searchIdx++;
+                            if (searchIdx === target.length) return true;
+                        }
+                    }
+                    return searchIdx >= 8;
+                }
+            },
+
+            // CẤP ĐỘ 5: BẬC THẦY SÁNG TẠO
+            {
+                id: 'draw_star',
+                level: 5,
+                levelName: 'Cấp độ 5: Bậc thầy sáng tạo',
+                levelColor: '#ec4899',
+                title: 'Thử thách 12: Ngôi sao lấp lánh ⭐',
+                desc: 'Sử dụng vòng lặp <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">for</code> 5 lần: mỗi lần tiến <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">100</code> bước và rẽ phải <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">144°</code> để vẽ ngôi sao 5 cánh hoàn chỉnh.',
+                validate: function (consoleLog, paths, variables) {
+                    const lines = paths.filter(p => p.type === undefined || p.x1 !== undefined);
+                    if (lines.length < 5) return false;
+                    let starSegments = 0;
+                    for (let p of lines) {
+                        const dist = Math.hypot(p.x2 - p.x1, p.y2 - p.y1);
+                        if (Math.abs(dist - 100) <= 15) starSegments++;
+                    }
+                    if (starSegments < 5) return false;
+                    const first = lines[0];
+                    const last = lines[lines.length - 1];
+                    return Math.hypot(last.x2 - first.x1, last.y2 - first.y1) <= 20;
+                }
+            },
+            {
+                id: 'spiral_square',
+                level: 5,
+                levelName: 'Cấp độ 5: Bậc thầy sáng tạo',
+                levelColor: '#ec4899',
+                title: 'Thử thách 13: Xoắn ốc cầu vồng 🌀',
+                desc: 'Sử dụng vòng lặp có bước nhảy tăng dần (<code class="bg-slate-100 px-1 py-0.5 rounded text-amber-700 font-bold">range(10, 110, 10)</code>) để Rùa đi <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-bold">i</code> bước và rẽ phải <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">90°</code> tạo thành hình xoắn ốc tuyệt đẹp.',
+                validate: function (consoleLog, paths, variables) {
+                    const lines = paths.filter(p => p.type === undefined || p.x1 !== undefined);
+                    return lines.length >= 8;
+                }
+            },
+            {
+                id: 'mandala_flower',
+                level: 5,
+                levelName: 'Cấp độ 5: Bậc thầy sáng tạo',
+                levelColor: '#ec4899',
+                title: 'Thử thách 14: Bông hoa vạn hoa (Mandala) 🌸',
+                desc: 'Dùng vòng lặp 6 lần: mỗi lần vẽ một hình tròn bán kính <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">40</code> (hoặc hình vuông) rồi xoay Rùa sang phải <code class="bg-slate-100 px-1 py-0.5 rounded text-red-500 font-bold">60°</code> để tạo thành bông hoa 6 cánh đối xứng.',
+                validate: function (consoleLog, paths, variables) {
+                    const circles = paths.filter(p => p.type === 'circle');
+                    if (circles.length >= 5) return true;
+                    const lines = paths.filter(p => p.type === undefined || p.x1 !== undefined);
+                    return lines.length >= 20;
+                }
+            }
+        ];
+
+        window.activeChallengeId = null;
+
+        function openChallengeModal() {
+            initVariableWatcher();
+            const modal = document.getElementById('challenge-modal');
+            const box = document.getElementById('challenge-modal-box');
+
+            const completed = JSON.parse(localStorage.getItem('pykids_completed_challenges') || '[]');
+            document.getElementById('challenge-progress-text').textContent = `${completed.length}/${window.challenges.length} thử thách`;
+
+            const container = document.getElementById('challenge-list-container');
+            let html = '';
+            let lastLevel = 0;
+            window.challenges.forEach((ch, idx) => {
+                if (ch.level !== lastLevel) {
+                    lastLevel = ch.level;
+                    html += `
+                        <div class="pt-2.5 pb-1.5 flex items-center space-x-2 border-b border-slate-100 ${idx > 0 ? 'mt-4' : ''}">
+                            <span class="w-3 h-3 rounded-full shrink-0 shadow-xs" style="background-color: ${ch.levelColor}"></span>
+                            <span class="text-xs font-bold text-slate-700 uppercase tracking-wide">${ch.levelName}</span>
+                        </div>
+                    `;
+                }
+
+                const isCompleted = completed.includes(ch.id);
+                const statusBadge = isCompleted
+                    ? `<span class="bg-green-100 text-green-700 px-2.5 py-0.5 rounded-full font-bold text-[10px] shrink-0 border border-green-200"><i class="fa-solid fa-check mr-1"></i>Hoàn thành</span>`
+                    : `<span class="bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full font-bold text-[10px] shrink-0">Chưa làm</span>`;
+
+                const activeBorder = window.activeChallengeId === ch.id
+                    ? 'border-[#f89b1c] bg-amber-50/50 shadow-sm ring-2 ring-amber-200'
+                    : 'border-slate-200 hover:border-[#2b53a7] bg-white hover:bg-slate-50/70';
+
+                html += `
+                    <div class="border-2 rounded-xl p-3.5 flex items-center justify-between cursor-pointer transition-all ${activeBorder}" onclick="selectChallenge('${ch.id}')">
+                        <div class="flex-1 pr-4 min-w-0">
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <h4 class="text-sm font-bold text-slate-800 truncate">${ch.title}</h4>
+                                ${statusBadge}
+                            </div>
+                            <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">${ch.desc.replace(/<[^>]+>/g, ' ')}</p>
+                        </div>
+                        <button class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-[#2b53a7] hover:bg-[#1f3d80] transition-colors shrink-0 shadow-xs cursor-pointer">
+                            ${window.activeChallengeId === ch.id ? 'Tiếp tục ➔' : 'Chọn ➔'}
+                        </button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            modal.classList.remove('hidden');
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+            box.classList.remove('scale-95');
+        }
+
+        function closeChallengeModal() {
+            const modal = document.getElementById('challenge-modal');
+            const box = document.getElementById('challenge-modal-box');
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function selectChallenge(id) {
+            closeChallengeModal();
+            window.activeChallengeId = id;
+            const ch = window.challenges.find(c => c.id === id);
+            if (ch) {
+                // Right mission board
+                const rightTitle = document.getElementById('right-challenge-title');
+                const rightDesc = document.getElementById('right-challenge-desc');
+                const tabChallengeBtn = document.getElementById('tab-challenge-btn');
+                const rightTabsHeader = document.getElementById('right-tabs-header');
+
+                if (rightTitle) rightTitle.innerHTML = ch.title;
+                if (rightDesc) rightDesc.innerHTML = ch.desc;
+                if (tabChallengeBtn) tabChallengeBtn.classList.remove('hidden');
+                if (rightTabsHeader) rightTabsHeader.classList.remove('hidden');
+
+                setMode('code');
+                switchTab('challenge');
+
+                if (typeof Blockly !== 'undefined' && workspace) {
+                    setTimeout(() => Blockly.svgResize(workspace), 50);
+                }
+            }
+        }
+
+        function quitChallenge() {
+            window.activeChallengeId = null;
+            const tabChallengeBtn = document.getElementById('tab-challenge-btn');
+            if (tabChallengeBtn) tabChallengeBtn.classList.add('hidden');
+
+            if (window.currentMode === 'code') {
+                const rightTabsHeader = document.getElementById('right-tabs-header');
+                if (rightTabsHeader) rightTabsHeader.classList.remove('hidden');
+                switchTab('explain');
+            } else {
+                switchTab('code');
+            }
+
+            if (typeof Blockly !== 'undefined' && workspace) {
+                setTimeout(() => Blockly.svgResize(workspace), 50);
+            }
+        }
+
+        function simulateQueuePaths(queue) {
+            let simPaths = [];
+            let st = {
+                x: turtleState.x,
+                y: turtleState.y,
+                angle: turtleState.angle,
+                penDown: turtleState.penDown,
+                color: turtleState.color || '#3b82f6',
+                width: turtleState.width || 3
+            };
+            for (let cmd of queue) {
+                if (cmd.type === 'forward' || cmd.type === 'backward') {
+                    let dist = cmd.type === 'backward' ? -cmd.value : cmd.value;
+                    let rad = st.angle * Math.PI / 180;
+                    let endX = st.x + dist * Math.cos(rad);
+                    let endY = st.y + dist * Math.sin(rad);
+                    if (st.penDown) {
+                        simPaths.push({ x1: st.x, y1: st.y, x2: endX, y2: endY, color: st.color, width: st.width });
+                    }
+                    st.x = endX;
+                    st.y = endY;
+                } else if (cmd.type === 'right') {
+                    st.angle += cmd.value;
+                } else if (cmd.type === 'left') {
+                    st.angle -= cmd.value;
+                } else if (cmd.type === 'pen') {
+                    st.penDown = cmd.value;
+                } else if (cmd.type === 'width') {
+                    st.width = Math.max(1, cmd.value);
+                } else if (cmd.type === 'pencolor' || cmd.type === 'color') {
+                    st.color = cmd.color;
+                } else if (cmd.type === 'circle') {
+                    simPaths.push({ type: 'circle', r: cmd.value || cmd.R || 50, color: st.color, width: st.width });
+                }
+            }
+            return simPaths;
+        }
+
+        window.challengeTriggeredId = null;
+        window.challengeFastTrack = false;
+
+        function checkCurrentChallenge(isInstant = false) {
+            if (!window.activeChallengeId) return;
+            const ch = window.challenges.find(c => c.id === window.activeChallengeId);
+            if (!ch) return;
+
+            const consoleLog = document.getElementById('console-output').textContent;
+            const variables = window.activeVariables;
+
+            let isSuccess = false;
+            if (isInstant) {
+                // Kiểm tra tức thì (0ms) cho các bài toán Terminal (in ấn) hoặc Biến số
+                if (ch.validate(consoleLog, paths, variables)) {
+                    isSuccess = true;
+                } else if (commandQueue && commandQueue.length > 0) {
+                    // Nếu là bài toán vẽ hình, mô phỏng trước kết quả nét vẽ
+                    const sim = simulateQueuePaths(commandQueue);
+                    if (ch.validate(consoleLog, sim, variables)) {
+                        // Kết quả vẽ chuẩn xác! Đẩy tốc độ vẽ lên nhanh để học sinh thấy rùa hoàn thành trong tích tắc
+                        window.challengeFastTrack = true;
+                    }
+                }
+            } else {
+                isSuccess = ch.validate(consoleLog, paths, variables);
+            }
+
+            if (isSuccess) {
+                if (window.challengeTriggeredId === ch.id) return;
+                window.challengeTriggeredId = ch.id;
+
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                playTone("C5", "8n");
+                setTimeout(() => playTone("E5", "8n"), 100);
+                setTimeout(() => playTone("G5", "8n"), 200);
+                setTimeout(() => playTone("C6", "4n"), 300);
+
+                let completed = JSON.parse(localStorage.getItem('pykids_completed_challenges') || '[]');
+                if (!completed.includes(ch.id)) {
+                    completed.push(ch.id);
+                    localStorage.setItem('pykids_completed_challenges', JSON.stringify(completed));
+                }
+
+                showSuccessModal();
+            }
+        }
+
+        function showSuccessModal() {
+            const modal = document.getElementById('success-modal');
+            const box = document.getElementById('success-modal-box');
+
+            const currIdx = window.challenges.findIndex(c => c.id === window.activeChallengeId);
+            const btnNext = document.getElementById('success-next-btn');
+            if (currIdx < window.challenges.length - 1) {
+                btnNext.style.display = 'inline-block';
+            } else {
+                btnNext.style.display = 'none';
+            }
+
+            modal.classList.remove('hidden');
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+            box.classList.remove('scale-95');
+        }
+
+        function closeSuccessModal() {
+            const modal = document.getElementById('success-modal');
+            const box = document.getElementById('success-modal-box');
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function retryCurrentChallenge() {
+            closeSuccessModal();
+            if (window.currentMode === 'code') {
+                document.getElementById('python-textarea').value = '';
+            } else {
+                if (typeof workspace !== 'undefined' && workspace) {
+                    workspace.clear();
+                    const defaultStartBlock = workspace.newBlock('event_start');
+                    defaultStartBlock.initSvg();
+                    defaultStartBlock.render();
+                    defaultStartBlock.setDeletable(false);
+                    defaultStartBlock.moveBy(50, 50);
+                }
+            }
+            resetTurtle();
+        }
+
+        function nextChallenge() {
+            closeSuccessModal();
+            const currIdx = window.challenges.findIndex(c => c.id === window.activeChallengeId);
+            if (currIdx < window.challenges.length - 1) {
+                selectChallenge(window.challenges[currIdx + 1].id);
+            }
+        }
+
+        if (typeof renderSyntaxCards === 'function') {
+            renderSyntaxCards();
         }
     </script>
 </body>
