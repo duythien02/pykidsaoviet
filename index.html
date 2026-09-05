@@ -262,7 +262,8 @@
                 <i class="fa-solid fa-snake text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl sm:text-2xl font-black playful-font text-white tracking-wide flex items-center gap-1.5">
+                <h1
+                    class="text-xl sm:text-2xl font-black playful-font text-white tracking-wide flex items-center gap-1.5">
                     <span>SaoVietPyScratch</span>
                     <span class="text-[#f89b1c]">🐍</span>
                 </h1>
@@ -357,19 +358,9 @@
                     <div class="flex-1 flex overflow-hidden relative">
                         <textarea id="python-textarea"
                             class="w-[60%] flex-[6] min-w-0 p-4 font-mono text-[14.5px] leading-relaxed text-slate-800 bg-[#fffdf5] focus:outline-none resize-none overflow-y-auto"
-                            spellcheck="false" placeholder="# Nhập mã Python để điều khiển Rùa...
-import turtle
-t = turtle.Turtle()
-t.forward(100)
-"></textarea>
-
-                        <!-- Toast thông báo chèn / sao chép cú pháp -->
-                        <div id="code-toast"
-                            class="pointer-events-none absolute bottom-4 left-1/3 -translate-x-1/2 bg-slate-900/90 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg transition-all duration-300 opacity-0 transform translate-y-2 z-30 flex items-center space-x-1.5">
-                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                            <span id="code-toast-text">Đã chèn lệnh vào dòng mới ✨</span>
-                        </div>
-
+                            style="tab-size: 4; -moz-tab-size: 4;"
+                            placeholder="# Nhập mã Python tại đây... (Nhấn Tab để thụt lề 4 dấu cách, Shift+Tab để lùi lề)"
+                            spellcheck="false"></textarea>
                         <!-- Panel Gợi ý Cú pháp inside Python Code Mode (40% width) -->
                         <div
                             class="w-[40%] flex-[4] min-w-0 bg-slate-50 border-l border-slate-200 flex flex-col hidden sm:flex select-none h-full">
@@ -378,15 +369,21 @@ t.forward(100)
                                 <div class="flex items-center justify-between mb-1.5">
                                     <div class="flex items-center space-x-1.5">
                                         <span class="text-amber-500 text-base">💡</span>
-                                        <h4 class="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider">Gợi ý cú pháp</h4>
+                                        <h4
+                                            class="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider">
+                                            Gợi ý cú pháp</h4>
                                     </div>
-                                    <span id="syntax-count-badge" class="text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">28 lệnh</span>
+                                    <span id="syntax-count-badge"
+                                        class="text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">28
+                                        lệnh</span>
                                 </div>
-                                <p class="text-xs text-slate-500 mb-2 leading-tight">Tra cứu cú pháp mẫu để tự viết mã:</p>
-                                
+                                <p class="text-xs text-slate-500 mb-2 leading-tight">Tra cứu cú pháp mẫu để tự viết mã:
+                                </p>
+
                                 <!-- Search Input -->
                                 <div class="relative mb-2">
-                                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                    <i
+                                        class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                                     <input type="text" id="syntax-search-input" oninput="filterSyntaxCheatSheet()"
                                         placeholder="Tìm lệnh (tiến, màu, xoay, lặp...)"
                                         class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-indigo-400 focus:bg-white transition-all text-slate-700 placeholder:text-slate-400">
@@ -394,17 +391,30 @@ t.forward(100)
 
                                 <!-- Categories horizontal scroll -->
                                 <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
-                                    <button onclick="filterSyntaxCategory('all')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-[#2b53a7] text-white transition-all shrink-0 text-xs" data-cat="all">Tất cả</button>
-                                    <button onclick="filterSyntaxCategory('move')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="move">🐢 Di chuyển</button>
-                                    <button onclick="filterSyntaxCategory('pen')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="pen">🎨 Bút vẽ</button>
-                                    <button onclick="filterSyntaxCategory('loop')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="loop">🔁 Vòng lặp</button>
-                                    <button onclick="filterSyntaxCategory('logic')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="logic">❓ Điều kiện</button>
-                                    <button onclick="filterSyntaxCategory('io')" class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs" data-cat="io">📦 In & Biến</button>
+                                    <button onclick="filterSyntaxCategory('all')"
+                                        class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-[#2b53a7] text-white transition-all shrink-0 text-xs"
+                                        data-cat="all">Tất cả</button>
+                                    <button onclick="filterSyntaxCategory('move')"
+                                        class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs"
+                                        data-cat="move">🐢 Di chuyển</button>
+                                    <button onclick="filterSyntaxCategory('pen')"
+                                        class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs"
+                                        data-cat="pen">🎨 Bút vẽ</button>
+                                    <button onclick="filterSyntaxCategory('loop')"
+                                        class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs"
+                                        data-cat="loop">🔁 Vòng lặp</button>
+                                    <button onclick="filterSyntaxCategory('logic')"
+                                        class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs"
+                                        data-cat="logic">❓ Điều kiện</button>
+                                    <button onclick="filterSyntaxCategory('io')"
+                                        class="syntax-cat-btn px-2.5 py-1 rounded-full font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all shrink-0 text-xs"
+                                        data-cat="io">📦 In & Biến</button>
                                 </div>
                             </div>
 
                             <!-- List of Syntax Cards -->
-                            <div id="syntax-cards-container" class="flex-1 overflow-y-auto px-3 pb-3 pt-0 space-y-2.5 text-xs">
+                            <div id="syntax-cards-container"
+                                class="flex-1 overflow-y-auto px-3 pb-3 pt-0 space-y-2.5 text-xs">
                                 <!-- Dynamically populated by renderSyntaxCards() -->
                             </div>
                         </div>
@@ -499,27 +509,35 @@ t.forward(100)
                             class="font-sans text-[13.5px] leading-relaxed text-slate-800 flex-1 whitespace-pre-wrap">
                             Ghép khối để xem giải thích nhé!</div>
                     </div>
-                    <div id="tab-challenge" class="absolute inset-0 p-4 overflow-auto bg-[#fffdfa] flex flex-col hidden">
+                    <div id="tab-challenge"
+                        class="absolute inset-0 p-4 overflow-auto bg-[#fffdfa] flex flex-col hidden">
                         <div class="flex items-center space-x-2.5 pb-2.5 border-b border-amber-200/80 mb-3 shrink-0">
                             <span class="text-2xl">🎯</span>
                             <div class="min-w-0 flex-1">
-                                <h4 id="right-challenge-title" class="text-sm font-bold text-amber-900 leading-tight">Thử thách</h4>
-                                <span class="text-[11px] font-semibold text-amber-600">Bảng nhiệm vụ & Đề bài chi tiết</span>
+                                <h4 id="right-challenge-title" class="text-sm font-bold text-amber-900 leading-tight">
+                                    Thử thách</h4>
+                                <span class="text-[11px] font-semibold text-amber-600">Bảng nhiệm vụ & Đề bài chi
+                                    tiết</span>
                             </div>
                         </div>
                         <div class="space-y-3.5 text-xs flex-1">
                             <div>
                                 <span class="font-bold text-slate-700 block mb-1 text-xs">📝 Yêu cầu cần làm:</span>
-                                <div id="right-challenge-desc" class="text-slate-800 leading-relaxed bg-amber-50/70 p-3 rounded-xl border border-amber-200 text-xs font-medium">...</div>
+                                <div id="right-challenge-desc"
+                                    class="text-slate-800 leading-relaxed bg-amber-50/70 p-3 rounded-xl border border-amber-200 text-xs font-medium">
+                                    ...</div>
                             </div>
-                            <div class="p-2.5 bg-sky-50 rounded-xl border border-sky-200 text-sky-800 text-[11px] flex items-center space-x-2">
+                            <div
+                                class="p-2.5 bg-sky-50 rounded-xl border border-sky-200 text-sky-800 text-[11px] flex items-center space-x-2">
                                 <i class="fa-solid fa-flag text-amber-500 text-sm"></i>
                                 <span>Bấm <b>Lá cờ vàng</b> trên sân khấu để chạy và tự động nộp bài!</span>
                             </div>
                         </div>
                         <div class="pt-2.5 border-t border-slate-200 flex items-center justify-between mt-2 shrink-0">
-                            <span class="text-[10px] text-slate-400 font-medium">SaoVietPyScratch Challenge System</span>
-                            <button onclick="quitChallenge()" class="text-xs text-red-500 hover:text-red-700 font-bold hover:underline cursor-pointer">
+                            <span class="text-[10px] text-slate-400 font-medium">SaoVietPyScratch Challenge
+                                System</span>
+                            <button onclick="quitChallenge()"
+                                class="text-xs text-red-500 hover:text-red-700 font-bold hover:underline cursor-pointer">
                                 <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i>Thoát thử thách
                             </button>
                         </div>
@@ -731,47 +749,47 @@ t.forward(100)
             mapBlock('turtle_forward',
                 (b, g) => `queueCommand({type: "forward", value: ${getJsInputValue(b, g, 'STEPS', '10')}});\n`,
                 (b, g) => `turtle.forward(${getPyInputValue(b, g, 'STEPS', '10')})\n`,
-                (b) => `🐢 Rùa tiến về phía trước ${getExplainInputValue(b, 'STEPS', '10')} bước\n`
+                (b) => `Rùa tiến ${getExplainInputValue(b, 'STEPS', '10')} bước\n`
             );
             mapBlock('turtle_backward',
                 (b, g) => `queueCommand({type: "backward", value: ${getJsInputValue(b, g, 'STEPS', '10')}});\n`,
                 (b, g) => `turtle.backward(${getPyInputValue(b, g, 'STEPS', '10')})\n`,
-                (b) => `🐢 Rùa lùi về phía sau ${getExplainInputValue(b, 'STEPS', '10')} bước\n`
+                (b) => `Rùa lùi ${getExplainInputValue(b, 'STEPS', '10')} bước\n`
             );
             mapBlock('turtle_right',
                 (b, g) => `queueCommand({type: "right", value: ${getJsInputValue(b, g, 'DEGREES', '90')}});\n`,
                 (b, g) => `turtle.right(${getPyInputValue(b, g, 'DEGREES', '90')})\n`,
-                (b) => `🐢 Rùa xoay phải ${getExplainInputValue(b, 'DEGREES', '90')} độ\n`
+                (b) => `Rùa quay phải ${getExplainInputValue(b, 'DEGREES', '90')}°\n`
             );
             mapBlock('turtle_left',
                 (b, g) => `queueCommand({type: "left", value: ${getJsInputValue(b, g, 'DEGREES', '90')}});\n`,
                 (b, g) => `turtle.left(${getPyInputValue(b, g, 'DEGREES', '90')})\n`,
-                (b) => `🐢 Rùa xoay trái ${getExplainInputValue(b, 'DEGREES', '90')} độ\n`
+                (b) => `Rùa quay trái ${getExplainInputValue(b, 'DEGREES', '90')}°\n`
             );
             mapBlock('turtle_pen',
                 (b, g) => `queueCommand({type: "pen", value: ${b.getFieldValue('PEN_STATE') === 'pendown' ? 'true' : 'false'}});\n`,
                 (b, g) => b.getFieldValue('PEN_STATE') === 'pendown' ? 'turtle.pendown()\n' : 'turtle.penup()\n',
-                (b) => `🐢 Rùa ${b.getFieldValue('PEN_STATE') === 'pendown' ? 'đặt bút xuống để vẽ' : 'nhấc bút lên không vẽ nữa'}\n`
+                (b) => `${b.getFieldValue('PEN_STATE') === 'pendown' ? 'Đặt bút xuống để vẽ' : 'Nhấc bút lên'}\n`
             );
             mapBlock('turtle_color',
                 (b, g) => `queueCommand({type: "color", color: "${b.getFieldValue('COLOR')}", fillColor: "${b.getFieldValue('FILL_COLOR')}"});\n`,
                 (b, g) => `turtle.color("${b.getFieldValue('COLOR')}", "${b.getFieldValue('FILL_COLOR')}")\n`,
-                (b) => `🎨 Đổi màu: Màu nét ${b.getFieldValue('COLOR')} và Màu tô ${b.getFieldValue('FILL_COLOR')}\n`
+                (b) => `Đổi màu nét ${b.getFieldValue('COLOR')}, màu tô ${b.getFieldValue('FILL_COLOR')}\n`
             );
             mapBlock('turtle_width',
                 (b, g) => `queueCommand({type: "width", value: ${getJsInputValue(b, g, 'WIDTH', '3')}});\n`,
                 (b, g) => `turtle.width(${getPyInputValue(b, g, 'WIDTH', '3')})\n`,
-                (b) => `🖍️ Đổi độ dày nét vẽ thành ${getExplainInputValue(b, 'WIDTH', '3')}\n`
+                (b) => `Đổi độ dày nét thành ${getExplainInputValue(b, 'WIDTH', '3')}\n`
             );
             mapBlock('py_print',
                 (b, g) => `queueCommand({type: "print", value: ${getJsInputValue(b, g, 'TEXT', '""')}});\n`,
                 (b, g) => `print(${getPyInputValue(b, g, 'TEXT', '""')})\n`,
-                (b) => `👉 In ra màn hình nội dung: ${getExplainInputValue(b, 'TEXT', '""')}\n`
+                (b) => `In ra: ${getExplainInputValue(b, 'TEXT', '""')}\n`
             );
             mapBlock('py_input',
                 (b, g) => [`(await customPrompt(${getJsInputValue(b, g, 'TEXT', '""')}))`, (g && g.ORDER_FUNCTION_CALL !== undefined ? g.ORDER_FUNCTION_CALL : 99)],
                 (b, g) => [`input(${getPyInputValue(b, g, 'TEXT', '""')})`, (g && g.ORDER_FUNCTION_CALL !== undefined ? g.ORDER_FUNCTION_CALL : 99)],
-                (b) => [`(Hỏi người dùng: ${getExplainInputValue(b, 'TEXT', '""')})`, explainGen.ORDER_NONE]
+                (b) => [`(nhập: ${getExplainInputValue(b, 'TEXT', '""')})`, explainGen.ORDER_NONE]
             );
             mapBlock('py_to_int',
                 (b, g) => [`parseInt(${getJsInputValue(b, g, 'VALUE', '0')} || 0)`, (g && g.ORDER_FUNCTION_CALL !== undefined ? g.ORDER_FUNCTION_CALL : 99)],
@@ -784,40 +802,40 @@ t.forward(100)
                 (b) => [`(chuyển ${getExplainInputValue(b, 'VALUE', '0')} thành số thập phân)`, explainGen.ORDER_NONE]
             );
 
-            mapBlock('turtle_clear', (b, g) => `queueCommand({type: "clear"});\n`, (b, g) => `turtle.clear()\n`, (b) => `🧹 Xóa toàn bộ hình đã vẽ\n`);
-            mapBlock('turtle_home', (b, g) => `queueCommand({type: "home"});\n`, (b, g) => `turtle.home()\n`, (b) => `🏠 Đưa rùa về vị trí trung tâm\n`);
-            mapBlock('event_start', (b, g) => `// Bắt đầu\n`, (b, g) => `# Bắt đầu\n`, (b) => `🚀 <b class="text-indigo-800">Bắt đầu chương trình</b>\n`);
+            mapBlock('turtle_clear', (b, g) => `queueCommand({type: "clear"});\n`, (b, g) => `turtle.clear()\n`, (b) => `Xóa toàn bộ hình đã vẽ\n`);
+            mapBlock('turtle_home', (b, g) => `queueCommand({type: "home"});\n`, (b, g) => `turtle.home()\n`, (b) => `Về vị trí trung tâm (0, 0)\n`);
+            mapBlock('event_start', (b, g) => `// Bắt đầu\n`, (b, g) => `# Bắt đầu\n`, (b) => `<b class="text-indigo-800">Bắt đầu chương trình</b>\n`);
 
             // NEW BLOCKS GENERATORS
             mapBlock('turtle_circle',
                 (b, g) => `queueCommand({type: "circle", value: ${getJsInputValue(b, g, 'RADIUS', '90')}});\n`,
                 (b, g) => `turtle.circle(${getPyInputValue(b, g, 'RADIUS', '90')})\n`,
-                (b) => `🐢 Rùa vẽ hình tròn bán kính ${getExplainInputValue(b, 'RADIUS', '90')}\n`
+                (b) => `Rùa vẽ hình tròn bán kính ${getExplainInputValue(b, 'RADIUS', '90')}\n`
             );
             mapBlock('turtle_bgcolor',
                 (b, g) => `queueCommand({type: "bgcolor", value: "${b.getFieldValue('COLOR')}"});\n`,
                 (b, g) => `turtle.bgcolor("${b.getFieldValue('COLOR')}")\n`,
-                (b) => `🎨 Đổi màu nền cửa sổ thành màu ${b.getFieldValue('COLOR')}\n`
+                (b) => `Đổi màu nền thành ${b.getFieldValue('COLOR')}\n`
             );
             mapBlock('turtle_begin_fill',
                 (b, g) => `queueCommand({type: "begin_fill"});\n`,
                 (b, g) => `turtle.begin_fill()\n`,
-                (b) => `🖌️ Bắt đầu theo dõi vùng để tô màu\n`
+                (b) => `Bắt đầu tô màu\n`
             );
             mapBlock('turtle_end_fill',
                 (b, g) => `queueCommand({type: "end_fill"});\n`,
                 (b, g) => `turtle.end_fill()\n`,
-                (b) => `🖌️ Kết thúc và đổ màu vào vùng vừa vẽ\n`
+                (b) => `Đổ màu tô kín\n`
             );
             mapBlock('turtle_speed',
                 (b, g) => `queueCommand({type: "speed", value: ${getJsInputValue(b, g, 'SPEED', '5')}});\n`,
                 (b, g) => `turtle.speed(${getPyInputValue(b, g, 'SPEED', '5')})\n`,
-                (b) => `⚡ Chỉnh tốc độ vẽ thành ${getExplainInputValue(b, 'SPEED', '5')}\n`
+                (b) => `Tốc độ vẽ: ${getExplainInputValue(b, 'SPEED', '5')}\n`
             );
             mapBlock('turtle_shape',
                 (b, g) => `queueCommand({type: "shape", value: "${b.getFieldValue('SHAPE')}"});\n`,
                 (b, g) => `turtle.shape("${b.getFieldValue('SHAPE')}")\n`,
-                (b) => `🐢 Đổi hình dáng bút thành ${b.getFieldValue('SHAPE')}\n`
+                (b) => `Hình dáng rùa: ${b.getFieldValue('SHAPE')}\n`
             );
 
             // Ghi đè khối nối chuỗi (text_join) để tạo ra f-string trong Python và template literal trong JS
@@ -860,7 +878,7 @@ t.forward(100)
             explainGen['text'] = explainGen.forBlock['text'];
 
             explainGen.forBlock['variables_set'] = function (block) {
-                return `👉 Lưu giá trị ${getExplainInputValue(block, 'VALUE', '0')} vào một chiếc hộp có tên là <b class="text-indigo-600">${block.getField('VAR').getText()}</b>\n`;
+                return `Gán <b class="text-indigo-600">${block.getField('VAR').getText()}</b> = ${getExplainInputValue(block, 'VALUE', '0')}\n`;
             };
             explainGen['variables_set'] = explainGen.forBlock['variables_set'];
 
@@ -875,7 +893,7 @@ t.forward(100)
             explainGen['math_number'] = explainGen.forBlock['math_number'];
 
             explainGen.forBlock['math_arithmetic'] = function (block) {
-                const ops = { 'ADD': 'cộng', 'MINUS': 'trừ', 'MULTIPLY': 'nhân', 'DIVIDE': 'chia', 'POWER': 'mũ' };
+                const ops = { 'ADD': '+', 'MINUS': '-', 'MULTIPLY': '×', 'DIVIDE': ':', 'POWER': '^' };
                 const op = ops[block.getFieldValue('OP')] || '+';
                 const a = getExplainInputValue(block, 'A', '0');
                 const b = getExplainInputValue(block, 'B', '0');
@@ -888,20 +906,20 @@ t.forward(100)
                 for (let i = 0; i <= block.elseifCount_; i++) {
                     const cond = getExplainInputValue(block, 'IF' + i, 'sai');
                     const branch = explainGen.statementToCode(block, 'DO' + i);
-                    if (i === 0) code += `👉 <b class="text-amber-600">NẾU</b> điều kiện (${cond}) đúng thì:\n${branch}`;
-                    else code += `👉 <b class="text-amber-600">NGƯỢC LẠI, NẾU</b> điều kiện (${cond}) đúng thì:\n${branch}`;
+                    if (i === 0) code += `<b class="text-amber-600">Nếu</b> (${cond}) thì:\n${branch}`;
+                    else code += `<b class="text-amber-600">Ngược lại, nếu</b> (${cond}) thì:\n${branch}`;
                 }
                 if (block.elseCount_) {
                     const branch = explainGen.statementToCode(block, 'ELSE');
-                    code += `👉 <b class="text-amber-600">TRONG CÁC TRƯỜNG HỢP CÒN LẠI</b> thì:\n${branch}`;
+                    code += `<b class="text-amber-600">Ngược lại:</b>\n${branch}`;
                 }
                 return code;
             };
             explainGen['controls_if'] = explainGen.forBlock['controls_if'];
 
             explainGen.forBlock['logic_compare'] = function (block) {
-                const ops = { 'EQ': 'bằng', 'NEQ': 'khác', 'LT': 'nhỏ hơn', 'LTE': 'nhỏ hơn hoặc bằng', 'GT': 'lớn hơn', 'GTE': 'lớn hơn hoặc bằng' };
-                const op = ops[block.getFieldValue('OP')] || 'bằng';
+                const ops = { 'EQ': '==', 'NEQ': '!=', 'LT': '<', 'LTE': '<=', 'GT': '>', 'GTE': '>=' };
+                const op = ops[block.getFieldValue('OP')] || '==';
                 const a = getExplainInputValue(block, 'A', '0');
                 const b = getExplainInputValue(block, 'B', '0');
                 return [`(${a} ${op} ${b})`, explainGen.ORDER_NONE];
@@ -920,11 +938,7 @@ t.forward(100)
             explainGen.forBlock['controls_repeat_ext'] = function (block) {
                 const repeats = getExplainInputValue(block, 'TIMES', '0');
                 const branch = explainGen.statementToCode(block, 'DO') || '  (chưa có lệnh nào)\n';
-                let code = `🔁 <b class="text-blue-600">VÒNG LẶP:</b> Lặp lại khối lệnh bên trong chính xác ${repeats} lần:\n`;
-                code += `  <b>Lần lặp 1:</b>\n${branch}`;
-                code += `  <b>Lần lặp 2:</b>\n${branch}`;
-                code += `  ... lặp tiếp tục như vậy đến lần thứ ${repeats}\n`;
-                return code;
+                return `<b class="text-blue-600">Lặp ${repeats} lần:</b>\n${branch}`;
             };
             explainGen['controls_repeat_ext'] = explainGen.forBlock['controls_repeat_ext'];
 
@@ -934,22 +948,14 @@ t.forward(100)
                 const to = getExplainInputValue(block, 'TO', '0');
                 const by = getExplainInputValue(block, 'BY', '1');
                 const branch = explainGen.statementToCode(block, 'DO') || '  (chưa có lệnh nào)\n';
-                let code = `🔁 <b class="text-blue-600">VÒNG LẶP (for):</b> Cho biến <b class="text-indigo-600">${variable0}</b> chạy từ ${from} đến ${to}:\n`;
-                code += `  <b>Lần lặp 1</b> (khi <b class="text-indigo-600">${variable0}</b> = ${from}):\n${branch}`;
-                code += `  <b>Lần lặp 2</b> (khi biến chạy tiếp):\n${branch}`;
-                code += `  ... lặp tiếp tục cho đến khi <b class="text-indigo-600">${variable0}</b> = ${to}\n`;
-                return code;
+                return `<b class="text-blue-600">Lặp biến <b class="text-indigo-600">${variable0}</b> từ ${from} đến ${to}:</b>\n${branch}`;
             };
             explainGen['controls_for'] = explainGen.forBlock['controls_for'];
 
             explainGen.forBlock['controls_whileUntil'] = function (block) {
                 const cond = getExplainInputValue(block, 'BOOL', 'sai');
                 const branch = explainGen.statementToCode(block, 'DO') || '  (chưa có lệnh nào)\n';
-                let code = `🔁 <b class="text-blue-600">VÒNG LẶP (while):</b> Liên tục kiểm tra điều kiện (${cond}):\n`;
-                code += `  <b>Lần lặp 1</b> (điều kiện đúng nên chạy lệnh):\n${branch}`;
-                code += `  <b>Lần lặp 2</b> (điều kiện vẫn đúng nên chạy tiếp):\n${branch}`;
-                code += `  ... lặp tiếp tục đến khi điều kiện (${cond}) bị sai thì dừng lại.\n`;
-                return code;
+                return `<b class="text-blue-600">Lặp khi (${cond}):</b>\n${branch}`;
             };
             explainGen['controls_whileUntil'] = explainGen.forBlock['controls_whileUntil'];
 
@@ -1021,7 +1027,7 @@ t.forward(100)
                 try {
                     initSound();
                     if (typeof Tone !== 'undefined' && Tone.context && Tone.context.state !== 'running') {
-                        Tone.start().catch(() => {});
+                        Tone.start().catch(() => { });
                     }
                     if (synth) {
                         synth.triggerAttackRelease(note, dur);
@@ -1411,6 +1417,12 @@ t.forward(100)
             if (typeof workspace !== 'undefined' && workspace) {
                 workspace.highlightBlock(null);
             }
+            const modal = document.getElementById('custom-prompt-modal');
+            if (modal) {
+                modal.classList.add('hidden', 'opacity-0');
+                const box = document.getElementById('custom-prompt-box');
+                if (box) box.classList.add('scale-95');
+            }
             initVariableWatcher();
         }
 
@@ -1712,6 +1724,10 @@ t.forward(100)
             if (paneCode) paneCode.classList.toggle('hidden', tabId !== 'code' || isCodeMode);
             if (paneExplain) paneExplain.classList.toggle('hidden', tabId !== 'explain');
             if (paneChallenge) paneChallenge.classList.toggle('hidden', tabId !== 'challenge');
+
+            if (tabId === 'explain' && isCodeMode && typeof updatePythonCodeExplanation === 'function') {
+                updatePythonCodeExplanation();
+            }
         }
 
         function handleWorkspaceChange() {
@@ -1753,9 +1769,11 @@ t.forward(100)
                 explainRaw = lines.map((line, index) => {
                     let indentMatch = line.match(/^\s*/);
                     let indent = indentMatch ? indentMatch[0] : '';
+                    let indentLevel = Math.floor(indent.length / 2);
+                    let indentPrefix = indentLevel > 0 ? '&nbsp;&nbsp;'.repeat(indentLevel) + '<span class="text-slate-400 font-mono">└─</span> ' : '';
                     let cleanLine = line.substring(indent.length);
-                    return `<span class="text-indigo-600 font-bold">Bước ${index + 1}:</span> ${cleanLine}`;
-                }).join('<br/>');
+                    return `<div class="py-1"><span class="text-indigo-600 font-bold">Bước ${index + 1}:</span> ${indentPrefix}${cleanLine}</div>`;
+                }).join('');
             }
             let prefix = pythonRaw.includes('turtle') ? "import turtle\nt = turtle.Turtle()\n\n" : "";
             let fullPython = (prefix + pythonRaw).trim();
@@ -1812,7 +1830,11 @@ t.forward(100)
 
                 document.getElementById('python-preview').innerHTML = htmlLines.map(item => item.text).join('');
             }
-            document.getElementById('explain-output').innerHTML = explainRaw.trim() === "" ? "Ghép khối để xem giải thích nhé!" : explainRaw;
+            if (window.currentMode === 'code' && typeof updatePythonCodeExplanation === 'function') {
+                updatePythonCodeExplanation();
+            } else {
+                document.getElementById('explain-output').innerHTML = explainRaw.trim() === "" ? "Ghép khối để xem giải thích nhé!" : explainRaw;
+            }
             if (typeof initVariableWatcher === 'function') {
                 initVariableWatcher();
             }
@@ -2097,16 +2119,20 @@ t.forward(100)
                         <p class="text-xs text-slate-500">Chinh phục 14 nhiệm vụ từ cơ bản đến nâng cao</p>
                     </div>
                 </div>
-                <button onclick="closeChallengeModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer p-1"><i
+                <button onclick="closeChallengeModal()"
+                    class="text-slate-400 hover:text-slate-600 cursor-pointer p-1"><i
                         class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <!-- Progress Tracker -->
-            <div class="mb-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-3 flex items-center justify-between text-xs text-slate-700 shrink-0">
+            <div
+                class="mb-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-3 flex items-center justify-between text-xs text-slate-700 shrink-0">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-medal text-amber-500 text-base"></i>
                     <span class="font-medium">Tiến độ hoàn thành:</span>
                 </div>
-                <span id="challenge-progress-text" class="font-bold text-[#2b53a7] bg-white px-2.5 py-1 rounded-lg border border-blue-200">0/14 thử thách</span>
+                <span id="challenge-progress-text"
+                    class="font-bold text-[#2b53a7] bg-white px-2.5 py-1 rounded-lg border border-blue-200">0/14 thử
+                    thách</span>
             </div>
             <!-- Challenge List -->
             <div class="space-y-3 overflow-y-auto pr-1 flex-1 max-h-[440px]" id="challenge-list-container">
@@ -2120,7 +2146,9 @@ t.forward(100)
         class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[9999] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-2xl shadow-2xl p-6 w-[400px] max-w-[90%] transform scale-95 transition-transform duration-300 text-center relative"
             id="success-modal-box">
-            <button onclick="reviewCurrentCode()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer text-base p-1" title="Đóng để xem lại code">
+            <button onclick="reviewCurrentCode()"
+                class="absolute top-3.5 right-3.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer text-base p-1"
+                title="Đóng để xem lại code">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <div class="text-5xl mb-3">🎉</div>
@@ -2220,8 +2248,19 @@ t.forward(100)
         }
 
         // 2. Hàm customPrompt gọi từ runtime cho lệnh Hỏi và đợi nhập
-        function customPrompt(message) {
-            return showCustomPrompt("Nhập dữ liệu", message, "💬", "", false);
+        async function customPrompt(message) {
+            const promptText = message !== undefined ? String(message) : "";
+            const res = await showCustomPrompt("Nhập dữ liệu", promptText || "Vui lòng nhập giá trị:", "💬", "", false);
+            const finalVal = res !== null ? String(res) : "";
+            if (promptText) {
+                const formatted = promptText.endsWith(' ') || promptText.endsWith('\n')
+                    ? (promptText + finalVal)
+                    : (promptText + ": " + finalVal);
+                addConsoleMessage(formatted);
+            } else if (finalVal) {
+                addConsoleMessage(finalVal);
+            }
+            return finalVal;
         }
 
         // --- Magic Variables Watcher ---
@@ -2461,6 +2500,9 @@ t.forward(100)
                 if (typeof Blockly !== 'undefined' && workspace) {
                     setTimeout(() => Blockly.svgResize(workspace), 50);
                 }
+                if (typeof handleWorkspaceChange === 'function') {
+                    handleWorkspaceChange();
+                }
             } else {
                 btnBlocks.className = inactiveClass;
                 btnCode.className = activeClass;
@@ -2497,6 +2539,9 @@ t.forward(100)
                     }
                 }
                 renderSyntaxCards();
+                if (typeof updatePythonCodeExplanation === 'function') {
+                    updatePythonCodeExplanation();
+                }
             }
         }
 
@@ -2731,10 +2776,10 @@ t.forward(100)
                 if (!matchCat) return false;
                 if (!query) return true;
                 const matchQuery = item.syntaxHtml.toLowerCase().includes(query) ||
-                                   item.example.toLowerCase().includes(query) ||
-                                   item.desc.toLowerCase().includes(query) ||
-                                   (item.keywords && item.keywords.includes(query)) ||
-                                   (item.alias && item.alias.toLowerCase().includes(query));
+                    item.example.toLowerCase().includes(query) ||
+                    item.desc.toLowerCase().includes(query) ||
+                    (item.keywords && item.keywords.includes(query)) ||
+                    (item.alias && item.alias.toLowerCase().includes(query));
                 return matchQuery;
             });
 
@@ -2850,6 +2895,9 @@ t.forward(100)
             textarea.selectionEnd = newPos;
 
             showCodeToast('Đã chèn lệnh vào dòng mới ✨');
+            if (window.currentMode === 'code' && typeof updatePythonCodeExplanation === 'function') {
+                updatePythonCodeExplanation();
+            }
         }
 
         function appendCode(snippet) {
@@ -2859,7 +2907,7 @@ t.forward(100)
         function copySyntax(text) {
             playClick();
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).catch(() => {});
+                navigator.clipboard.writeText(text).catch(() => { });
             } else {
                 const temp = document.createElement('textarea');
                 temp.value = text;
@@ -2899,7 +2947,349 @@ for i in range(4):
     t.right(90)
 `;
             document.getElementById('python-textarea').value = template;
+            if (window.currentMode === 'code' && typeof updatePythonCodeExplanation === 'function') {
+                updatePythonCodeExplanation();
+            }
         }
+
+        // Hỗ trợ phím Tab (4 dấu cách), Shift+Tab, Enter tự động thụt lề cho Python editor
+        function setupPythonEditorKeybindings() {
+            const textarea = document.getElementById('python-textarea');
+            if (!textarea) return;
+
+            textarea.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const text = this.value;
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+
+                    if (e.shiftKey) {
+                        // Shift + Tab: Lùi lề (Outdent) tối đa 4 dấu cách cho dòng hiện tại hoặc các dòng được chọn
+                        const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+                        let lineEnd = text.indexOf('\n', end);
+                        if (lineEnd === -1) lineEnd = text.length;
+
+                        const selectedBlock = text.substring(lineStart, lineEnd);
+                        const blockLines = selectedBlock.split('\n');
+                        let removedFirstLine = 0;
+                        let totalRemoved = 0;
+
+                        const unindentedLines = blockLines.map((l, idx) => {
+                            let removeCount = 0;
+                            if (l.startsWith('    ')) {
+                                removeCount = 4;
+                            } else if (l.startsWith('\t')) {
+                                removeCount = 1;
+                            } else {
+                                const spaceMatch = l.match(/^[ ]{1,3}/);
+                                removeCount = spaceMatch ? spaceMatch[0].length : 0;
+                            }
+                            if (idx === 0) removedFirstLine = removeCount;
+                            totalRemoved += removeCount;
+                            return l.substring(removeCount);
+                        });
+
+                        const replacement = unindentedLines.join('\n');
+                        this.setRangeText(replacement, lineStart, lineEnd, 'preserve');
+                        this.selectionStart = Math.max(lineStart, start - removedFirstLine);
+                        this.selectionEnd = Math.max(this.selectionStart, end - totalRemoved);
+                        this.dispatchEvent(new Event('input', { bubbles: true }));
+                    } else if (start !== end && text.substring(start, end).includes('\n')) {
+                        // Bôi đen nhiều dòng + Tab: Thụt lề 4 dấu cách cho tất cả các dòng được chọn
+                        const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+                        let lineEnd = text.indexOf('\n', end);
+                        if (lineEnd === -1) lineEnd = text.length;
+
+                        const selectedBlock = text.substring(lineStart, lineEnd);
+                        const blockLines = selectedBlock.split('\n');
+                        const indentedLines = blockLines.map(l => '    ' + l);
+                        const replacement = indentedLines.join('\n');
+
+                        this.setRangeText(replacement, lineStart, lineEnd, 'preserve');
+                        this.selectionStart = start + 4;
+                        this.selectionEnd = end + (blockLines.length * 4);
+                        this.dispatchEvent(new Event('input', { bubbles: true }));
+                    } else {
+                        // Tab đơn dòng hoặc con trỏ bình thường: Chèn đúng 4 dấu cách tại vị trí con trỏ
+                        if (!document.execCommand || !document.execCommand('insertText', false, '    ')) {
+                            this.setRangeText('    ', start, end, 'end');
+                            this.dispatchEvent(new Event('input', { bubbles: true }));
+                        }
+                    }
+                } else if (e.key === 'Enter') {
+                    // Tự động giữ nguyên thụt lề dòng trước, nếu dòng trước kết thúc bằng ':' thì tự cộng thêm 4 dấu cách
+                    const text = this.value;
+                    const start = this.selectionStart;
+                    const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+                    const currentLine = text.substring(lineStart, start);
+                    const indentMatch = currentLine.match(/^(\s*)/);
+                    let indent = indentMatch ? indentMatch[1] : '';
+
+                    if (currentLine.trim().endsWith(':')) {
+                        indent += '    ';
+                    }
+
+                    if (indent.length > 0) {
+                        e.preventDefault();
+                        const insert = '\n' + indent;
+                        if (!document.execCommand || !document.execCommand('insertText', false, insert)) {
+                            this.setRangeText(insert, start, this.selectionEnd, 'end');
+                            this.dispatchEvent(new Event('input', { bubbles: true }));
+                        }
+                    }
+                } else if (e.key === 'Backspace' && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+                    // Xóa thông minh: Nếu con trỏ đứng ở khoảng thụt lề 4 dấu cách thì xóa cả 4 dấu cách cùng lúc
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    if (start === end && start >= 4) {
+                        const text = this.value;
+                        const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+                        const beforeCursor = text.substring(lineStart, start);
+                        if (/^ {4,}$/.test(beforeCursor) && beforeCursor.endsWith('    ')) {
+                            e.preventDefault();
+                            this.setRangeText('', start - 4, start, 'end');
+                            this.dispatchEvent(new Event('input', { bubbles: true }));
+                        }
+                    }
+                }
+            });
+
+            textarea.addEventListener('input', function () {
+                if (window.currentMode === 'code' && typeof updatePythonCodeExplanation === 'function') {
+                    updatePythonCodeExplanation();
+                }
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function translateLogicWords(expr) {
+            if (!expr) return '';
+            let stringLiterals = [];
+            let masked = expr.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, function (match) {
+                stringLiterals.push(match);
+                return `__STR_LIT_${stringLiterals.length - 1}__`;
+            });
+
+            masked = masked
+                .replace(/\band\b/g, ' và ')
+                .replace(/\bor\b/g, ' hoặc ')
+                .replace(/\bnot\b/g, 'không ');
+
+            masked = masked.replace(/__STR_LIT_(\d+)__/g, function (_, idx) {
+                return stringLiterals[Number(idx)];
+            });
+
+            return masked.replace(/\s+/g, ' ').trim();
+        }
+
+        function formatPromptText(promptStr) {
+            const p = promptStr ? promptStr.trim() : '';
+            if (!p) return '';
+            return ` (nhắc: <i>${escapeHtml(p)}</i>)`;
+        }
+
+        function generatePythonExplanation(code) {
+            const lines = code.split('\n');
+            let explainSteps = [];
+            let stepNum = 1;
+
+            for (let idx = 0; idx < lines.length; idx++) {
+                let rawLine = lines[idx];
+                let trimmed = rawLine.trim();
+
+                if (trimmed === '') continue;
+
+                const expandedLine = rawLine.replace(/\t/g, '    ');
+                const matchIndent = expandedLine.match(/^(\s*)/);
+                const indentLength = matchIndent ? matchIndent[0].length : 0;
+                const indentLevel = Math.floor(indentLength / 4);
+
+                let textWithoutComment = trimmed;
+                if (!trimmed.startsWith('#')) {
+                    let inQuote = null;
+                    for (let i = 0; i < trimmed.length; i++) {
+                        const c = trimmed[i];
+                        if (inQuote) {
+                            if (c === '\\') i++;
+                            else if (c === inQuote) inQuote = null;
+                        } else {
+                            if (c === '"' || c === "'") inQuote = c;
+                            else if (c === '#') {
+                                textWithoutComment = trimmed.substring(0, i).trim();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                let desc = '';
+
+                if (trimmed.startsWith('#')) {
+                    desc = `<i>Ghi chú: ${escapeHtml(trimmed.substring(1).trim())}</i>`;
+                } else if (/^import\s+turtle\b/.test(textWithoutComment)) {
+                    desc = `Nạp thư viện <code>turtle</code>`;
+                } else if (/^from\s+turtle\s+import\b/.test(textWithoutComment)) {
+                    desc = `Nạp lệnh vẽ rùa từ <code>turtle</code>`;
+                } else if (/^import\s+([a-zA-Z0-9_]+)/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^import\s+([a-zA-Z0-9_]+)/);
+                    desc = `Nạp thư viện <code>${escapeHtml(m[1])}</code>`;
+                } else if (/^([a-zA-Z0-9_]+)\s*=\s*(?:turtle\.)?Turtle\(\)/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^([a-zA-Z0-9_]+)\s*=/);
+                    desc = `Khởi tạo rùa <b class="text-indigo-600">${m[1]}</b>`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?(forward|fd)\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?(?:forward|fd)\s*\((.*)\)$/);
+                    desc = `Rùa tiến <b>${escapeHtml(m[2])}</b> bước`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?(backward|bk|back)\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?(?:backward|bk|back)\s*\((.*)\)$/);
+                    desc = `Rùa lùi <b>${escapeHtml(m[2])}</b> bước`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?(right|rt)\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?(?:right|rt)\s*\((.*)\)$/);
+                    desc = `Rùa quay phải <b>${escapeHtml(m[2])}°</b>`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?(left|lt)\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?(?:left|lt)\s*\((.*)\)$/);
+                    desc = `Rùa quay trái <b>${escapeHtml(m[2])}°</b>`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?circle\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?circle\s*\((.*)\)$/);
+                    desc = `Rùa vẽ đường tròn bán kính <b>${escapeHtml(m[2])}</b>`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?penup\s*\(\)$/.test(textWithoutComment)) {
+                    desc = `Nhấc bút lên`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?pendown\s*\(\)$/.test(textWithoutComment)) {
+                    desc = `Đặt bút xuống`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?(color|pencolor)\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?(?:color|pencolor)\s*\((.*)\)$/);
+                    desc = `Màu nét: <b>${escapeHtml(m[2])}</b>`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?fillcolor\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?fillcolor\s*\((.*)\)$/);
+                    desc = `Màu tô: <b>${escapeHtml(m[2])}</b>`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?begin_fill\s*\(\)$/.test(textWithoutComment)) {
+                    desc = `Bắt đầu tô màu`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?end_fill\s*\(\)$/.test(textWithoutComment)) {
+                    desc = `Đổ màu tô kín`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?(width|pensize)\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?(?:width|pensize)\s*\((.*)\)$/);
+                    desc = `Độ dày nét: <b>${escapeHtml(m[2])}</b>`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?speed\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?speed\s*\((.*)\)$/);
+                    desc = `Tốc độ vẽ: <b>${escapeHtml(m[2])}</b>`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?shape\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:([a-zA-Z0-9_]+)\.)?shape\s*\((.*)\)$/);
+                    desc = `Hình dáng rùa: <b>${escapeHtml(m[2])}</b>`;
+                } else if (/^(?:turtle\.)?bgcolor\s*\((.*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^(?:turtle\.)?bgcolor\s*\((.*)\)$/);
+                    desc = `Màu nền: <b>${escapeHtml(m[1])}</b>`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?clear\s*\(\)$/.test(textWithoutComment)) {
+                    desc = `Xóa hình vẽ`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?reset\s*\(\)$/.test(textWithoutComment)) {
+                    desc = `Đặt lại rùa về ban đầu`;
+                } else if (/^(?:([a-zA-Z0-9_]+)\.)?home\s*\(\)$/.test(textWithoutComment)) {
+                    desc = `Về vị trí gốc (0, 0)`;
+                } else if (/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*int\s*\(\s*input\s*\((.*)\)\s*\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*int\s*\(\s*input\s*\((.*)\)\s*\)$/);
+                    desc = `Nhập số nguyên cho biến <b class="text-indigo-600">${m[1]}</b>${formatPromptText(m[2])}`;
+                } else if (/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*float\s*\(\s*input\s*\((.*)\)\s*\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*float\s*\(\s*input\s*\((.*)\)\s*\)$/);
+                    desc = `Nhập số thập phân cho biến <b class="text-indigo-600">${m[1]}</b>${formatPromptText(m[2])}`;
+                } else if (/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=(?:\s*str)?\s*\(\s*input\s*\((.*)\)\s*\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=(?:\s*str)?\s*\(\s*input\s*\((.*)\)\s*\)$/);
+                    desc = `Nhập chuỗi cho biến <b class="text-indigo-600">${m[1]}</b>${formatPromptText(m[2])}`;
+                } else if (/^([a-zA-Z_][a-zA-Z0-9_]*)\s*(\+=|-=|\*=|\/=|%=)\s*(.*)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*(\+=|-=|\*=|\/=|%=)\s*(.*)$/);
+                    const opWords = { '+=': 'Tăng', '-=': 'Giảm', '*=': 'Nhân', '/=': 'Chia', '%=': 'Chia lấy dư của' };
+                    const prep = m[2] === '+=' ? 'thêm' : (m[2] === '-=' ? 'đi' : 'với');
+                    desc = `${opWords[m[2]] || 'Cập nhật'} <b class="text-indigo-600">${m[1]}</b> ${prep} <code>${escapeHtml(m[3])}</code>`;
+                } else if (/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.*)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.*)$/);
+                    desc = `Gán <b class="text-indigo-600">${m[1]}</b> = <code>${escapeHtml(m[2])}</code>`;
+                } else if (/^print\s*\(([\s\S]*)\)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^print\s*\(([\s\S]*)\)$/);
+                    const content = m[1].trim();
+                    if (content === '') {
+                        desc = `In dòng trống`;
+                    } else {
+                        desc = `In ra: <code>${escapeHtml(content)}</code>`;
+                    }
+                } else if (/^if\s+(.*):$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^if\s+(.*):$/);
+                    desc = `<b class="text-amber-600">Nếu</b> <code>${escapeHtml(translateLogicWords(m[1].trim()))}</code> thì:`;
+                } else if (/^elif\s+(.*):$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^elif\s+(.*):$/);
+                    desc = `<b class="text-amber-600">Ngược lại, nếu</b> <code>${escapeHtml(translateLogicWords(m[1].trim()))}</code> thì:`;
+                } else if (/^else\s*:$/.test(textWithoutComment)) {
+                    desc = `<b class="text-amber-600">Ngược lại:</b>`;
+                } else if (/^while\s+(.*):$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^while\s+(.*):$/);
+                    desc = `<b class="text-blue-600">Lặp khi</b> <code>${escapeHtml(translateLogicWords(m[1].trim()))}</code>:`;
+                } else if (/^for\s+([a-zA-Z0-9_]+)\s+in\s+range\(([^)]+)\)\s*:$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^for\s+([a-zA-Z0-9_]+)\s+in\s+range\(([^)]+)\)\s*:$/);
+                    const varName = m[1];
+                    const args = m[2].split(',').map(s => s.trim());
+                    if (args.length === 1) {
+                        desc = `<b class="text-blue-600">Lặp ${escapeHtml(args[0])} lần</b> (biến <b class="text-indigo-600">${varName}</b> từ 0 đến ${escapeHtml(args[0])} - 1):`;
+                    } else if (args.length === 2) {
+                        desc = `<b class="text-blue-600">Lặp biến <b class="text-indigo-600">${varName}</b></b> từ ${escapeHtml(args[0])} đến ${escapeHtml(args[1])} - 1:`;
+                    } else {
+                        desc = `<b class="text-blue-600">Lặp biến <b class="text-indigo-600">${varName}</b></b> từ ${escapeHtml(args[0])} đến ${escapeHtml(args[1])} (bước ${escapeHtml(args[2])}):`;
+                    }
+                } else if (/^for\s+([a-zA-Z0-9_]+)\s+in\s+(.*):$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^for\s+([a-zA-Z0-9_]+)\s+in\s+(.*):$/);
+                    desc = `<b class="text-blue-600">Duyệt từng phần tử <b class="text-indigo-600">${m[1]}</b> trong</b> <code>${escapeHtml(m[2].trim())}</code>:`;
+                } else if (/^def\s+([a-zA-Z0-9_]+)\s*\(([^)]*)\)\s*:$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^def\s+([a-zA-Z0-9_]+)\s*\(([^)]*)\)\s*:$/);
+                    desc = `Định nghĩa hàm <b class="text-indigo-600">${m[1]}</b>(${escapeHtml(m[2])}):`;
+                } else if (/^return\b\s*(.*)$/.test(textWithoutComment)) {
+                    const m = textWithoutComment.match(/^return\b\s*(.*)$/);
+                    desc = `Trả về: <code>${escapeHtml(translateLogicWords(m[1].trim()))}</code>`;
+                } else if (textWithoutComment === 'break') {
+                    desc = `Thoát vòng lặp`;
+                } else if (textWithoutComment === 'continue') {
+                    desc = `Chuyển sang lượt lặp tiếp`;
+                } else if (textWithoutComment === 'pass') {
+                    desc = `Bỏ qua`;
+                } else {
+                    desc = `Thực hiện: <code>${escapeHtml(textWithoutComment)}</code>`;
+                }
+
+                let indentPrefix = '';
+                if (indentLevel > 0) {
+                    indentPrefix = '&nbsp;&nbsp;'.repeat(indentLevel) + '<span class="text-slate-400 font-mono">└─</span> ';
+                }
+
+                explainSteps.push(`<div class="py-1"><span class="text-indigo-600 font-bold">Bước ${stepNum}:</span> ${indentPrefix}${desc}</div>`);
+                stepNum++;
+            }
+
+            if (explainSteps.length === 0) {
+                return '<div class="text-slate-400 italic">Nhập code Python để xem giải thích từng bước.</div>';
+            }
+
+            return explainSteps.join('');
+        }
+
+        function updatePythonCodeExplanation() {
+            const textarea = document.getElementById('python-textarea');
+            const explainOutput = document.getElementById('explain-output');
+            if (!explainOutput) return;
+
+            const code = textarea ? textarea.value : '';
+            if (!code || code.trim() === '') {
+                explainOutput.innerHTML = '<div class="text-slate-400 italic">Nhập code Python để xem giải thích từng bước.</div>';
+                return;
+            }
+
+            explainOutput.innerHTML = generatePythonExplanation(code);
+        }
+
+        setupPythonEditorKeybindings();
 
         // Global objects for python runtime simulation
         window.pyTurtle = {
@@ -2954,6 +3344,9 @@ for i in range(4):
 
         window.pyPrint = function () {
             const args = Array.from(arguments).map(arg => {
+                if (arg === null || arg === undefined) return 'None';
+                if (arg === true) return 'True';
+                if (arg === false) return 'False';
                 if (typeof arg === 'object') return JSON.stringify(arg);
                 return String(arg);
             });
@@ -2961,33 +3354,271 @@ for i in range(4):
             queueCommand({ type: "print", value: msg });
         };
 
+        window.pyInput = customPrompt;
+        window.int = function (val) {
+            if (val === undefined || val === null || val === '') return 0;
+            if (typeof val === 'boolean') return val ? 1 : 0;
+            if (typeof val === 'number') return Math.trunc(val);
+            let strVal = String(val).trim();
+            if (strVal === '') return 0;
+            let n = Number(strVal);
+            if (isNaN(n)) {
+                throw new Error("ValueError: invalid literal for int() with base 10: '" + val + "'");
+            }
+            return Math.trunc(n);
+        };
+        window.float = function (val) {
+            if (val === undefined || val === null || val === '') return 0.0;
+            if (typeof val === 'boolean') return val ? 1.0 : 0.0;
+            if (typeof val === 'number') return val;
+            let strVal = String(val).trim();
+            if (strVal === '') return 0.0;
+            let n = Number(strVal);
+            if (isNaN(n)) {
+                throw new Error("ValueError: could not convert string to float: '" + val + "'");
+            }
+            return n;
+        };
+        window.str = function (val) {
+            if (val === undefined) return '';
+            if (val === null) return 'None';
+            if (val === true) return 'True';
+            if (val === false) return 'False';
+            return String(val);
+        };
+        window.bool = function (val) {
+            if (!val) return false;
+            if (typeof val === 'string' && (val === '' || val === '0' || val.toLowerCase() === 'false')) return false;
+            if (Array.isArray(val) && val.length === 0) return false;
+            return Boolean(val);
+        };
+        window.len = function (val) {
+            if (val !== null && val !== undefined && typeof val.length !== 'undefined') return val.length;
+            if (val !== null && val !== undefined && typeof val.size !== 'undefined') return val.size;
+            throw new Error("TypeError: object of type '" + typeof val + "' has no len()");
+        };
+
+        function stripInlineComment(codeLine) {
+            let inQuote = null;
+            for (let i = 0; i < codeLine.length; i++) {
+                const c = codeLine[i];
+                if (inQuote) {
+                    if (c === '\\') {
+                        i++;
+                    } else if (c === inQuote) {
+                        inQuote = null;
+                    }
+                } else {
+                    if (c === '"' || c === "'") {
+                        inQuote = c;
+                    } else if (c === '#') {
+                        return codeLine.substring(0, i);
+                    }
+                }
+            }
+            return codeLine;
+        }
+
+        function replaceInputCalls(codeLine) {
+            let result = '';
+            let i = 0;
+            while (i < codeLine.length) {
+                const ch = codeLine[i];
+                if (ch === '"' || ch === "'") {
+                    const quote = ch;
+                    result += quote;
+                    i++;
+                    while (i < codeLine.length) {
+                        const c = codeLine[i];
+                        result += c;
+                        if (c === '\\') {
+                            i++;
+                            if (i < codeLine.length) result += codeLine[i];
+                        } else if (c === quote) {
+                            break;
+                        }
+                        i++;
+                    }
+                    i++;
+                    continue;
+                }
+
+                const sub = codeLine.slice(i);
+                const match = sub.match(/^(\binput\s*\()/);
+                if (match) {
+                    let start = i + match[0].length;
+                    let depth = 1;
+                    let j = start;
+                    let inQuote = null;
+                    while (j < codeLine.length && depth > 0) {
+                        const c = codeLine[j];
+                        if (inQuote) {
+                            if (c === '\\') {
+                                j += 2;
+                                continue;
+                            }
+                            if (c === inQuote) {
+                                inQuote = null;
+                            }
+                        } else {
+                            if (c === '"' || c === "'") {
+                                inQuote = c;
+                            } else if (c === '(') {
+                                depth++;
+                            } else if (c === ')') {
+                                depth--;
+                            }
+                        }
+                        if (depth > 0) j++;
+                    }
+                    const args = codeLine.slice(start, j);
+                    result += `(await pyInput(${replaceInputCalls(args)}))`;
+                    i = j + 1;
+                } else {
+                    result += ch;
+                    i++;
+                }
+            }
+            return result;
+        }
+
         function transpilePythonToJS(pythonCode) {
             const lines = pythonCode.split('\n');
             let jsCode = '';
-            let indentStack = [0];
+            let blockStack = [];
 
-            // Strict Mode: Không nạp sẵn t và turtle, học sinh phải import và khởi tạo chuẩn Python
+            // Nạp các hàm và giá trị built-in chuẩn của Python
             jsCode += `
+                const True = true, False = false, None = null;
                 function pyPrint() { window.pyPrint.apply(null, arguments); }
+                async function pyInput(promptMsg) {
+                    return await customPrompt(promptMsg);
+                }
+                const input = pyInput;
+
+                function int(val) {
+                    if (val === undefined || val === null || val === '') return 0;
+                    if (typeof val === 'boolean') return val ? 1 : 0;
+                    if (typeof val === 'number') return Math.trunc(val);
+                    let strVal = String(val).trim();
+                    if (strVal === '') return 0;
+                    let n = Number(strVal);
+                    if (isNaN(n)) {
+                        throw new Error("ValueError: invalid literal for int() with base 10: '" + val + "'");
+                    }
+                    return Math.trunc(n);
+                }
+
+                function float(val) {
+                    if (val === undefined || val === null || val === '') return 0.0;
+                    if (typeof val === 'boolean') return val ? 1.0 : 0.0;
+                    if (typeof val === 'number') return val;
+                    let strVal = String(val).trim();
+                    if (strVal === '') return 0.0;
+                    let n = Number(strVal);
+                    if (isNaN(n)) {
+                        throw new Error("ValueError: could not convert string to float: '" + val + "'");
+                    }
+                    return n;
+                }
+
+                function str(val) {
+                    if (val === undefined) return '';
+                    if (val === null) return 'None';
+                    if (val === true) return 'True';
+                    if (val === false) return 'False';
+                    return String(val);
+                }
+
+                function bool(val) {
+                    if (!val) return false;
+                    if (typeof val === 'string' && (val === '' || val === '0' || val.toLowerCase() === 'false')) return false;
+                    if (Array.isArray(val) && val.length === 0) return false;
+                    return Boolean(val);
+                }
+
+                function len(val) {
+                    if (val !== null && val !== undefined && typeof val.length !== 'undefined') return val.length;
+                    if (val !== null && val !== undefined && typeof val.size !== 'undefined') return val.size;
+                    throw new Error("TypeError: object of type '" + typeof val + "' has no len()");
+                }
+
+                function abs(val) { return Math.abs(Number(val)); }
+                function round(val, n) {
+                    let factor = Math.pow(10, n || 0);
+                    return Math.round(Number(val) * factor) / factor;
+                }
+                function max() {
+                    if (arguments.length === 1 && Array.isArray(arguments[0])) return Math.max.apply(null, arguments[0]);
+                    return Math.max.apply(null, arguments);
+                }
+                function min() {
+                    if (arguments.length === 1 && Array.isArray(arguments[0])) return Math.min.apply(null, arguments[0]);
+                    return Math.min.apply(null, arguments);
+                }
+                function sum(arr) {
+                    if (Array.isArray(arr)) return arr.reduce((a, b) => a + Number(b), 0);
+                    return 0;
+                }
+                function range(start, stop, step) {
+                    if (step === undefined) step = 1;
+                    if (stop === undefined) { stop = start; start = 0; }
+                    let res = [];
+                    if (step > 0) {
+                        for (let i = start; i < stop; i += step) res.push(i);
+                    } else if (step < 0) {
+                        for (let i = start; i > stop; i += step) res.push(i);
+                    }
+                    return res;
+                }
             `;
 
             for (let idx = 0; idx < lines.length; idx++) {
                 let line = lines[idx];
-                const trimmed = line.trim();
+                const cleanLine = stripInlineComment(line);
+                const trimmed = cleanLine.trim();
 
                 if (trimmed === '' || trimmed.startsWith('#')) {
                     continue;
                 }
 
-                const matchIndent = line.match(/^(\s*)/);
+                const expandedLine = line.replace(/\t/g, '    ');
+                const matchIndent = expandedLine.match(/^(\s*)/);
                 const indent = matchIndent ? matchIndent[0].length : 0;
 
-                while (indentStack.length > 1 && indent < indentStack[indentStack.length - 1]) {
-                    jsCode += '}\n';
-                    indentStack.pop();
+                const isElif = /^elif\b/.test(trimmed) && trimmed.endsWith(':');
+                const isElse = /^else\s*:$/.test(trimmed);
+
+                if (isElif || isElse) {
+                    // Đóng các khối lồng sâu hơn nhánh if/elif hiện tại
+                    while (blockStack.length > 0 && blockStack[blockStack.length - 1].indent > indent) {
+                        jsCode += '}\n';
+                        blockStack.pop();
+                    }
+                    if (blockStack.length > 0 && blockStack[blockStack.length - 1].indent === indent) {
+                        blockStack[blockStack.length - 1].type = isElif ? 'elif' : 'else';
+                    } else {
+                        blockStack.push({ indent: indent, type: isElif ? 'elif' : 'else' });
+                    }
+                } else {
+                    // Câu lệnh thường: đóng mọi khối có thụt lề lớn hơn hoặc bằng câu lệnh hiện tại
+                    while (blockStack.length > 0 && blockStack[blockStack.length - 1].indent >= indent) {
+                        jsCode += '}\n';
+                        blockStack.pop();
+                    }
                 }
 
-                let jsLine = trimmed;
+                function cleanCondition(condStr) {
+                    let cond = condStr.trim();
+                    const chainMatch = cond.match(/^([a-zA-Z0-9_.]+|\d+(?:\.\d+)?)\s*(<=|<|>=|>|==)\s*([a-zA-Z0-9_.]+|\d+(?:\.\d+)?)\s*(<=|<|>=|>|==)\s*([a-zA-Z0-9_.]+|\d+(?:\.\d+)?)$/);
+                    if (chainMatch) {
+                        cond = `(${chainMatch[1]} ${chainMatch[2]} ${chainMatch[3]} && ${chainMatch[3]} ${chainMatch[4]} ${chainMatch[5]})`;
+                    }
+                    return cond.replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!').replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false');
+                }
+
+                let processed = replaceInputCalls(trimmed);
+                let jsLine = processed;
 
                 if (/^import\s+turtle\b/.test(trimmed)) {
                     const asMatch = trimmed.match(/^import\s+turtle\s+as\s+([a-zA-Z0-9_]+)/);
@@ -3071,31 +3702,28 @@ for i in range(4):
                         jsLine += `  queueCommand({type: "loop_text", value: "Lặp: " + "${loopVar}" + " = " + ${loopVar}});`;
                         jsLine += `  queueCommand({type: "var_update", name: "${loopVar}", value: ${loopVar}});`;
 
-                        indentStack.push(indent + 4);
+                        blockStack.push({ indent: indent, type: 'for' });
                     }
                 }
                 else if (trimmed.startsWith('while ') && trimmed.endsWith(':')) {
-                    let cond = trimmed.substring(6, trimmed.length - 1).trim();
-                    cond = cond.replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!').replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false');
+                    let cond = cleanCondition(processed.substring(6, processed.length - 1));
                     jsLine = `while (${cond}) {\n`;
-                    indentStack.push(indent + 4);
+                    blockStack.push({ indent: indent, type: 'while' });
                 }
                 else if (trimmed.startsWith('if ') && trimmed.endsWith(':')) {
-                    let cond = trimmed.substring(3, trimmed.length - 1).trim();
-                    cond = cond.replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!').replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false');
+                    let cond = cleanCondition(processed.substring(3, processed.length - 1));
                     jsLine = `if (${cond}) {\n`;
-                    indentStack.push(indent + 4);
+                    blockStack.push({ indent: indent, type: 'if' });
                 }
-                else if (trimmed.startsWith('elif ') && trimmed.endsWith(':')) {
-                    let cond = trimmed.substring(5, trimmed.length - 1).trim();
-                    cond = cond.replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!').replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false');
+                else if (isElif) {
+                    let cond = cleanCondition(processed.substring(5, processed.length - 1));
                     jsLine = `} else if (${cond}) {\n`;
                 }
-                else if (trimmed === 'else:') {
+                else if (isElse) {
                     jsLine = `} else {\n`;
                 }
-                else if (/^[a-zA-Z_][a-zA-Z0-9_]*\s*(\+=|-=|\*=|\/=|%=|=)\s*(.*)/.test(trimmed)) {
-                    const assignMatch = trimmed.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*(\+=|-=|\*=|\/=|%=|=)\s*(.*)/);
+                else if (/^[a-zA-Z_][a-zA-Z0-9_]*\s*(\+=|-=|\*=|\/=|%=|=)\s*(.*)/.test(processed)) {
+                    const assignMatch = processed.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*(\+=|-=|\*=|\/=|%=|=)\s*(.*)/);
                     if (assignMatch) {
                         const varName = assignMatch[1];
                         const op = assignMatch[2];
@@ -3107,11 +3735,13 @@ for i in range(4):
                         }
                     }
                 }
-                else if (trimmed.startsWith('print(') && trimmed.endsWith(')')) {
-                    const printContentMatch = trimmed.match(/^print\((.*)\)$/);
+                else if (/^print\s*\(([\s\S]*)\)$/.test(processed)) {
+                    const printContentMatch = processed.match(/^print\s*\(([\s\S]*)\)$/);
                     if (printContentMatch) {
-                        let content = printContentMatch[1];
-                        if (content.startsWith('f"') && content.endsWith('"')) {
+                        let content = printContentMatch[1].trim();
+                        if (content === '') {
+                            jsLine = `pyPrint();`;
+                        } else if (content.startsWith('f"') && content.endsWith('"')) {
                             const clean = content.substring(2, content.length - 1);
                             const jsTemplate = clean.replace(/\{([^}]+)\}/g, '${$1}');
                             jsLine = `pyPrint(\`${jsTemplate}\`);`;
@@ -3128,9 +3758,9 @@ for i in range(4):
                 jsCode += jsLine + '\n';
             }
 
-            while (indentStack.length > 1) {
+            while (blockStack.length > 0) {
                 jsCode += '}\n';
-                indentStack.pop();
+                blockStack.pop();
             }
 
             return jsCode;
@@ -3139,9 +3769,16 @@ for i in range(4):
         function formatPythonError(err) {
             const rawMsg = err.message || String(err);
 
+            if (rawMsg.startsWith('ValueError:')) {
+                return `❌ Lỗi ${rawMsg}\n👉 Giá trị truyền vào hàm không hợp lệ để chuyển đổi kiểu dữ liệu!`;
+            }
+            if (rawMsg.startsWith('TypeError:')) {
+                return `❌ Lỗi ${rawMsg}\n👉 Kiểu dữ liệu không phù hợp cho phép toán hoặc hàm này!`;
+            }
+
             // Match "X is not defined" (Standard JS ReferenceError)
             const refMatch = rawMsg.match(/^(\w+)\s+is not defined$/i) ||
-                             rawMsg.match(/Cannot access '(\w+)' before initialization/i);
+                rawMsg.match(/Cannot access '(\w+)' before initialization/i);
             if (refMatch) {
                 const name = refMatch[1];
                 if (name === 't') {
@@ -3152,6 +3789,8 @@ for i in range(4):
                     return `❌ Lỗi NameError: name 'Turtle' is not defined.\n👉 Bạn chưa import 'Turtle'. Hãy thêm 'import turtle' hoặc 'from turtle import Turtle' ở đầu chương trình nhé!`;
                 } else if (['forward', 'fd', 'backward', 'bk', 'right', 'rt', 'left', 'lt', 'circle', 'penup', 'pendown', 'color', 'pencolor', 'fillcolor', 'width', 'speed', 'clear', 'reset', 'home'].includes(name)) {
                     return `❌ Lỗi NameError: name '${name}' is not defined.\n👉 Để dùng lệnh này, hãy gọi qua biến rùa (ví dụ: t.${name}(...)) sau khi 'import turtle' và 't = turtle.Turtle()' nhé!`;
+                } else if (['int', 'float', 'str', 'bool', 'input', 'len', 'range', 'print'].includes(name)) {
+                    return `❌ Lỗi NameError: name '${name}' is not defined.\n👉 Hãy kiểm tra lại cú pháp gọi hàm '${name}()' nhé!`;
                 } else {
                     return `❌ Lỗi NameError: name '${name}' is not defined.\n👉 Biến hoặc hàm '${name}' chưa được khai báo trước khi sử dụng!`;
                 }
@@ -3159,7 +3798,7 @@ for i in range(4):
 
             // Match TypeError: Cannot read properties of undefined
             const propMatch = rawMsg.match(/Cannot read properties of (?:undefined|null) \(reading '(\w+)'\)/i) ||
-                              rawMsg.match(/(\w+) is undefined/i);
+                rawMsg.match(/(\w+) is undefined/i);
             if (propMatch) {
                 const prop = propMatch[1];
                 return `❌ Lỗi AttributeError / NameError: Không thể gọi lệnh '.${prop}()'.\n👉 Hãy chắc chắn bạn đã nạp thư viện và khởi tạo đối tượng rùa (ví dụ: import turtle; t = turtle.Turtle()) nhé!`;
